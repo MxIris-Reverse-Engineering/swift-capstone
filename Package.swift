@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -14,19 +14,19 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(url: "https://github.com/MxIris-Reverse-Engineering/capstone", branch: "v5"),
     ],
     targets: [
-        .systemLibrary(name: "Ccapstone",
-                       pkgConfig: "capstone",
-                       providers: [
-                        .brew(["capstone"])
-        ]),
         .target(
             name: "Capstone",
-            dependencies: ["Ccapstone"]),
+            dependencies: [
+                .product(name: "Ccapstone", package: "capstone"),
+            ]
+        ),
         .testTarget(
             name: "CapstoneTests",
-            dependencies: ["Capstone"])
-    ]
+            dependencies: ["Capstone"]
+        )
+    ],
+    swiftLanguageModes: [.v5]
 )

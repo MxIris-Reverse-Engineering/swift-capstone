@@ -26,7 +26,7 @@ public enum CapstoneError: Error {
     case unknown(code: UInt32)
 }
 
-extension cs_err: Hashable {
+extension cs_err: @retroactive Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(rawValue)
     }

@@ -30,10 +30,6 @@ public class Capstone {
     ///   * `CapstoneError.invalidMode` if the given combination of modes is invalid for the target architecture
     ///   * `CapstoneError.unsupportedVersion` if the installed version of capstone does not match the Swift bindings
     public init(arch: Architecture, mode: Mode = []) throws {
-        guard CS_VERSION_MAJOR == 5, Capstone.version.major == 5 else {
-            throw CapstoneError.unsupportedVersion
-        }
-
         var h: csh = 0
         let err = cs_open(cs_arch(arch.rawValue), cs_mode(mode.rawValue), &h)
         guard err == CS_ERR_OK else {
