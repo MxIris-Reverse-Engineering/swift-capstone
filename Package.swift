@@ -15,6 +15,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/MxIris-Reverse-Engineering/capstone", branch: "v5"),
+//        .package(path: "/Volumes/Repositories/Private/Fork/Library/capstone")
     ],
     targets: [
         .target(

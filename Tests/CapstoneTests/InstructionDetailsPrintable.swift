@@ -232,10 +232,7 @@ extension Arm64Instruction: InstructionDetailsPrintable {
             case .pstate:
                 print("\t\toperands[\(i)].type: PSTATE = 0x\(hex(op.pState!.rawValue))")
             case .sys:
-                guard let value = op.value as? Arm64OperandSysValue else {
-                    fatalError("Invalid sys operand value: \(op.value)")
-                }
-                print("\t\toperands[\(i)].type: SYS = 0x\(hex(value.rawValue))")
+                print("\t\toperands[\(i)].type: SYS = 0x\(hex(op.systemRegister.rawValue))")
             case .prefetch:
                 print("\t\toperands[\(i)].type: PREFETCH = 0x\(hex(op.prefetch!.rawValue))")
             case .barrier:
