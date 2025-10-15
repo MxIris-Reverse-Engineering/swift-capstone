@@ -6,16 +6,14 @@ import PackageDescription
 let package = Package(
     name: "Capstone",
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "Capstone",
             targets: ["Capstone"]
         )
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/MxIris-Reverse-Engineering/capstone", branch: "v5"),
-//        .package(path: "/Volumes/Repositories/Private/Fork/Library/capstone")
+        .package(url: "https://github.com/MxIris-DeveloperTool/swift-clang", branch: "main"),
     ],
     targets: [
         .target(
@@ -24,6 +22,25 @@ let package = Package(
                 .product(name: "Ccapstone", package: "capstone"),
             ]
         ),
+        .plugin(
+            name: "CapstoneEnumGeneratePlugin",
+            capability: .command(
+                intent: .custom(verb: "generate-enums", description: ""),
+                permissions: [
+                    .writeToPackageDirectory(reason: "This plugin creates a enum file at the root of the package.")
+                ]
+            ),
+            dependencies: [
+                "CapstoneEnumGenerator"
+            ]
+        ),
+        .executableTarget(
+            name: "CapstoneEnumGenerator",
+            dependencies: [
+                .product(name: "Clang", package: "swift-clang"),
+            ]
+        ),
+        
         .testTarget(
             name: "CapstoneTests",
             dependencies: ["Capstone"]
