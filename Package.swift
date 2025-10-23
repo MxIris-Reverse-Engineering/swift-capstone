@@ -14,6 +14,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/MxIris-Reverse-Engineering/capstone", branch: "v5"),
         .package(url: "https://github.com/MxIris-DeveloperTool/swift-clang", branch: "main"),
+        .package(url: "https://github.com/brightdigit/SyntaxKit", branch: "main"),
     ],
     targets: [
         .target(
@@ -23,7 +24,7 @@ let package = Package(
             ]
         ),
         .plugin(
-            name: "CapstoneEnumGeneratePlugin",
+            name: "CapstoneEnumsGeneratePlugin",
             capability: .command(
                 intent: .custom(verb: "generate-enums", description: ""),
                 permissions: [
@@ -31,13 +32,19 @@ let package = Package(
                 ]
             ),
             dependencies: [
-                "CapstoneEnumGenerator"
+                "capstone-enums-generator"
+            ]
+        ),
+        .target(
+            name: "CapstoneEnumsGenerator",
+            dependencies: [
+                .product(name: "Clang", package: "swift-clang"),
             ]
         ),
         .executableTarget(
-            name: "CapstoneEnumGenerator",
+            name: "capstone-enums-generator",
             dependencies: [
-                .product(name: "Clang", package: "swift-clang"),
+                "CapstoneEnumsGenerator"
             ]
         ),
         

@@ -237,6 +237,8 @@ extension Arm64Instruction: InstructionDetailsPrintable {
                 print("\t\toperands[\(i)].type: PREFETCH = 0x\(hex(op.prefetch!.rawValue))")
             case .barrier:
                 print("\t\toperands[\(i)].type: BARRIER = 0x\(hex(op.barrier!.rawValue))")
+            default:
+                break
             }
 
             printOperandAccess(index: i, access: op.access)
