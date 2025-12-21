@@ -22,7 +22,7 @@ extension RiscvInstruction: OperandContainer {
         public var type: RiscvOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: RiscvOperandValue {
+        public var value: RiscvOperandValue? {
             switch type {
             case .reg:
                 return register
@@ -38,17 +38,21 @@ extension RiscvInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: RiscvReg! {
+        public var register: RiscvReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            let reg = RiscvReg(rawValue: numericCast(op.reg))
+            if reg == .invalid {
+                return nil
+            }
+            return reg
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else {
                 return nil
             }
@@ -58,7 +62,7 @@ extension RiscvInstruction: OperandContainer {
         /// Base/displacement value for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

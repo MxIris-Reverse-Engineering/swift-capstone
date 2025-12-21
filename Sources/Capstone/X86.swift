@@ -20,22 +20,22 @@ extension X86Instruction: OperandContainer {
     /// REX prefix (x86_64).
     ///
     /// `nil` when detail mode is off, or not appropriate instruction.
-    public var rex: UInt8! { nonZero(detail?.x86.rex) }
+    public var rex: UInt8? { nonZero(detail?.x86.rex) }
 
     /// Address size, which can be overridden with prefix.
     ///
     /// `nil` when detail mode is off.
-    public var addressSize: UInt8! { detail?.x86.addr_size }
+    public var addressSize: UInt8? { detail?.x86.addr_size }
 
     /// ModR/M byte.
     ///
     /// `nil` when detail mode is off.
-    public var modRM: UInt8! { detail?.x86.modrm }
+    public var modRM: UInt8? { detail?.x86.modrm }
 
     /// Displacement value.
     ///
     /// `nil` when detail mode is off.
-    public var displacement: Int64! {
+    public var displacement: Int64? {
         guard encoding?.displacement != nil else {
             return nil
         }
@@ -45,14 +45,18 @@ extension X86Instruction: OperandContainer {
     /// SIB (Scaled Index Byte).
     ///
     /// `nil` when detail mode is off, or not appropriate instruction.
-    public var sib: SIB! {
-        guard let value = detail?.x86.sib,
-            let base: X86Reg = optionalEnumCast(detail?.x86.sib_base, ignoring: X86_REG_INVALID),
-            let index: X86Reg = optionalEnumCast(detail?.x86.sib_index, ignoring: X86_REG_INVALID) else {
+    public var sib: SIB? {
+        guard let detail = detail else {
+            return nil
+        }
+        let value = detail.x86.sib
+        guard value != 0,
+              let base: X86Reg = optionalEnumCast(detail.x86.sib_base, ignoring: X86_REG_INVALID),
+              let index: X86Reg = optionalEnumCast(detail.x86.sib_index, ignoring: X86_REG_INVALID) else {
             return nil
         }
         return SIB(
-            scale: detail!.x86.sib_scale,
+            scale: detail.x86.sib_scale,
             index: index,
             base: base,
             value: value)
@@ -61,42 +65,42 @@ extension X86Instruction: OperandContainer {
     /// XOP Condition Code.
     ///
     /// `nil` when detail mode is off, or doesn't exist.
-    public var xopConditionCode: X86XopCc! {
+    public var xopConditionCode: X86XopCc? {
         optionalEnumCast(detail?.x86.xop_cc, ignoring: X86_XOP_CC_INVALID)
     }
 
     /// SSE Condition Code.
     ///
     /// `nil` when detail mode is off, or doesn't exist.
-    public var sseConditionCode: X86SseCc! {
+    public var sseConditionCode: X86SseCc? {
         optionalEnumCast(detail?.x86.sse_cc, ignoring: X86_SSE_CC_INVALID)
     }
 
     /// AVX Condition Code.
     ///
     /// `nil` when detail mode is off, or doesn't exist.
-    public var avxConditionCode: X86AvxCc! {
+    public var avxConditionCode: X86AvxCc? {
         optionalEnumCast(detail?.x86.avx_cc, ignoring: X86_AVX_CC_INVALID)
     }
 
     /// AVX Suppress all Exception.
     ///
     /// `nil` when detail mode is off.
-    public var avxSuppressAllException: Bool! {
+    public var avxSuppressAllException: Bool? {
         detail?.x86.avx_sae
     }
 
     /// AVX static rounding mode.
     ///
     /// `nil` when detail mode is off, or not AVX instruction.
-    public var avxStaticRoundingMode: X86AvxRm! {
+    public var avxStaticRoundingMode: X86AvxRm? {
         optionalEnumCast(detail?.x86.avx_rm, ignoring: X86_AVX_RM_INVALID)
     }
 
     /// EFLAGS updated by this instruction..
     ///
     /// `nil` when detail mode is off, or if this is a FPU instruction.
-    public var eFlags: X86Eflags! {
+    public var eFlags: X86Eflags? {
         guard let flags = detail?.x86.eflags, !isIn(group: .fpu) else {
             return nil
         }
@@ -106,7 +110,7 @@ extension X86Instruction: OperandContainer {
     /// FPU flags updated by this instruction.
     ///
     /// `nil` when detail mode is off, or not a FPU instruction.
-    public var fpuFlags: X86FpuFlags! {
+    public var fpuFlags: X86FpuFlags? {
         guard let flags = detail?.x86.eflags, isIn(group: .fpu) else {
             return nil
         }
@@ -116,7 +120,7 @@ extension X86Instruction: OperandContainer {
     /// Encoding information.
     ///
     /// `nil` when detail mode is off.
-    public var encoding: Encoding! {
+    public var encoding: Encoding? {
         Encoding(detail?.x86.encoding)
     }
 
@@ -141,7 +145,7 @@ extension X86Instruction: OperandContainer {
         public var type: X86Op { enumCast(op.type) }
 
         /// Operand value.
-        public var value: X86OperandValue {
+        public var value: X86OperandValue? {
             switch type {
             case .reg:
                 return register
@@ -161,7 +165,7 @@ extension X86Instruction: OperandContainer {
         public var access: Access { enumCast(op.access) }
 
         /// AVX broadcast type.
-        public var avxBroadcastType: X86AvxBcast! { optionalEnumCast(op.avx_bcast, ignoring: X86_AVX_BCAST_INVALID) }
+        public var avxBroadcastType: X86AvxBcast? { optionalEnumCast(op.avx_bcast, ignoring: X86_AVX_BCAST_INVALID) }
 
         /// AVX zero opmask {z}.
         public var avxZeroOpmask: Bool { op.avx_zero_opmask }
@@ -169,17 +173,17 @@ extension X86Instruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: X86Reg! {
+        public var register: X86Reg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            return optionalEnumCast(op.reg, ignoring: X86_REG_INVALID)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else {
                 return nil
             }
@@ -189,7 +193,7 @@ extension X86Instruction: OperandContainer {
         /// Values for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

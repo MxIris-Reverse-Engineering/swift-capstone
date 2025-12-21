@@ -22,7 +22,7 @@ extension XCoreInstruction: OperandContainer {
         public var type: XcoreOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: XcoreOperandValue {
+        public var value: XcoreOperandValue? {
             switch type {
             case .imm:
                 return immediateValue
@@ -38,17 +38,17 @@ extension XCoreInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: XcoreReg! {
+        public var register: XcoreReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            return optionalEnumCast(op.reg.rawValue, ignoring: XCORE_REG_INVALID.rawValue)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int32! {
+        public var immediateValue: Int32? {
             guard type == .imm else {
                 return nil
             }
@@ -58,7 +58,7 @@ extension XCoreInstruction: OperandContainer {
         /// Memory values for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

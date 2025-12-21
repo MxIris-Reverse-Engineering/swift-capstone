@@ -103,8 +103,8 @@ public class PlatformInstructionBase<
     /// The identifier for this instruction.
     ///
     /// This is the instruction mnemonic, represented in an architecture-specific enumeration.
-    public var instruction: InsType {
-        InsType(rawValue: insn.id)!
+    public var instruction: InsType? {
+        InsType(rawValue: insn.id)
     }
 
     /// The type for instructions used in this architecture.

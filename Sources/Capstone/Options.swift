@@ -109,20 +109,23 @@ extension Capstone {
     private func setSkipData(mnemonic: String?, callback: SkipDataCallback?) -> cs_err {
         updateMnemonicPointer(mnemonic: mnemonic ?? ".byte")
         skipDataCallback = callback
-        let cb: cs_skipdata_cb_t!
-        if callback == nil {
-            cb = nil
-        } else {
-            cb = { (_, _, offset, userData) -> Int in
-                let cs = Unmanaged<Capstone>.fromOpaque(userData!).takeUnretainedValue()
-                switch(cs.skipDataCallback!(cs, cs.currentCode!, offset)) {
+        let cb: cs_skipdata_cb_t? = callback.map({ _ in
+            { (_, _, offset, userData) -> Int in
+                guard let userData else {
+                    return 0
+                }
+                let cs = Unmanaged<Capstone>.fromOpaque(userData).takeUnretainedValue()
+                guard let skipCallback = cs.skipDataCallback, let code = cs.currentCode else {
+                    return 0
+                }
+                switch skipCallback(cs, code, offset) {
                 case .skip(bytes: let bytes):
                     return bytes
                 case .stop:
                     return 0
                 }
             }
-        }
+        })
 
         return withUnsafePointer(to: cs_opt_skipdata(mnemonic: skipDataMnemonicPtr,
                                                      callback: cb,

@@ -1,51 +1,13 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Xcore)
 
-
-/// Operand type for instruction's operands
-public enum XcoreOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
+/// Group of XCore instructions
+public enum XcoreGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-
-}
-
-/// XCore registers
-public enum XcoreReg: UInt16 {
-    case invalid = 0
-    case cp = 1
-    case dp = 2
-    case lr = 3
-    case sp = 4
-    case r0 = 5
-    case r1 = 6
-    case r2 = 7
-    case r3 = 8
-    case r4 = 9
-    case r5 = 10
-    case r6 = 11
-    case r7 = 12
-    case r8 = 13
-    case r9 = 14
-    case r10 = 15
-    case r11 = 16
-    /// pc
-    case pc = 17
-    /// save pc
-    case scp = 18
-    case ssr = 19
-    case et = 20
-    case ed = 21
-    case sed = 22
-    case kep = 23
-    case ksp = 24
-    case id = 25
-    case ending = 26
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// <-- mark the end of the list of groups
+    case ending = 2
 }
 
 /// XCore instruction
@@ -171,16 +133,59 @@ public enum XcoreIns: UInt32 {
     case waiteu = 118
     case xor = 119
     case zext = 120
+    /// <-- mark the end of the list of instructions
     case ending = 121
-
 }
 
-/// Group of XCore instructions
-public enum XcoreGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum XcoreOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    case ending = 2
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
 }
 
+/// XCore registers
+public enum XcoreReg: UInt16 {
+    case invalid = 0
+    case cp = 1
+    case dp = 2
+    case lr = 3
+    case sp = 4
+    case r0 = 5
+    case r1 = 6
+    case r2 = 7
+    case r3 = 8
+    case r4 = 9
+    case r5 = 10
+    case r6 = 11
+    case r7 = 12
+    case r8 = 13
+    case r9 = 14
+    case r10 = 15
+    case r11 = 16
+    /// pc
+    case pc = 17
+    /// save pc
+    case scp = 18
+    /// save status
+    case ssr = 19
+    /// exception type
+    case et = 20
+    /// exception data
+    case ed = 21
+    /// save exception data
+    case sed = 22
+    /// kernel entry pointer
+    case kep = 23
+    /// kernel stack pointer
+    case ksp = 24
+    /// thread ID
+    case id = 25
+    /// <-- mark the end of the list of registers
+    case ending = 26
+}

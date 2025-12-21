@@ -1,46 +1,24 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Bpf)
 
-
-/// Operand type for instruction's operands
-public enum BpfOp: UInt32 {
-    case invalid = 0
-    case reg = 1
-    case imm = 2
-    case off = 3
-    case mem = 4
-    /// M[k] in cBPF
-    case mmem = 5
-    /// corresponds to cBPF's BPF_MSH mode
-    case msh = 6
-    /// cBPF's extension (not eBPF)
-    case ext = 7
-
-}
-
-/// BPF registers
-public enum BpfReg: UInt16 {
-    case invalid = 0
-    case a = 1
-    case x = 2
-    case r0 = 3
-    case r1 = 4
-    case r2 = 5
-    case r3 = 6
-    case r4 = 7
-    case r5 = 8
-    case r6 = 9
-    case r7 = 10
-    case r8 = 11
-    case r9 = 12
-    case r10 = 13
-    case ending = 14
-
-}
-
 public enum BpfExt: UInt32 {
     case invalid = 0
     case len = 1
+}
 
+/// Group of BPF instructions
+public enum BpfGrp: UInt8 {
+    /// = CS_GRP_INVALID
+    case invalid = 0
+    case load = 1
+    case store = 2
+    case alu = 3
+    case jump = 4
+    /// eBPF only
+    case call = 5
+    case `return` = 6
+    /// cBPF only
+    case misc = 7
+    case ending = 8
 }
 
 /// BPF instruction
@@ -82,12 +60,16 @@ public enum BpfIns: UInt32 {
     case be64 = 32
     /// eBPF only
     case ldw = 33
+    /// cBPF only
+    public static let ld = 33
     case ldh = 34
     case ldb = 35
     /// eBPF only: load 64-bit imm
     case lddw = 36
     /// eBPF only
     case ldxw = 37
+    /// cBPF only
+    public static let ldx = 37
     /// eBPF only
     case ldxh = 38
     /// eBPF only
@@ -96,6 +78,8 @@ public enum BpfIns: UInt32 {
     case ldxdw = 40
     /// eBPF only
     case stw = 41
+    /// cBPF only
+    public static let st = 41
     /// eBPF only
     case sth = 42
     /// eBPF only
@@ -104,6 +88,8 @@ public enum BpfIns: UInt32 {
     case stdw = 44
     /// eBPF only
     case stxw = 45
+    /// cBPF only
+    public static let stx = 45
     /// eBPF only
     case stxh = 46
     /// eBPF only
@@ -128,43 +114,53 @@ public enum BpfIns: UInt32 {
     /// eBPF only
     case call = 59
     /// eBPF only
-    case exit = 60
+    case callx = 60
     /// eBPF only
-    case jlt = 61
+    case exit = 61
     /// eBPF only
-    case jle = 62
+    case jlt = 62
     /// eBPF only
-    case jslt = 63
+    case jle = 63
     /// eBPF only
-    case jsle = 64
-    case ret = 65
-    case tax = 66
-    case txa = 67
-    case ending = 68
-    /// cBPF only
-    public static let ld = 33
-    /// cBPF only
-    public static let ldx = 37
-    /// cBPF only
-    public static let st = 41
-    /// cBPF only
-    public static let stx = 45
-
+    case jslt = 64
+    /// eBPF only
+    case jsle = 65
+    case ret = 66
+    case tax = 67
+    case txa = 68
+    case ending = 69
 }
 
-/// Group of BPF instructions
-public enum BpfGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum BpfOp: UInt32 {
     case invalid = 0
-    case load = 1
-    case store = 2
-    case alu = 3
-    case jump = 4
-    /// eBPF only
-    case call = 5
-    case `return` = 6
-    /// cBPF only
-    case misc = 7
-    case ending = 8
+    case reg = 1
+    case imm = 2
+    case off = 3
+    case mem = 4
+    /// M[k] in cBPF
+    case mmem = 5
+    /// corresponds to cBPF's BPF_MSH mode
+    case msh = 6
+    /// cBPF's extension (not eBPF)
+    case ext = 7
 }
 
+/// BPF registers
+public enum BpfReg: UInt16 {
+    case invalid = 0
+    case a = 1
+    case x = 2
+    case r0 = 3
+    case r1 = 4
+    case r2 = 5
+    case r3 = 6
+    case r4 = 7
+    case r5 = 8
+    case r6 = 9
+    case r7 = 10
+    case r8 = 11
+    case r9 = 12
+    case r10 = 13
+    case ending = 14
+}

@@ -12,7 +12,7 @@ extension M680xInstruction: OperandContainer {
     /// Flags indicating if operands are part of the mnemonic.
     ///
     /// `nil` when detail mode is off.
-    public var opFlags: M680xOpFlags! {
+    public var opFlags: M680xOpFlags? {
         optionalEnumCast(detail?.m680x.flags)
     }
 
@@ -55,7 +55,7 @@ extension M680xInstruction: OperandContainer {
         public var access: Access { enumCast(op.access) }
 
         /// Operand value.
-        public var value: M680xOperandValue {
+        public var value: M680xOperandValue? {
             switch type {
             case .immediate:
                 return immediateValue
@@ -79,17 +79,20 @@ extension M680xInstruction: OperandContainer {
         /// Register value for `register` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: M680xReg! {
+        public var register: M680xReg? {
             guard type == .register else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard op.reg != M680X_REG_INVALID else {
+                return nil
+            }
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `immediate` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int32! {
+        public var immediateValue: Int32? {
             guard type == .immediate else {
                 return nil
             }
@@ -99,7 +102,7 @@ extension M680xInstruction: OperandContainer {
         /// Indexed addressing operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var indexedAddress: IndexedAddress! {
+        public var indexedAddress: IndexedAddress? {
             guard type == .indexed else {
                 return nil
             }
@@ -109,7 +112,7 @@ extension M680xInstruction: OperandContainer {
         /// Relative addressing operand (Bcc/LBcc).
         ///
         /// `nil` when not an appropriate operand.
-        public var relativeAddress: RelativeAddress! {
+        public var relativeAddress: RelativeAddress? {
             guard type == .relative else {
                 return nil
             }
@@ -122,7 +125,7 @@ extension M680xInstruction: OperandContainer {
         /// Extended address.
         ///
         /// `nil` when not an appropriate operand.
-        public var extendedAddress: ExtendedAddress! {
+        public var extendedAddress: ExtendedAddress? {
             guard type == .extended else {
                 return nil
             }
@@ -135,7 +138,7 @@ extension M680xInstruction: OperandContainer {
         /// Direct address.
         ///
         /// `nil` when not an appropriate operand.
-        public var directAddress: UInt16! {
+        public var directAddress: UInt16? {
             guard type == .direct else {
                 return nil
             }
@@ -145,7 +148,7 @@ extension M680xInstruction: OperandContainer {
         /// Constant value (bit index, page nr.).
         ///
         /// `nil` when not an appropriate operand.
-        public var constantValue: UInt8! {
+        public var constantValue: UInt8? {
             guard type == .constant else {
                 return nil
             }

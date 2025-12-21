@@ -13,7 +13,7 @@ public class Capstone {
 
     internal let handle: csh
     // when using skipdata options, the pointer to the mnemonic must be kept as long as it's used
-    internal var skipDataMnemonicPtr: UnsafeMutablePointer<Int8>!
+    internal var skipDataMnemonicPtr: UnsafeMutablePointer<Int8>?
     internal var skipDataCallback: SkipDataCallback?
     internal var currentCode: Data?
     // valid specific type for disassembled instructions
@@ -79,7 +79,10 @@ public class Capstone {
         var insnsPtr: UnsafeMutablePointer<cs_insn>?
         currentCode = code
         let resultCount = code.withUnsafeBytes({ (ptr: UnsafeRawBufferPointer) in
-            cs_disasm(handle, ptr.bindMemory(to: UInt8.self).baseAddress!, code.count, address, count ?? 0, &insnsPtr)
+            guard let baseAddress = ptr.bindMemory(to: UInt8.self).baseAddress else {
+                return 0
+            }
+            return cs_disasm(handle, baseAddress, code.count, address, count ?? 0, &insnsPtr)
         })
         currentCode = nil
         let err = cs_errno(handle)
@@ -91,9 +94,7 @@ public class Capstone {
             return []
         }
         let mgr = InstructionMemoryManager(insns, count: resultCount, cs: self)
-        // swiftlint:disable force_cast
-        return (0..<resultCount).map({ instructionClass.init(mgr, index: $0) as! InsType })
-        // swiftlint:enable force_cast
+        return (0..<resultCount).compactMap({ instructionClass.init(mgr, index: $0) as? InsType })
     }
 
     func name(ofInstruction id: UInt32) -> String? {

@@ -12,12 +12,12 @@ extension Mos65xxInstruction: OperandContainer {
     /// Addressing mode for this instruction.
     ///
     /// `nil` when detail mode is off.
-    public var addressingMode: Mos65xxAm! { optionalEnumCast(detail?.mos65xx.am) }
+    public var addressingMode: Mos65xxAm? { optionalEnumCast(detail?.mos65xx.am) }
 
     /// `true` if this instruction modifies flags.
     ///
     /// `nil` when detail mode is off.
-    public var modifiesFlags: Bool! { detail?.mos65xx.modifies_flags }
+    public var modifiesFlags: Bool? { detail?.mos65xx.modifies_flags }
 
     /// Operand for MOS65xx instructions.
     ///
@@ -32,7 +32,7 @@ extension Mos65xxInstruction: OperandContainer {
         public var type: Mos65xxOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: Mos65xxOperandValue {
+        public var value: Mos65xxOperandValue? {
             switch type {
             case .imm:
                 return immediateValue
@@ -41,24 +41,24 @@ extension Mos65xxInstruction: OperandContainer {
             case .mem:
                 return address
             default:
-                fatalError("Invalid mos65xx operand type \(type.rawValue)")
+                return nil
             }
         }
 
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: Mos65xxReg! {
+        public var register: Mos65xxReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: UInt16! {
+        public var immediateValue: UInt16? {
             guard type == .imm else {
                 return nil
             }
@@ -68,7 +68,7 @@ extension Mos65xxInstruction: OperandContainer {
         /// Address for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var address: UInt32! {
+        public var address: UInt32? {
             guard type == .mem else {
                 return nil
             }

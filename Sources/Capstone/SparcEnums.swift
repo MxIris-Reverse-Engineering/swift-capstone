@@ -1,60 +1,59 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sparc)
 
-
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
 public enum SparcCc: UInt32 {
     /// invalid CC (default)
     case invalid = 0
-    /// Always
-    case iccA = 264
     /// Never
     case iccN = 256
-    /// Not Equal
-    case iccNe = 265
     /// Equal
     case iccE = 257
-    /// Greater
-    case iccG = 266
     /// Less or Equal
     case iccLe = 258
-    /// Greater or Equal
-    case iccGe = 267
     /// Less
     case iccL = 259
-    /// Greater Unsigned
-    case iccGu = 268
     /// Less or Equal Unsigned
     case iccLeu = 260
-    /// Carry Clear/Great or Equal Unsigned
-    case iccCc = 269
     /// Carry Set/Less Unsigned
     case iccCs = 261
-    /// Positive
-    case iccPos = 270
     /// Negative
     case iccNeg = 262
-    /// Overflow Clear
-    case iccVc = 271
     /// Overflow Set
     case iccVs = 263
     /// Always
-    case fccA = 280
+    case iccA = 264
+    /// Not Equal
+    case iccNe = 265
+    /// Greater
+    case iccG = 266
+    /// Greater or Equal
+    case iccGe = 267
+    /// Greater Unsigned
+    case iccGu = 268
+    /// Carry Clear/Great or Equal Unsigned
+    case iccCc = 269
+    /// Positive
+    case iccPos = 270
+    /// Overflow Clear
+    case iccVc = 271
     /// Never
     case fccN = 272
-    /// Unordered
-    case fccU = 279
-    /// Greater
-    case fccG = 278
-    /// Unordered or Greater
-    case fccUg = 277
-    /// Less
-    case fccL = 276
-    /// Unordered or Less
-    case fccUl = 275
-    /// Less or Greater
-    case fccLg = 274
     /// Not Equal
     case fccNe = 273
+    /// Less or Greater
+    case fccLg = 274
+    /// Unordered or Less
+    case fccUl = 275
+    /// Less
+    case fccL = 276
+    /// Unordered or Greater
+    case fccUg = 277
+    /// Greater
+    case fccG = 278
+    /// Unordered
+    case fccU = 279
+    /// Always
+    case fccA = 280
     /// Equal
     case fccE = 281
     /// Unordered or Equal
@@ -69,130 +68,44 @@ public enum SparcCc: UInt32 {
     case fccUle = 286
     /// Ordered
     case fccO = 287
+}
 
+/// Group of SPARC instructions
+public enum SparcGrp: UInt8 {
+    /// = CS_GRP_INVALID
+    case invalid = 0
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// Architecture-specific groups
+    case hardquad = 128
+    /// Architecture-specific groups
+    case v9 = 129
+    /// Architecture-specific groups
+    case vis = 130
+    /// Architecture-specific groups
+    case vis2 = 131
+    /// Architecture-specific groups
+    case vis3 = 132
+    /// Architecture-specific groups
+    case _32bit = 133
+    /// Architecture-specific groups
+    case _64bit = 134
+    /// <-- mark the end of the list of groups
+    case ending = 135
 }
 
 /// Branch hint
 public struct SparcHint: OptionSet {
-    public typealias RawValue = UInt32
-    public let rawValue: RawValue
-    public init(rawValue: RawValue) { self.rawValue = rawValue }
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
+    /// no hint
+    public static let invalid: SparcHint = []
     /// annul delay slot instruction
-    public static let a = SparcHint(rawValue: 1<<0)
+    public static let a = SparcHint(rawValue: 1)
     /// branch taken
-    public static let pt = SparcHint(rawValue: 1<<1)
+    public static let pt = SparcHint(rawValue: 2)
     /// branch NOT taken
-    public static let pn = SparcHint(rawValue: 1<<2)
-
-}
-
-/// Operand type for instruction's operands
-public enum SparcOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-
-}
-
-/// SPARC registers
-public enum SparcReg: UInt16 {
-    case invalid = 0
-    case f0 = 1
-    case f1 = 2
-    case f2 = 3
-    case f3 = 4
-    case f4 = 5
-    case f5 = 6
-    case f6 = 7
-    case f7 = 8
-    case f8 = 9
-    case f9 = 10
-    case f10 = 11
-    case f11 = 12
-    case f12 = 13
-    case f13 = 14
-    case f14 = 15
-    case f15 = 16
-    case f16 = 17
-    case f17 = 18
-    case f18 = 19
-    case f19 = 20
-    case f20 = 21
-    case f21 = 22
-    case f22 = 23
-    case f23 = 24
-    case f24 = 25
-    case f25 = 26
-    case f26 = 27
-    case f27 = 28
-    case f28 = 29
-    case f29 = 30
-    case f30 = 31
-    case f31 = 32
-    case f32 = 33
-    case f34 = 34
-    case f36 = 35
-    case f38 = 36
-    case f40 = 37
-    case f42 = 38
-    case f44 = 39
-    case f46 = 40
-    case f48 = 41
-    case f50 = 42
-    case f52 = 43
-    case f54 = 44
-    case f56 = 45
-    case f58 = 46
-    case f60 = 47
-    case f62 = 48
-    case fcc0 = 49
-    case fcc1 = 50
-    case fcc2 = 51
-    case fcc3 = 52
-    case fp = 53
-    case g0 = 54
-    case g1 = 55
-    case g2 = 56
-    case g3 = 57
-    case g4 = 58
-    case g5 = 59
-    case g6 = 60
-    case g7 = 61
-    case i0 = 62
-    case i1 = 63
-    case i2 = 64
-    case i3 = 65
-    case i4 = 66
-    case i5 = 67
-    case i7 = 68
-    case icc = 69
-    case l0 = 70
-    case l1 = 71
-    case l2 = 72
-    case l3 = 73
-    case l4 = 74
-    case l5 = 75
-    case l6 = 76
-    case l7 = 77
-    case o0 = 78
-    case o1 = 79
-    case o2 = 80
-    case o3 = 81
-    case o4 = 82
-    case o5 = 83
-    case o7 = 84
-    case sp = 85
-    case y = 86
-    case xcc = 87
-    case ending = 88
-    public static let o6 = 85
-    public static let i6 = 53
-
+    public static let pn = SparcHint(rawValue: 4)
 }
 
 /// SPARC instruction
@@ -474,25 +387,123 @@ public enum SparcIns: UInt32 {
     case xnor = 274
     case xorcc = 275
     case xor = 276
+    /// alias instructions
     case ret = 277
+    /// alias instructions
     case retl = 278
+    /// <-- mark the end of the list of instructions
     case ending = 279
-
 }
 
-/// Group of SPARC instructions
-public enum SparcGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum SparcOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    case hardquad = 128
-    case v9 = 129
-    case vis = 130
-    case vis2 = 131
-    case vis3 = 132
-    case grp32bit = 133
-    case grp64bit = 134
-    case ending = 135
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
 }
 
+/// SPARC registers
+public enum SparcReg: UInt16 {
+    case invalid = 0
+    case f0 = 1
+    case f1 = 2
+    case f2 = 3
+    case f3 = 4
+    case f4 = 5
+    case f5 = 6
+    case f6 = 7
+    case f7 = 8
+    case f8 = 9
+    case f9 = 10
+    case f10 = 11
+    case f11 = 12
+    case f12 = 13
+    case f13 = 14
+    case f14 = 15
+    case f15 = 16
+    case f16 = 17
+    case f17 = 18
+    case f18 = 19
+    case f19 = 20
+    case f20 = 21
+    case f21 = 22
+    case f22 = 23
+    case f23 = 24
+    case f24 = 25
+    case f25 = 26
+    case f26 = 27
+    case f27 = 28
+    case f28 = 29
+    case f29 = 30
+    case f30 = 31
+    case f31 = 32
+    case f32 = 33
+    case f34 = 34
+    case f36 = 35
+    case f38 = 36
+    case f40 = 37
+    case f42 = 38
+    case f44 = 39
+    case f46 = 40
+    case f48 = 41
+    case f50 = 42
+    case f52 = 43
+    case f54 = 44
+    case f56 = 45
+    case f58 = 46
+    case f60 = 47
+    case f62 = 48
+    /// Floating condition codes
+    case fcc0 = 49
+    case fcc1 = 50
+    case fcc2 = 51
+    case fcc3 = 52
+    case fp = 53
+    /// extras
+    public static let i6 = 53
+    case g0 = 54
+    case g1 = 55
+    case g2 = 56
+    case g3 = 57
+    case g4 = 58
+    case g5 = 59
+    case g6 = 60
+    case g7 = 61
+    case i0 = 62
+    case i1 = 63
+    case i2 = 64
+    case i3 = 65
+    case i4 = 66
+    case i5 = 67
+    case i7 = 68
+    /// Integer condition codes
+    case icc = 69
+    case l0 = 70
+    case l1 = 71
+    case l2 = 72
+    case l3 = 73
+    case l4 = 74
+    case l5 = 75
+    case l6 = 76
+    case l7 = 77
+    case o0 = 78
+    case o1 = 79
+    case o2 = 80
+    case o3 = 81
+    case o4 = 82
+    case o5 = 83
+    case o7 = 84
+    case sp = 85
+    /// extras
+    public static let o6 = 85
+    case y = 86
+    /// special register
+    case xcc = 87
+    /// <-- mark the end of the list of registers
+    case ending = 88
+}

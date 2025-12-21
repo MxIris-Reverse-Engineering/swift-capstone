@@ -24,7 +24,7 @@ extension WasmInstruction: OperandContainer {
         public var type: WasmOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: WasmOperandValue {
+        public var value: WasmOperandValue? {
             switch type {
             // can an operand type be none?
             case .int7:
@@ -48,7 +48,7 @@ extension WasmInstruction: OperandContainer {
         }
 
         /// Value for `int7` operand.
-        public var int7Value: Int8! {
+        public var int7Value: Int8? {
             guard type == .int7 else {
                 return nil
             }
@@ -56,7 +56,7 @@ extension WasmInstruction: OperandContainer {
         }
 
         /// Value for `uint32` or `varuint32` operand.
-        public var uint32Value: UInt32! {
+        public var uint32Value: UInt32? {
             switch type {
             case .uint32:
                 return op.uint32
@@ -68,7 +68,7 @@ extension WasmInstruction: OperandContainer {
         }
 
         /// Value for `uint64` or `varuint64` operand.
-        public var uint64Value: UInt64! {
+        public var uint64Value: UInt64? {
             switch type {
             case .uint64:
                 return op.uint64
@@ -80,7 +80,7 @@ extension WasmInstruction: OperandContainer {
         }
 
         /// Values for `imm` operand.
-        public var immediateValues: [UInt32]! {
+        public var immediateValues: [UInt32]? {
             guard type == .imm else {
                 return nil
             }
@@ -88,7 +88,7 @@ extension WasmInstruction: OperandContainer {
         }
 
         /// Value for `brtable` operand.
-        public var branchTableValue: BranchTable! {
+        public var branchTableValue: BranchTable? {
             guard type == .brtable else {
                 return nil
             }

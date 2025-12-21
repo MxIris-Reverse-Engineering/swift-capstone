@@ -26,7 +26,7 @@ extension BpfInstruction: OperandContainer {
         public var type: BpfOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: BpfOperandValue {
+        public var value: BpfOperandValue? {
             switch type {
             case .reg:
                 return register
@@ -53,15 +53,19 @@ extension BpfInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: BpfReg! {
+        public var register: BpfReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            let reg = BpfReg(rawValue: numericCast(op.reg))
+            if reg == .invalid {
+                return nil
+            }
+            return reg
         }
 
         /// Immediate value for `imm` operand.
-        public var immediateValue: UInt64! {
+        public var immediateValue: UInt64? {
             guard type == .imm else {
                 return nil
             }
@@ -69,7 +73,7 @@ extension BpfInstruction: OperandContainer {
         }
 
         /// Offset value for `off` operand.
-        public var offsetValue: UInt32! {
+        public var offsetValue: UInt32? {
             guard type == .off else {
                 return nil
             }
@@ -77,7 +81,7 @@ extension BpfInstruction: OperandContainer {
         }
 
         /// Base/displacement value for `mem` operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }
@@ -86,7 +90,7 @@ extension BpfInstruction: OperandContainer {
         }
 
         /// Scratch memory index for `mmem` operand.
-        public var scratchIndex: UInt32! {
+        public var scratchIndex: UInt32? {
             guard type == .mmem else {
                 return nil
             }
@@ -94,7 +98,7 @@ extension BpfInstruction: OperandContainer {
         }
 
         /// Value for `msh` operand.
-        public var msh: UInt32! {
+        public var msh: UInt32? {
             guard type == .msh else {
                 return nil
             }
@@ -102,7 +106,7 @@ extension BpfInstruction: OperandContainer {
         }
 
         /// Extension  for `ext` operand.
-        public var `extension`: BpfExt! {
+        public var `extension`: BpfExt? {
             guard type == .ext else {
                 return nil
             }

@@ -1,99 +1,5 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M680x)
 
-public enum M680xOperand: UInt32 {
-    case count = 9
-
-}
-
-/// M680X registers and special registers
-public enum M680xReg: UInt16 {
-    case invalid = 0
-    /// M6800/1/2/3/9, HD6301/9
-    case a = 1
-    /// M6800/1/2/3/9, HD6301/9
-    case b = 2
-    /// HD6309
-    case e = 3
-    /// HD6309
-    case f = 4
-    /// HD6309
-    case reg0 = 5
-    /// M6801/3/9, HD6301/9
-    case d = 6
-    /// HD6309
-    case w = 7
-    /// M6800/1/2/3/9, M6301/9
-    case cc = 8
-    /// M6809/M6309
-    case dp = 9
-    /// M6309
-    case md = 10
-    /// M6808
-    case hx = 11
-    /// M6808
-    case h = 12
-    /// M6800/1/2/3/9, M6301/9
-    case x = 13
-    /// M6809/M6309
-    case y = 14
-    /// M6809/M6309
-    case s = 15
-    /// M6809/M6309
-    case u = 16
-    /// M6309
-    case v = 17
-    /// M6309
-    case q = 18
-    /// M6800/1/2/3/9, M6301/9
-    case pc = 19
-    /// CPU12
-    case tmp2 = 20
-    /// CPU12
-    case tmp3 = 21
-    /// <-- mark the end of the list of registers
-    case ending = 22
-
-}
-
-/// Operand type for instruction's operands
-public enum M680xOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// = Register operand.
-    case register = 1
-    /// = Immediate operand.
-    case immediate = 2
-    /// = Indexed addressing operand.
-    case indexed = 3
-    /// = Extended addressing operand.
-    case extended = 4
-    /// = Direct addressing operand.
-    case direct = 5
-    /// = Relative addressing operand.
-    case relative = 6
-    /// = constant operand (Displayed as number only).
-    case constant = 7
-
-}
-
-public enum M680xOffset: UInt32 {
-    case none = 0
-    case bits5 = 5
-    case bits8 = 8
-    case bits9 = 9
-    case bits16 = 16
-}
-
-public struct M680xIdx: OptionSet {
-    public typealias RawValue = UInt8
-    public let rawValue: RawValue
-    public init(rawValue: RawValue) { self.rawValue = rawValue }
-    public static let indirect = M680xIdx(rawValue: 1)
-    public static let noComma = M680xIdx(rawValue: 2)
-    public static let postIncDec = M680xIdx(rawValue: 4)
-
-}
-
 /// Group of M680X instructions
 public enum M680xGrp: UInt8 {
     case invalid = 0
@@ -111,16 +17,16 @@ public enum M680xGrp: UInt8 {
     case priv = 6
     /// = CS_GRP_BRANCH_RELATIVE
     case brarel = 7
+    /// <-- mark the end of the list of groups
     case ending = 8
 }
 
-public struct M680xOpFlags: OptionSet {
-    public typealias RawValue = UInt8
-    public let rawValue: RawValue
-    public init(rawValue: RawValue) { self.rawValue = rawValue }
-    public static let firstOpInMnem = M680xOpFlags(rawValue: 1)
-    public static let secondOpInMnem = M680xOpFlags(rawValue: 2)
-
+public struct M680xIdx: OptionSet {
+    public let rawValue: UInt8
+    public init(rawValue: UInt8) { self.rawValue = rawValue }
+    public static let indirect = M680xIdx(rawValue: 1)
+    public static let noComma = M680xIdx(rawValue: 2)
+    public static let postIncDec = M680xIdx(rawValue: 4)
 }
 
 /// M680X instruction IDs
@@ -519,6 +425,90 @@ public enum M680xIns: UInt32 {
     /// HD6301
     case xgdx = 355
     case xgdy = 356
+    /// <-- mark the end of the list of instructions
     case ending = 357
 }
 
+public enum M680xOffset: UInt8 {
+    case none = 0
+    case bits5 = 5
+    case bits8 = 8
+    case bits9 = 9
+    case bits16 = 16
+}
+
+/// Operand type for instruction's operands
+public enum M680xOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
+    case invalid = 0
+    /// = Register operand.
+    case register = 1
+    /// = Immediate operand.
+    case immediate = 2
+    /// = Indexed addressing operand.
+    case indexed = 3
+    /// = Extended addressing operand.
+    case extended = 4
+    /// = Direct addressing operand.
+    case direct = 5
+    /// = Relative addressing operand.
+    case relative = 6
+    /// = constant operand (Displayed as number only). Used e.g. for a bit index or page number.
+    case constant = 7
+}
+
+public struct M680xOpFlags: OptionSet {
+    public let rawValue: UInt8
+    public init(rawValue: UInt8) { self.rawValue = rawValue }
+    public static let firstOpInMnem = M680xOpFlags(rawValue: 1)
+    public static let secondOpInMnem = M680xOpFlags(rawValue: 2)
+}
+
+/// M680X registers and special registers
+public enum M680xReg: UInt16 {
+    case invalid = 0
+    /// M6800/1/2/3/9, HD6301/9
+    case a = 1
+    /// M6800/1/2/3/9, HD6301/9
+    case b = 2
+    /// HD6309
+    case e = 3
+    /// HD6309
+    case f = 4
+    /// HD6309
+    case _0 = 5
+    /// M6801/3/9, HD6301/9
+    case d = 6
+    /// HD6309
+    case w = 7
+    /// M6800/1/2/3/9, M6301/9
+    case cc = 8
+    /// M6809/M6309
+    case dp = 9
+    /// M6309
+    case md = 10
+    /// M6808
+    case hx = 11
+    /// M6808
+    case h = 12
+    /// M6800/1/2/3/9, M6301/9
+    case x = 13
+    /// M6809/M6309
+    case y = 14
+    /// M6809/M6309
+    case s = 15
+    /// M6809/M6309
+    case u = 16
+    /// M6309
+    case v = 17
+    /// M6309
+    case q = 18
+    /// M6800/1/2/3/9, M6301/9
+    case pc = 19
+    /// CPU12
+    case tmp2 = 20
+    /// CPU12
+    case tmp3 = 21
+    /// <-- mark the end of the list of registers
+    case ending = 22
+}

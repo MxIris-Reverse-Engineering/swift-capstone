@@ -12,12 +12,12 @@ extension SparcInstruction: OperandContainer {
     /// Condition code.
     ///
     /// `nil` when detail mode is off.
-    public var conditionCode: SparcCc! { optionalEnumCast(detail?.sparc.cc, ignoring: SPARC_CC_INVALID) }
+    public var conditionCode: SparcCc? { optionalEnumCast(detail?.sparc.cc, ignoring: SPARC_CC_INVALID) }
 
     /// Hints.
     ///
     /// `nil` when detail mode is off.
-    public var hint: SparcHint! { optionalEnumCast(detail?.sparc.hint) }
+    public var hint: SparcHint? { optionalEnumCast(detail?.sparc.hint) }
 
     /// Operand for SPARC instructions.
     ///
@@ -32,7 +32,7 @@ extension SparcInstruction: OperandContainer {
         public var type: SparcOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: SparcOperandValue {
+        public var value: SparcOperandValue? {
             switch type {
             case .reg:
                 return register
@@ -48,17 +48,20 @@ extension SparcInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: SparcReg! {
+        public var register: SparcReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard op.reg != SPARC_REG_INVALID else {
+                return nil
+            }
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else {
                 return nil
             }
@@ -68,7 +71,7 @@ extension SparcInstruction: OperandContainer {
         /// Base/index/displacement value for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

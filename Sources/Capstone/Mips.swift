@@ -22,7 +22,7 @@ extension MipsInstruction: OperandContainer {
         public var type: MipsOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: MipsOperandValue {
+        public var value: MipsOperandValue? {
             switch type {
             case .imm:
                 return immediateValue
@@ -38,17 +38,20 @@ extension MipsInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: MipsReg! {
+        public var register: MipsReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard op.reg != MIPS_REG_INVALID else {
+                return nil
+            }
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else {
                 return nil
             }
@@ -58,7 +61,7 @@ extension MipsInstruction: OperandContainer {
         /// Base/displacement value for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

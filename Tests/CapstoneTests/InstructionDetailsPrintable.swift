@@ -92,7 +92,7 @@ extension ArmInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: ArmReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -104,35 +104,48 @@ extension ArmInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register!))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(mem.base)")
-                if let memIndex = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(memIndex)")
-                }
-                if mem.scale != .plus {
-                    print("\t\t\toperands[\(i)].mem.scale: -1")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(Int32(mem.displacement)))")
-                }
-                if let leftShift = mem.leftShift {
-                    print("\t\t\toperands[\(i)].mem.lshift: 0x\(hex(leftShift))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(mem.base)")
+                    if let memIndex = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(memIndex)")
+                    }
+                    if mem.scale != .plus {
+                        print("\t\t\toperands[\(i)].mem.scale: -1")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(Int32(mem.displacement)))")
+                    }
+                    if let leftShift = mem.leftShift {
+                        print("\t\t\toperands[\(i)].mem.lshift: 0x\(hex(leftShift))")
+                    }
                 }
             case .fp:
-                print("\t\toperands[\(i)].type: FP = \(op.doubleValue!)")
+                if let value = op.doubleValue {
+                    print("\t\toperands[\(i)].type: FP = \(value)")
+                }
             case .cimm:
-                print("\t\toperands[\(i)].type: C-IMM = \(op.immediateValue!)")
+                if let immediate = op.immediateValue {
+                    print("\t\toperands[\(i)].type: C-IMM = \(immediate)")
+                }
             case .pimm:
-                print("\t\toperands[\(i)].type: P-IMM = \(op.immediateValue!)")
+                if let immediate = op.immediateValue {
+                    print("\t\toperands[\(i)].type: P-IMM = \(immediate)")
+                }
             case .setend:
-                print("\t\toperands[\(i)].type: SETEND = \(op.setend!)")
+                if let setend = op.setend {
+                    print("\t\toperands[\(i)].type: SETEND = \(setend)")
+                }
             case .sysreg:
-                print("\t\toperands[\(i)].type: SYSREG = \(op.systemRegister!.rawValue)")
+                if let sysreg = op.systemRegister {
+                    print("\t\toperands[\(i)].type: SYSREG = \(sysreg.rawValue)")
+                }
             }
 
             if let neonLane = op.neonLane {
@@ -168,7 +181,7 @@ extension ArmInstruction: InstructionDetailsPrintable {
         printInstructionValue("CPSI-mode", value: cpsMode?.mode)
         printInstructionValue("CPSI-flag", value: cpsMode?.flag)
         printInstructionValue("Vector-data", value: vectorDataType)
-        if vectorSize > 0 {
+        if let vectorSize, vectorSize > 0 {
             printInstructionValue("Vector-size", value: vectorSize)
         }
         printInstructionValue("User-mode", value: usermode)
@@ -196,7 +209,7 @@ extension Arm64Instruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: Arm64Reg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -208,35 +221,44 @@ extension Arm64Instruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register!))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(mem.base)")
-                if let memIndex = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(memIndex)")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(Int32(mem.displacement)))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(mem.base)")
+                    if let memIndex = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(memIndex)")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(Int32(mem.displacement)))")
+                    }
                 }
             case .fp:
-                print("\t\toperands[\(i)].type: FP = \(op.doubleValue!)")
+                if let value = op.doubleValue {
+                    print("\t\toperands[\(i)].type: FP = \(value)")
+                }
             case .cimm:
-                print("\t\toperands[\(i)].type: C-IMM = \(op.immediateValue!)")
+                if let immediate = op.immediateValue {
+                    print("\t\toperands[\(i)].type: C-IMM = \(immediate)")
+                }
             case .regMrs:
-                print("\t\toperands[\(i)].type: REG_MRS = 0x\(hex(op.systemRegister!.rawValue))")
+                printInstructionValue("operands[\(i)].type: REG_MRS", hex: op.systemRegister?.rawValue)
             case .regMsr:
-                print("\t\toperands[\(i)].type: REG_MSR = 0x\(hex(op.systemRegister!.rawValue))")
+                printInstructionValue("operands[\(i)].type: REG_MSR", hex: op.systemRegister?.rawValue)
             case .pstate:
-                print("\t\toperands[\(i)].type: PSTATE = 0x\(hex(op.pState!.rawValue))")
+                printInstructionValue("operands[\(i)].type: PSTATE", hex: op.pState?.rawValue)
             case .sys:
-                print("\t\toperands[\(i)].type: SYS = 0x\(hex(op.systemRegister.rawValue))")
+                if let sys = op.systemRegister {
+                    print("\t\toperands[\(i)].type: SYS = 0x\(hex(sys.rawValue))")
+                }
             case .prefetch:
-                print("\t\toperands[\(i)].type: PREFETCH = 0x\(hex(op.prefetch!.rawValue))")
+                printInstructionValue("operands[\(i)].type: PREFETCH", hex: op.prefetch?.rawValue)
             case .barrier:
-                print("\t\toperands[\(i)].type: BARRIER = 0x\(hex(op.barrier!.rawValue))")
+                printInstructionValue("operands[\(i)].type: BARRIER", hex: op.barrier?.rawValue)
             default:
                 break
             }
@@ -280,7 +302,7 @@ extension PowerPCInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: PpcReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -292,22 +314,28 @@ extension PowerPCInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register!))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                if let reg = op.memory.base {
-                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(reg))")
-                }
-                if op.memory.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(op.memory.displacement))")
+                if let memory = op.memory {
+                    if let reg = memory.base {
+                        print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(reg))")
+                    }
+                    if memory.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(memory.displacement))")
+                    }
                 }
             case .crx:
                 print("\t\toperands[\(i)].type: CRX")
-                print("\t\t\toperands[\(i)].crx.scale: \(op.condition.scale)")
-                print("\t\t\toperands[\(i)].crx.reg: \(registerName(op.condition.register))")
-                print("\t\t\toperands[\(i)].crx.cond: \(op.condition.condition)")
+                if let condition = op.condition {
+                    print("\t\t\toperands[\(i)].crx.scale: \(condition.scale)")
+                    print("\t\t\toperands[\(i)].crx.reg: \(registerName(condition.register))")
+                    print("\t\t\toperands[\(i)].crx.cond: \(condition.condition)")
+                }
             }
         }
 
@@ -343,7 +371,7 @@ extension X86Instruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: X86Reg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         print("\tPrefix:\(formattedPrefix)")
@@ -351,9 +379,9 @@ extension X86Instruction: InstructionDetailsPrintable {
         printInstructionValue("rex", hex: rex ?? 0) // match C test output
         printInstructionValue("addr_size", value: addressSize)
         printInstructionValue("modrm", hex: modRM)
-        printInstructionValue("modrm_offset", hex: encoding.modRMOffset)
+        printInstructionValue("modrm_offset", hex: encoding?.modRMOffset)
         printInstructionValue("disp", hex: displacement ?? 0) // match C test output
-        if let disp = encoding.displacement {
+        if let disp = encoding?.displacement {
             printInstructionValue("disp_offset", hex: disp.offset)
             printInstructionValue("disp_size", hex: disp.size)
         }
@@ -368,7 +396,7 @@ extension X86Instruction: InstructionDetailsPrintable {
         printInstructionValue("xop_cc", value: xopConditionCode)
         printInstructionValue("sse_cc", value: sseConditionCode)
         printInstructionValue("avx_cc", value: avxConditionCode)
-        if avxSuppressAllException {
+        if avxSuppressAllException == true {
             printInstructionValue("avx_sae", value: 1)
         }
         printInstructionValue("avx_rm", value: avxStaticRoundingMode)
@@ -379,8 +407,8 @@ extension X86Instruction: InstructionDetailsPrintable {
             printInstructionValue("imm_count", value: imms.count)
         }
         for (i, imm) in imms.enumerated() {
-            print("\t\timms[\(i+1)]: 0x\(hex(imm.immediateValue))")
-            if let enc = encoding.immediate {
+            printInstructionValue("\t\timms[\(i+1)]:", hex: imm.immediateValue)
+            if let enc = encoding?.immediate {
                 printInstructionValue("imm_offset", hex: enc.offset)
                 printInstructionValue("imm_size", hex: enc.size)
             }
@@ -396,25 +424,27 @@ extension X86Instruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue))")
+                printInstructionValue("\t\toperands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                if let segment = op.memory.segment {
+                if let segment = op.memory?.segment {
                     print("\t\t\toperands[\(i)].mem.segment: REG = \(registerName(segment))")
                 }
-                if let base = op.memory.base {
+                if let base = op.memory?.base {
                     print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(base))")
                 }
-                if let index = op.memory.index {
+                if let index = op.memory?.index {
                     print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(index))")
                 }
-                if op.memory.scale != 1 {
-                    print("\t\t\toperands[\(i)].mem.scale: \(op.memory.scale)")
+                if let scale = op.memory?.scale, scale != 1 {
+                    print("\t\t\toperands[\(i)].mem.scale: \(scale)")
                 }
-                if op.memory.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(op.memory.displacement))")
+                if let displacement = op.memory?.displacement, displacement != 0 {
+                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(displacement))")
                 }
             }
 
@@ -446,7 +476,7 @@ extension M68kInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: M68kReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -469,39 +499,54 @@ extension M68kInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                let imm32 = UInt32(op.immediateValue! & 0xffffffff)
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(imm32))")
+                if let immediateValue = op.immediateValue {
+                    let imm32 = UInt32(immediateValue & 0xffffffff)
+                    print("\t\toperands[\(i)].type: IMM = 0x\(hex(imm32))")
+                }
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                if let base = mem.base {
-                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(base))")
+                if let mem = op.memory {
+                    if let base = mem.base {
+                        print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(base))")
+                    }
+                    if let index = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(index.register))")
+                        print("\t\t\toperands[\(i)].mem.index: size = \(String(describing: index.size).prefix(1))")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                    }
+                    if let scale = mem.index?.scale, scale != 0 {
+                        print("\t\t\toperands[\(i)].mem.scale: \(scale)")
+                    }
                 }
-                if let index = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(index.register))")
-                    print("\t\t\toperands[\(i)].mem.index: size = \(String(describing: index.size).prefix(1))")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
-                }
-                if let scale = mem.index?.scale, scale != 0 {
-                    print("\t\t\toperands[\(i)].mem.scale: \(scale)")
-                }
-                print("\t\taddress mode: \(op.addressingMode)")
+                print("\t\taddress mode: \(String(describing: op.addressingMode))")
             case .fpSingle:
                 print("\t\toperands[\(i)].type: FP_SINGLE")
-                print("\t\t\toperands[\(i)].simm: \(String(format: "%f", op.floatValue!))")
+                if let floatValue = op.floatValue {
+                    print("\t\t\toperands[\(i)].simm: \(String(format: "%f", floatValue))")
+                }
             case .fpDouble:
                 print("\t\toperands[\(i)].type: FP_DOUBLE")
-                print("\t\t\toperands[\(i)].dimm: \(String(format: "%lf", op.doubleValue!))")
+                if let doubleValue = op.doubleValue {
+                    print("\t\t\toperands[\(i)].dimm: \(String(format: "%lf", doubleValue))")
+                }
             case .regBits:
-                print("\t\toperands[\(i)].type: REG_BITS = $\(hex(op.registerList.registerBits))")
+                if let registerList = op.registerList {
+                    print("\t\toperands[\(i)].type: REG_BITS = $\(hex(registerList.registerBits))")
+                }
             case .regPair:
-                break
+                if let registerPair = op.registerPair {
+                    print("\t\toperands[\(i)].type: REG_PAIR = \(registerPair)")
+                }
             case .brDisp:
-                break
+                if let branchDisplacement = op.branchDisplacement {
+                    print("\t\toperands[\(i)].type: BR_DISP = \(branchDisplacement.value)")
+                }
             }
         }
 
@@ -517,7 +562,7 @@ extension SparcInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: SparcReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -529,24 +574,27 @@ extension SparcInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
-                if let index = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(index))")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
+                    if let index = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(index))")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                    }
                 }
             }
         }
 
         printInstructionValue("Code condition", value: conditionCode)
-        if !hint.isEmpty {
+        if let hint, !hint.isEmpty {
             printInstructionValue("Hint code", value: hint)
         }
         print()
@@ -560,9 +608,15 @@ extension EthereumInstruction: InstructionDetailsPrintable {
             return
         }
 
-        print("\tPop:     \(pop!)")
-        print("\tPush:    \(push!)")
-        print("\tGas fee: \(fee!)")
+        if let pop {
+            print("\tPop:     \(pop)")
+        }
+        if let push {
+            print("\tPush:    \(push)")
+        }
+        if let fee {
+            print("\tGas fee: \(fee)")
+        }
 
         if !groups.isEmpty {
             print("\tGroups: \(groupNames.joined(separator: " ")) ")
@@ -579,7 +633,7 @@ extension MipsInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: MipsReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -591,15 +645,18 @@ extension MipsInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                    }
                 }
             }
         }
@@ -621,7 +678,7 @@ extension M680xInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: M680xReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -634,39 +691,51 @@ extension M680xInstruction: InstructionDetailsPrintable {
                 fatalError("Invalid operand")
             case .register:
                 let comment = op.isInMnemonic ? " (in mnemonic)" : ""
-                print("\t\toperands[\(i)].type: REGISTER = \(registerName(op.register))\(comment)")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REGISTER = \(registerName(register))\(comment)")
+                }
             case .constant:
-                print("\t\toperands[\(i)].type: CONSTANT = \(op.constantValue!)")
+                if let constantValue = op.constantValue {
+                    print("\t\toperands[\(i)].type: CONSTANT = \(constantValue)")
+                }
             case .immediate:
-                print("\t\toperands[\(i)].type: IMMEDIATE = #\(op.immediateValue!)")
+                if let immediateValue = op.immediateValue {
+                    print("\t\toperands[\(i)].type: IMMEDIATE = #\(immediateValue)")
+                }
             case .direct:
-                print("\t\toperands[\(i)].type: DIRECT = 0x\(hex(op.directAddress!, uppercase: true, digits: 2))")
+                if let address = op.directAddress {
+                    print("\t\toperands[\(i)].type: DIRECT = 0x\(hex(address, uppercase: true, digits: 2))")
+                }
             case .extended:
-                let ext = op.extendedAddress!
-                print("\t\toperands[\(i)].type: EXTENDED \(ext.indirect ? "INDIRECT" : "") = 0x\(hex(ext.address, uppercase: true, digits: 4))")
+                if let ext = op.extendedAddress {
+                    print("\t\toperands[\(i)].type: EXTENDED \(ext.indirect ? "INDIRECT" : "") = 0x\(hex(ext.address, uppercase: true, digits: 4))")
+                }
             case .relative:
-                print("\t\toperands[\(i)].type: RELATIVE = 0x\(hex(op.relativeAddress.address, uppercase: true, digits: 4))")
+                if let address = op.relativeAddress?.address {
+                    print("\t\toperands[\(i)].type: RELATIVE = 0x\(hex(address, uppercase: true, digits: 4))")
+                }
             case .indexed:
-                let idx = op.indexedAddress!
-                print("\t\toperands[\(i)].type: INDEXED" + (idx.indirect ? " INDIRECT" : ""))
-                if let reg = idx.base {
-                    print("\t\t\tbase register: \(registerName(reg))")
-                }
-                if let reg = idx.offset.register {
-                    print("\t\t\toffset register: \(registerName(reg))")
-                }
-                if idx.offset.width != .none && idx.incDec == 0 {
-                    print("\t\t\toffset: \(idx.offset.value)")
-                    if idx.base == .pc {
-                        print("\t\t\toffset address: 0x\(hex(idx.offset.address, uppercase: true))")
+                if let idx = op.indexedAddress {
+                    print("\t\toperands[\(i)].type: INDEXED" + (idx.indirect ? " INDIRECT" : ""))
+                    if let reg = idx.base {
+                        print("\t\t\tbase register: \(registerName(reg))")
                     }
-                    print("\t\t\toffset bits: \(idx.offset.width.rawValue)")
-                }
-                if idx.incDec != 0 {
-                    let value = idx.incDec
-                    let postPre = idx.pre ? "pre" : "post"
-                    let incDec = value > 0 ? "increment" : "decrement"
-                    print("\t\t\t\(postPre) \(incDec): \(abs(value))")
+                    if let reg = idx.offset.register {
+                        print("\t\t\toffset register: \(registerName(reg))")
+                    }
+                    if idx.offset.width != .none && idx.incDec == 0 {
+                        print("\t\t\toffset: \(idx.offset.value)")
+                        if idx.base == .pc {
+                            print("\t\t\toffset address: 0x\(hex(idx.offset.address, uppercase: true))")
+                        }
+                        print("\t\t\toffset bits: \(idx.offset.width.rawValue)")
+                    }
+                    if idx.incDec != 0 {
+                        let value = idx.incDec
+                        let postPre = idx.pre ? "pre" : "post"
+                        let incDec = value > 0 ? "increment" : "decrement"
+                        print("\t\t\t\(postPre) \(incDec): \(abs(value))")
+                    }
                 }
             }
 
@@ -696,7 +765,7 @@ extension SystemZInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: SyszReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -708,23 +777,28 @@ extension SystemZInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .acreg:
-                print("\t\toperands[\(i)].type: ACREG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: ACREG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
-                if let idx = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(idx))")
-                }
-                if mem.length != 0 {
-                    print("\t\t\toperands[\(i)].mem.length: 0x\(hex(mem.length))")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
+                    if let idx = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(idx))")
+                    }
+                    if mem.length != 0 {
+                        print("\t\t\toperands[\(i)].mem.length: 0x\(hex(mem.length))")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                    }
                 }
             }
         }
@@ -743,7 +817,7 @@ extension XCoreInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: XcoreReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -755,18 +829,21 @@ extension XCoreInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
-                if let idx = mem.index {
-                    print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(idx))")
-                }
-                if mem.displacement != 0 {
-                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
+                    if let idx = mem.index {
+                        print("\t\t\toperands[\(i)].mem.index: REG = \(registerName(idx))")
+                    }
+                    if mem.displacement != 0 {
+                        print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(mem.displacement))")
+                    }
                 }
             }
         }
@@ -783,7 +860,7 @@ extension TMS320C64xInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: Tms320c64xReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         if operands.count > 0 {
@@ -795,39 +872,46 @@ extension TMS320C64xInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                let mem = op.memory!
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
-                switch mem.displacement {
-                case .constant(value: let value):
-                    print("\t\t\toperands[\(i)].mem.disptype: Constant")
-                    print("\t\t\toperands[\(i)].mem.disp: \(value)")
-                case .register(register: let reg):
-                    print("\t\t\toperands[\(i)].mem.disptype: Register")
-                    print("\t\t\toperands[\(i)].mem.disp: \(registerName(reg))")
+                if let mem = op.memory {
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(mem.base))")
+                    switch mem.displacement {
+                    case .constant(value: let value):
+                        print("\t\t\toperands[\(i)].mem.disptype: Constant")
+                        print("\t\t\toperands[\(i)].mem.disp: \(value)")
+                    case .register(register: let reg):
+                        print("\t\t\toperands[\(i)].mem.disptype: Register")
+                        print("\t\t\toperands[\(i)].mem.disp: \(registerName(reg))")
+                    }
+                    print("\t\t\toperands[\(i)].mem.unit: \(mem.unit)")
+                    print("\t\t\toperands[\(i)].mem.direction: \(mem.direction)")
+                    print("\t\t\toperands[\(i)].mem.modify: \(mem.modification)")
+                    print("\t\t\toperands[\(i)].mem.scaled: \(mem.scaled)")
                 }
-                print("\t\t\toperands[\(i)].mem.unit: \(mem.unit)")
-                print("\t\t\toperands[\(i)].mem.direction: \(mem.direction)")
-                print("\t\t\toperands[\(i)].mem.modify: \(mem.modification)")
-                print("\t\t\toperands[\(i)].mem.scaled: \(mem.scaled)")
             case .regpair:
-                print("\t\toperands[\(i)].type: REGPAIR = \(op.registerPair.map({ registerName($0) }).joined(separator: ":"))")
+                if let registerPair = op.registerPair {
+                    print("\t\toperands[\(i)].type: REGPAIR = \(registerPair.map({ registerName($0) }).joined(separator: ":"))")
+                }
             }
         }
 
-        print("\tFunctional unit: \(functionalUnit!)")
-        if crossPath {
+        if let functionalUnit {
+            print("\tFunctional unit: \(functionalUnit)")
+        }
+        if crossPath == true {
             print("\tCrosspath: 1")
         }
 
         if let cc = condition {
             print("\tCondition: [\(cc.zero ? "!" : " ")\(registerName(cc.register))]")
         }
-        print("\tParallel: \(parallel ? "true" : "false")")
+        print("\tParallel: \(parallel == true ? "true" : "false")")
 
         print()
     }
@@ -841,11 +925,15 @@ extension Mos65xxInstruction: InstructionDetailsPrintable {
         }
 
         let registerName = { (reg: Mos65xxReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
-        print("\taddress mode: \(addressingMode!)")
-        print("\tmodifies flags: \(modifiesFlags!)")
+        if let addressingMode {
+            print("\taddress mode: \(addressingMode)")
+        }
+        if let modifiesFlags {
+            print("\tmodifies flags: \(modifiesFlags)")
+        }
 
         if operands.count > 0 {
             print("\top_count: \(operands.count)")
@@ -856,11 +944,13 @@ extension Mos65xxInstruction: InstructionDetailsPrintable {
             case .invalid:
                 fatalError("Invalid operand")
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue!))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
-                print("\t\toperands[\(i)].type: MEM = 0x\(hex(op.address!))")
+                printInstructionValue("operands[\(i)].type: MEM", hex: op.address)
             }
         }
 
@@ -887,11 +977,13 @@ extension WasmInstruction: InstructionDetailsPrintable {
             print("\t\tOperand[\(i)] type: \(op.type)")
             switch op.type {
             case .int7:
-                print("\t\tOperand[\(i)] value: \(op.int7Value!)")
+                if let value = op.int7Value {
+                    print("\t\tOperand[\(i)] value: \(value)")
+                }
             case .uint32, .varuint32:
-                print("\t\tOperand[\(i)] value: 0x\(hex(op.uint32Value!))")
+                printInstructionValue("Operand[\(i)] value", hex: op.uint32Value)
             case .uint64, .varuint64:
-                print("\t\tOperand[\(i)] value: 0x\(hex(op.uint64Value!))")
+                printInstructionValue("Operand[\(i)] value", hex: op.uint64Value)
             default:
                 break
             }
@@ -914,30 +1006,39 @@ extension BpfInstruction: InstructionDetailsPrintable {
         print("\tOperand count: \(operands.count)")
 
         let registerName = { (reg: BpfReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         for (i, op) in operands.enumerated() {
             switch op.type {
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .off:
-                print("\t\toperands[\(i)].type: OFF = +0x\(hex(op.offsetValue))")
+                printInstructionValue("operands[\(i)].type: OFF", hex: op.offsetValue)
             case .mem:
                 print("\t\toperands[\(i)].type: MEM")
-                if let base = op.memory.base {
-                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(base))")
+                if let memory = op.memory {
+                    if let base = memory.base {
+                        print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(base))")
+                    }
+                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(memory.displacement))")
                 }
-                print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(op.memory.displacement))")
             case .mmem:
-                print("\t\toperands[\(i)].type: MMEM = M[0x\(hex(op.scratchIndex))]")
+                if let scratchIndex = op.scratchIndex {
+                    print("\t\toperands[\(i)].type: MMEM = M[0x\(hex(scratchIndex))]")
+                }
             case .msh:
-                print("\t\toperands[\(i)].type: MSH = 4*([0x\(hex(op.msh))]&0xf)")
+                if let msh = op.msh {
+                    print("\t\toperands[\(i)].type: MSH = 4*([0x\(hex(msh))]&0xf)")
+                }
             case .ext:
-                let ext = op.extension!
-                print("\t\toperands[\(i)].type: EXT = #\(ext)")
+                if let ext = op.extension {
+                    print("\t\toperands[\(i)].type: EXT = #\(ext)")
+                }
             default:
                 break
             }
@@ -957,19 +1058,23 @@ extension RiscvInstruction: InstructionDetailsPrintable {
         print("\top_count: \(operands.count)")
 
         let registerName = { (reg: RiscvReg) -> String in
-            cs.name(ofRegister: reg)!
+            cs.name(ofRegister: reg) ?? "\(reg)"
         }
 
         for (i, op) in operands.enumerated() {
             switch op.type {
             case .reg:
-                print("\t\toperands[\(i)].type: REG = \(registerName(op.register))")
+                if let register = op.register {
+                    print("\t\toperands[\(i)].type: REG = \(registerName(register))")
+                }
             case .imm:
-                print("\t\toperands[\(i)].type: IMM = 0x\(hex(op.immediateValue))")
+                printInstructionValue("operands[\(i)].type: IMM", hex: op.immediateValue)
             case .mem:
-                print("\t\toperands[\(i)].type: MEM")
-                print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(op.memory.base))")
-                print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(op.memory.displacement))")
+                if let memory = op.memory {
+                    print("\t\toperands[\(i)].type: MEM")
+                    print("\t\t\toperands[\(i)].mem.base: REG = \(registerName(memory.base))")
+                    print("\t\t\toperands[\(i)].mem.disp: 0x\(hex(memory.displacement))")
+                }
             default:
                 break
             }

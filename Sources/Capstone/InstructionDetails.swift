@@ -48,7 +48,7 @@ extension Instruction {
     /// This API is only valid when detail mode is on (it's off by default).
     /// When in 'diet' mode, this API is irrelevant because engine does not store groups.
     public var groupNames: [String] {
-        getInstructionGroups().compactMap({ String(cString: cs_group_name(mgr.cs.handle, UInt32($0))) })
+        getInstructionGroups().compactMap { cs_group_name(mgr.cs.handle, UInt32($0)).flatMap { String(cString: $0) } }
     }
 
     internal func getInstructionGroups() -> [UInt8] {

@@ -1,6 +1,5 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sysz)
 
-
 /// Enums corresponding to SystemZ condition codes
 public enum SyszCc: UInt32 {
     /// invalid CC (default)
@@ -19,145 +18,74 @@ public enum SyszCc: UInt32 {
     case le = 12
     case nh = 13
     case no = 14
-
 }
 
-/// Operand type for instruction's operands
-public enum SyszOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
+/// Group of SystemZ instructions
+public enum SyszGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-    /// Access register operand.
-    case acreg = 64
-
-}
-
-/// SystemZ registers
-public enum SyszReg: UInt16 {
-    case invalid = 0
-    case reg0 = 1
-    case reg1 = 2
-    case reg2 = 3
-    case reg3 = 4
-    case reg4 = 5
-    case reg5 = 6
-    case reg6 = 7
-    case reg7 = 8
-    case reg8 = 9
-    case reg9 = 10
-    case reg10 = 11
-    case reg11 = 12
-    case reg12 = 13
-    case reg13 = 14
-    case reg14 = 15
-    case reg15 = 16
-    case cc = 17
-    case f0 = 18
-    case f1 = 19
-    case f2 = 20
-    case f3 = 21
-    case f4 = 22
-    case f5 = 23
-    case f6 = 24
-    case f7 = 25
-    case f8 = 26
-    case f9 = 27
-    case f10 = 28
-    case f11 = 29
-    case f12 = 30
-    case f13 = 31
-    case f14 = 32
-    case f15 = 33
-    case r0l = 34
-    case a0 = 35
-    case a1 = 36
-    case a2 = 37
-    case a3 = 38
-    case a4 = 39
-    case a5 = 40
-    case a6 = 41
-    case a7 = 42
-    case a8 = 43
-    case a9 = 44
-    case a10 = 45
-    case a11 = 46
-    case a12 = 47
-    case a13 = 48
-    case a14 = 49
-    case a15 = 50
-    case c0 = 51
-    case c1 = 52
-    case c2 = 53
-    case c3 = 54
-    case c4 = 55
-    case c5 = 56
-    case c6 = 57
-    case c7 = 58
-    case c8 = 59
-    case c9 = 60
-    case c10 = 61
-    case c11 = 62
-    case c12 = 63
-    case c13 = 64
-    case c14 = 65
-    case c15 = 66
-    case v0 = 67
-    case v1 = 68
-    case v2 = 69
-    case v3 = 70
-    case v4 = 71
-    case v5 = 72
-    case v6 = 73
-    case v7 = 74
-    case v8 = 75
-    case v9 = 76
-    case v10 = 77
-    case v11 = 78
-    case v12 = 79
-    case v13 = 80
-    case v14 = 81
-    case v15 = 82
-    case v16 = 83
-    case v17 = 84
-    case v18 = 85
-    case v19 = 86
-    case v20 = 87
-    case v21 = 88
-    case v22 = 89
-    case v23 = 90
-    case v24 = 91
-    case v25 = 92
-    case v26 = 93
-    case v27 = 94
-    case v28 = 95
-    case v29 = 96
-    case v30 = 97
-    case v31 = 98
-    case f16 = 99
-    case f17 = 100
-    case f18 = 101
-    case f19 = 102
-    case f20 = 103
-    case f21 = 104
-    case f22 = 105
-    case f23 = 106
-    case f24 = 107
-    case f25 = 108
-    case f26 = 109
-    case f27 = 110
-    case f28 = 111
-    case f29 = 112
-    case f30 = 113
-    case f31 = 114
-    case f0q = 115
-    case f4q = 116
-    case ending = 117
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// Architecture-specific groups
+    case distinctops = 128
+    /// Architecture-specific groups
+    case fpextension = 129
+    /// Architecture-specific groups
+    case highword = 130
+    /// Architecture-specific groups
+    case interlockedaccess1 = 131
+    /// Architecture-specific groups
+    case loadstoreoncond = 132
+    /// Architecture-specific groups
+    case dfppackedconversion = 133
+    /// Architecture-specific groups
+    case dfpzonedconversion = 134
+    /// Architecture-specific groups
+    case enhanceddat2 = 135
+    /// Architecture-specific groups
+    case executionhint = 136
+    /// Architecture-specific groups
+    case guardedstorage = 137
+    /// Architecture-specific groups
+    case insertreferencebitsmultiple = 138
+    /// Architecture-specific groups
+    case loadandtrap = 139
+    /// Architecture-specific groups
+    case loadandzerorightmostbyte = 140
+    /// Architecture-specific groups
+    case loadstoreoncond2 = 141
+    /// Architecture-specific groups
+    case messagesecurityassist3 = 142
+    /// Architecture-specific groups
+    case messagesecurityassist4 = 143
+    /// Architecture-specific groups
+    case messagesecurityassist5 = 144
+    /// Architecture-specific groups
+    case messagesecurityassist7 = 145
+    /// Architecture-specific groups
+    case messagesecurityassist8 = 146
+    /// Architecture-specific groups
+    case miscellaneousextensions = 147
+    /// Architecture-specific groups
+    case miscellaneousextensions2 = 148
+    /// Architecture-specific groups
+    case novector = 149
+    /// Architecture-specific groups
+    case populationcount = 150
+    /// Architecture-specific groups
+    case processorassist = 151
+    /// Architecture-specific groups
+    case resetreferencebitsmultiple = 152
+    /// Architecture-specific groups
+    case transactionalexecution = 153
+    /// Architecture-specific groups
+    case vector = 154
+    /// Architecture-specific groups
+    case vectorenhancements1 = 155
+    /// Architecture-specific groups
+    case vectorpackeddecimal = 156
+    /// <-- mark the end of the list of groups
+    case ending = 157
 }
 
 /// SystemZ instruction
@@ -2508,45 +2436,142 @@ public enum SyszIns: UInt32 {
     case wledb = 2343
     case xsch = 2344
     case zap = 2345
+    /// <-- mark the end of the list of instructions
     case ending = 2346
-
 }
 
-/// Group of SystemZ instructions
-public enum SyszGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum SyszOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    case distinctops = 128
-    case fpextension = 129
-    case highword = 130
-    case interlockedaccess1 = 131
-    case loadstoreoncond = 132
-    case dfppackedconversion = 133
-    case dfpzonedconversion = 134
-    case enhanceddat2 = 135
-    case executionhint = 136
-    case guardedstorage = 137
-    case insertreferencebitsmultiple = 138
-    case loadandtrap = 139
-    case loadandzerorightmostbyte = 140
-    case loadstoreoncond2 = 141
-    case messagesecurityassist3 = 142
-    case messagesecurityassist4 = 143
-    case messagesecurityassist5 = 144
-    case messagesecurityassist7 = 145
-    case messagesecurityassist8 = 146
-    case miscellaneousextensions = 147
-    case miscellaneousextensions2 = 148
-    case novector = 149
-    case populationcount = 150
-    case processorassist = 151
-    case resetreferencebitsmultiple = 152
-    case transactionalexecution = 153
-    case vector = 154
-    case vectorenhancements1 = 155
-    case vectorpackeddecimal = 156
-    case ending = 157
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
+    /// Access register operand.
+    case acreg = 64
 }
 
+/// SystemZ registers
+public enum SyszReg: UInt16 {
+    case invalid = 0
+    case _0 = 1
+    case _1 = 2
+    case _2 = 3
+    case _3 = 4
+    case _4 = 5
+    case _5 = 6
+    case _6 = 7
+    case _7 = 8
+    case _8 = 9
+    case _9 = 10
+    case _10 = 11
+    case _11 = 12
+    case _12 = 13
+    case _13 = 14
+    case _14 = 15
+    case _15 = 16
+    case cc = 17
+    case f0 = 18
+    case f1 = 19
+    case f2 = 20
+    case f3 = 21
+    case f4 = 22
+    case f5 = 23
+    case f6 = 24
+    case f7 = 25
+    case f8 = 26
+    case f9 = 27
+    case f10 = 28
+    case f11 = 29
+    case f12 = 30
+    case f13 = 31
+    case f14 = 32
+    case f15 = 33
+    case r0l = 34
+    case a0 = 35
+    case a1 = 36
+    case a2 = 37
+    case a3 = 38
+    case a4 = 39
+    case a5 = 40
+    case a6 = 41
+    case a7 = 42
+    case a8 = 43
+    case a9 = 44
+    case a10 = 45
+    case a11 = 46
+    case a12 = 47
+    case a13 = 48
+    case a14 = 49
+    case a15 = 50
+    case c0 = 51
+    case c1 = 52
+    case c2 = 53
+    case c3 = 54
+    case c4 = 55
+    case c5 = 56
+    case c6 = 57
+    case c7 = 58
+    case c8 = 59
+    case c9 = 60
+    case c10 = 61
+    case c11 = 62
+    case c12 = 63
+    case c13 = 64
+    case c14 = 65
+    case c15 = 66
+    case v0 = 67
+    case v1 = 68
+    case v2 = 69
+    case v3 = 70
+    case v4 = 71
+    case v5 = 72
+    case v6 = 73
+    case v7 = 74
+    case v8 = 75
+    case v9 = 76
+    case v10 = 77
+    case v11 = 78
+    case v12 = 79
+    case v13 = 80
+    case v14 = 81
+    case v15 = 82
+    case v16 = 83
+    case v17 = 84
+    case v18 = 85
+    case v19 = 86
+    case v20 = 87
+    case v21 = 88
+    case v22 = 89
+    case v23 = 90
+    case v24 = 91
+    case v25 = 92
+    case v26 = 93
+    case v27 = 94
+    case v28 = 95
+    case v29 = 96
+    case v30 = 97
+    case v31 = 98
+    case f16 = 99
+    case f17 = 100
+    case f18 = 101
+    case f19 = 102
+    case f20 = 103
+    case f21 = 104
+    case f22 = 105
+    case f23 = 106
+    case f24 = 107
+    case f25 = 108
+    case f26 = 109
+    case f27 = 110
+    case f28 = 111
+    case f29 = 112
+    case f30 = 113
+    case f31 = 114
+    case f0q = 115
+    case f4q = 116
+    case ending = 117
+}

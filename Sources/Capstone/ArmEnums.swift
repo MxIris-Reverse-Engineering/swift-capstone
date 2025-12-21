@@ -1,419 +1,138 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arm)
 
-
-/// ARM shift type
-public enum ArmSft: UInt32 {
-    case invalid = 0
-    /// shift with immediate const
-    case asr = 1
-    /// shift with immediate const
-    case lsl = 2
-    /// shift with immediate const
-    case lsr = 3
-    /// shift with immediate const
-    case ror = 4
-    /// shift with immediate const
-    case rrx = 5
-    /// shift with register
-    case asrReg = 6
-    /// shift with register
-    case lslReg = 7
-    /// shift with register
-    case lsrReg = 8
-    /// shift with register
-    case rorReg = 9
-    /// shift with register
-    case rrxReg = 10
-
-}
-
 /// ARM condition code
 public enum ArmCc: UInt32 {
     case invalid = 0
-    /// Equal                      Equal
+    /// Equal Equal
     case eq = 1
-    /// Not equal                  Not equal, or unordered
+    /// Not equal Not equal, or unordered
     case ne = 2
-    /// Carry set                  >, ==, or unordered
+    /// Carry set >, ==, or unordered
     case hs = 3
-    /// Carry clear                Less than
+    /// Carry clear Less than
     case lo = 4
-    /// Minus, negative            Less than
+    /// Minus, negative Less than
     case mi = 5
-    /// Plus, positive or zero     >, ==, or unordered
+    /// Plus, positive or zero >, ==, or unordered
     case pl = 6
-    /// Overflow                   Unordered
+    /// Overflow Unordered
     case vs = 7
-    /// No overflow                Not unordered
+    /// No overflow Not unordered
     case vc = 8
-    /// Unsigned higher            Greater than, or unordered
+    /// Unsigned higher Greater than, or unordered
     case hi = 9
-    /// Unsigned lower or same     Less than or equal
+    /// Unsigned lower or same Less than or equal
     case ls = 10
-    /// Greater than or equal      Greater than or equal
+    /// Greater than or equal Greater than or equal
     case ge = 11
-    /// Less than                  Less than, or unordered
+    /// Less than Less than, or unordered
     case lt = 12
-    /// Greater than               Greater than
+    /// Greater than Greater than
     case gt = 13
-    /// Less than or equal         <, ==, or unordered
+    /// Less than or equal <, ==, or unordered
     case le = 14
-    /// Always (unconditional)     Always (unconditional)
+    /// Always (unconditional) Always (unconditional)
     case al = 15
-
-}
-
-/// Special registers for MSR
-public enum ArmSysreg: UInt32 {
-    case invalid = 0
-    case spsrC = 1
-    case spsrX = 2
-    case spsrS = 4
-    case spsrF = 8
-    case cpsrC = 16
-    case cpsrX = 32
-    case cpsrS = 64
-    case cpsrF = 128
-    case apsr = 256
-    case apsrG = 257
-    case apsrNzcvq = 258
-    case apsrNzcvqg = 259
-    case iapsr = 260
-    case iapsrG = 261
-    case iapsrNzcvqg = 262
-    case iapsrNzcvq = 263
-    case eapsr = 264
-    case eapsrG = 265
-    case eapsrNzcvqg = 266
-    case eapsrNzcvq = 267
-    case xpsr = 268
-    case xpsrG = 269
-    case xpsrNzcvqg = 270
-    case xpsrNzcvq = 271
-    case ipsr = 272
-    case epsr = 273
-    case iepsr = 274
-    case msp = 275
-    case psp = 276
-    case primask = 277
-    case basepri = 278
-    case basepriMax = 279
-    case faultmask = 280
-    case control = 281
-    case msplim = 282
-    case psplim = 283
-    case mspNs = 284
-    case pspNs = 285
-    case msplimNs = 286
-    case psplimNs = 287
-    case primaskNs = 288
-    case basepriNs = 289
-    case faultmaskNs = 290
-    case controlNs = 291
-    case spNs = 292
-    case r8Usr = 293
-    case r9Usr = 294
-    case r10Usr = 295
-    case r11Usr = 296
-    case r12Usr = 297
-    case spUsr = 298
-    case lrUsr = 299
-    case r8Fiq = 300
-    case r9Fiq = 301
-    case r10Fiq = 302
-    case r11Fiq = 303
-    case r12Fiq = 304
-    case spFiq = 305
-    case lrFiq = 306
-    case lrIrq = 307
-    case spIrq = 308
-    case lrSvc = 309
-    case spSvc = 310
-    case lrAbt = 311
-    case spAbt = 312
-    case lrUnd = 313
-    case spUnd = 314
-    case lrMon = 315
-    case spMon = 316
-    case elrHyp = 317
-    case spHyp = 318
-    case spsrFiq = 319
-    case spsrIrq = 320
-    case spsrSvc = 321
-    case spsrAbt = 322
-    case spsrUnd = 323
-    case spsrMon = 324
-    case spsrHyp = 325
-
-    case spsrCx = 3
-    case spsrCs = 5
-    case spsrXs = 6
-    case spsrCxs = 7
-    case spsrCf = 9
-    case spsrXf = 10
-    case spsrCxf = 11
-    case spsrSf = 12
-    case spsrCsf = 13
-    case spsrXsf = 14
-    case spsrCxsf = 15
-    case cpsrCx = 48
-    case cpsrCs = 80
-    case cpsrXs = 96
-    case cpsrCxs = 112
-    case cpsrCf = 144
-    case cpsrXf = 160
-    case cpsrCxf = 176
-    case cpsrSf = 192
-    case cpsrCsf = 208
-    case cpsrXsf = 224
-    case cpsrCxsf = 240
-}
-
-/// The memory barrier constants map directly to the 4-bit encoding of
-/// the option field for Memory Barrier operations.
-public enum ArmMb: UInt32 {
-    case invalid = 0
-    case reserved0 = 1
-    case oshld = 2
-    case oshst = 3
-    case osh = 4
-    case reserved4 = 5
-    case nshld = 6
-    case nshst = 7
-    case nsh = 8
-    case reserved8 = 9
-    case ishld = 10
-    case ishst = 11
-    case ish = 12
-    case reserved12 = 13
-    case ld = 14
-    case st = 15
-    case sy = 16
-
-}
-
-/// Operand type for instruction's operands
-public enum ArmOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-    /// = CS_OP_FP (Floating-Point operand).
-    case fp = 4
-    /// C-Immediate (coprocessor registers)
-    case cimm = 64
-    /// P-Immediate (coprocessor registers)
-    case pimm = 65
-    /// operand for SETEND instruction
-    case setend = 66
-    /// MSR/MRS special register operand
-    case sysreg = 67
-
 }
 
 /// Operand type for SETEND instruction
-public enum ArmSetend: UInt32 {
-    /// Uninitialized.
-    case invalid = 0
-    /// BE operand.
-    case be = 1
-    /// LE operand
-    case le = 2
-
+public struct ArmCpsflag: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
+    public static let invalid: ArmCpsflag = []
+    public static let f = ArmCpsflag(rawValue: 1)
+    public static let i = ArmCpsflag(rawValue: 2)
+    public static let a = ArmCpsflag(rawValue: 4)
+    /// no flag
+    public static let none = ArmCpsflag(rawValue: 16)
 }
 
 public enum ArmCpsmode: UInt32 {
     case invalid = 0
     case ie = 2
     case id = 3
-
 }
 
-/// Operand type for SETEND instruction
-public enum ArmCpsflag: UInt32 {
+/// Group of ARM instructions
+public enum ArmGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    case f = 1
-    case i = 2
-    case a = 4
-    /// no flag
-    case none = 16
-
-}
-
-/// Data type for elements of vector instructions.
-public enum ArmVectordata: UInt32 {
-    case invalid = 0
-    case i8 = 1
-    case i16 = 2
-    case i32 = 3
-    case i64 = 4
-    case s8 = 5
-    case s16 = 6
-    case s32 = 7
-    case s64 = 8
-    case u8 = 9
-    case u16 = 10
-    case u32 = 11
-    case u64 = 12
-    case p8 = 13
-    case f16 = 14
-    case f32 = 15
-    case f64 = 16
-    case f16f64 = 17
-    case f64f16 = 18
-    case f32f16 = 19
-    case f16f32 = 20
-    case f64f32 = 21
-    case f32f64 = 22
-    case s32f32 = 23
-    case u32f32 = 24
-    case f32s32 = 25
-    case f32u32 = 26
-    case f64s16 = 27
-    case f32s16 = 28
-    case f64s32 = 29
-    case s16f64 = 30
-    case s16f32 = 31
-    case s32f64 = 32
-    case u16f64 = 33
-    case u16f32 = 34
-    case u32f64 = 35
-    case f64u16 = 36
-    case f32u16 = 37
-    case f64u32 = 38
-    case f16u16 = 39
-    case u16f16 = 40
-    case f16u32 = 41
-    case u32f16 = 42
-
-}
-
-/// ARM registers
-public enum ArmReg: UInt16 {
-    case invalid = 0
-    case apsr = 1
-    case apsrNzcv = 2
-    case cpsr = 3
-    case fpexc = 4
-    case fpinst = 5
-    case fpscr = 6
-    case fpscrNzcv = 7
-    case fpsid = 8
-    case itstate = 9
-    case lr = 10
-    case pc = 11
-    case sp = 12
-    case spsr = 13
-    case d0 = 14
-    case d1 = 15
-    case d2 = 16
-    case d3 = 17
-    case d4 = 18
-    case d5 = 19
-    case d6 = 20
-    case d7 = 21
-    case d8 = 22
-    case d9 = 23
-    case d10 = 24
-    case d11 = 25
-    case d12 = 26
-    case d13 = 27
-    case d14 = 28
-    case d15 = 29
-    case d16 = 30
-    case d17 = 31
-    case d18 = 32
-    case d19 = 33
-    case d20 = 34
-    case d21 = 35
-    case d22 = 36
-    case d23 = 37
-    case d24 = 38
-    case d25 = 39
-    case d26 = 40
-    case d27 = 41
-    case d28 = 42
-    case d29 = 43
-    case d30 = 44
-    case d31 = 45
-    case fpinst2 = 46
-    case mvfr0 = 47
-    case mvfr1 = 48
-    case mvfr2 = 49
-    case q0 = 50
-    case q1 = 51
-    case q2 = 52
-    case q3 = 53
-    case q4 = 54
-    case q5 = 55
-    case q6 = 56
-    case q7 = 57
-    case q8 = 58
-    case q9 = 59
-    case q10 = 60
-    case q11 = 61
-    case q12 = 62
-    case q13 = 63
-    case q14 = 64
-    case q15 = 65
-    case r0 = 66
-    case r1 = 67
-    case r2 = 68
-    case r3 = 69
-    case r4 = 70
-    case r5 = 71
-    case r6 = 72
-    case r7 = 73
-    case r8 = 74
-    case r9 = 75
-    case r10 = 76
-    case r11 = 77
-    case r12 = 78
-    case s0 = 79
-    case s1 = 80
-    case s2 = 81
-    case s3 = 82
-    case s4 = 83
-    case s5 = 84
-    case s6 = 85
-    case s7 = 86
-    case s8 = 87
-    case s9 = 88
-    case s10 = 89
-    case s11 = 90
-    case s12 = 91
-    case s13 = 92
-    case s14 = 93
-    case s15 = 94
-    case s16 = 95
-    case s17 = 96
-    case s18 = 97
-    case s19 = 98
-    case s20 = 99
-    case s21 = 100
-    case s22 = 101
-    case s23 = 102
-    case s24 = 103
-    case s25 = 104
-    case s26 = 105
-    case s27 = 106
-    case s28 = 107
-    case s29 = 108
-    case s30 = 109
-    case s31 = 110
-    case ending = 111
-    public static let r13 = 12
-    public static let r14 = 10
-    public static let r15 = 11
-    public static let sb = 75
-    public static let sl = 76
-    public static let fp = 77
-    public static let ip = 78
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_CALL
+    case call = 2
+    /// = CS_GRP_INT
+    case int = 4
+    /// = CS_GRP_PRIVILEGE
+    case privilege = 6
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    /// Architecture-specific groups
+    case crypto = 128
+    /// Architecture-specific groups
+    case databarrier = 129
+    /// Architecture-specific groups
+    case divide = 130
+    /// Architecture-specific groups
+    case fparmv8 = 131
+    /// Architecture-specific groups
+    case multpro = 132
+    /// Architecture-specific groups
+    case neon = 133
+    /// Architecture-specific groups
+    case t2extractpack = 134
+    /// Architecture-specific groups
+    case thumb2dsp = 135
+    /// Architecture-specific groups
+    case trustzone = 136
+    /// Architecture-specific groups
+    case v4t = 137
+    /// Architecture-specific groups
+    case v5t = 138
+    /// Architecture-specific groups
+    case v5te = 139
+    /// Architecture-specific groups
+    case v6 = 140
+    /// Architecture-specific groups
+    case v6t2 = 141
+    /// Architecture-specific groups
+    case v7 = 142
+    /// Architecture-specific groups
+    case v8 = 143
+    /// Architecture-specific groups
+    case vfp2 = 144
+    /// Architecture-specific groups
+    case vfp3 = 145
+    /// Architecture-specific groups
+    case vfp4 = 146
+    /// Architecture-specific groups
+    case arm = 147
+    /// Architecture-specific groups
+    case mclass = 148
+    /// Architecture-specific groups
+    case notmclass = 149
+    /// Architecture-specific groups
+    case thumb = 150
+    /// Architecture-specific groups
+    case thumb1only = 151
+    /// Architecture-specific groups
+    case thumb2 = 152
+    /// Architecture-specific groups
+    case prev8 = 153
+    /// Architecture-specific groups
+    case fpvmlx = 154
+    /// Architecture-specific groups
+    case mulops = 155
+    /// Architecture-specific groups
+    case crc = 156
+    /// Architecture-specific groups
+    case dpvfp = 157
+    /// Architecture-specific groups
+    case v6m = 158
+    /// Architecture-specific groups
+    case virtualization = 159
+    /// Architecture-specific groups
+    case ending = 160
 }
 
 /// ARM instruction
@@ -890,56 +609,465 @@ public enum ArmIns: UInt32 {
     case wfe = 469
     case wfi = 470
     case yield = 471
+    /// <-- mark the end of the list of instructions
     case ending = 472
-
 }
 
-/// Group of ARM instructions
-public enum ArmGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// The memory barrier constants map directly to the 4-bit encoding of the option field for Memory Barrier operations.
+public enum ArmMb: UInt32 {
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    /// = CS_GRP_CALL
-    case call = 2
-    /// = CS_GRP_INT
-    case int = 4
-    /// = CS_GRP_PRIVILEGE
-    case privilege = 6
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 7
-    case crypto = 128
-    case databarrier = 129
-    case divide = 130
-    case fparmv8 = 131
-    case multpro = 132
-    case neon = 133
-    case t2extractpack = 134
-    case thumb2dsp = 135
-    case trustzone = 136
-    case v4t = 137
-    case v5t = 138
-    case v5te = 139
-    case v6 = 140
-    case v6t2 = 141
-    case v7 = 142
-    case v8 = 143
-    case vfp2 = 144
-    case vfp3 = 145
-    case vfp4 = 146
-    case arm = 147
-    case mclass = 148
-    case notmclass = 149
-    case thumb = 150
-    case thumb1only = 151
-    case thumb2 = 152
-    case prev8 = 153
-    case fpvmlx = 154
-    case mulops = 155
-    case crc = 156
-    case dpvfp = 157
-    case v6m = 158
-    case virtualization = 159
-    case ending = 160
+    case reserved0 = 1
+    case oshld = 2
+    case oshst = 3
+    case osh = 4
+    case reserved4 = 5
+    case nshld = 6
+    case nshst = 7
+    case nsh = 8
+    case reserved8 = 9
+    case ishld = 10
+    case ishst = 11
+    case ish = 12
+    case reserved12 = 13
+    case ld = 14
+    case st = 15
+    case sy = 16
 }
 
+/// Operand type for instruction's operands
+public enum ArmOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
+    case invalid = 0
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
+    /// = CS_OP_FP (Floating-Point operand).
+    case fp = 4
+    /// C-Immediate (coprocessor registers)
+    case cimm = 64
+    /// P-Immediate (coprocessor registers)
+    case pimm = 65
+    /// operand for SETEND instruction
+    case setend = 66
+    /// MSR/MRS special register operand
+    case sysreg = 67
+}
+
+/// ARM registers
+public enum ArmReg: UInt16 {
+    case invalid = 0
+    case apsr = 1
+    case apsrNzcv = 2
+    case cpsr = 3
+    case fpexc = 4
+    case fpinst = 5
+    case fpscr = 6
+    case fpscrNzcv = 7
+    case fpsid = 8
+    case itstate = 9
+    case lr = 10
+    /// alias registers
+    public static let r14 = 10
+    case pc = 11
+    /// alias registers
+    public static let r15 = 11
+    case sp = 12
+    /// alias registers
+    public static let r13 = 12
+    case spsr = 13
+    case d0 = 14
+    case d1 = 15
+    case d2 = 16
+    case d3 = 17
+    case d4 = 18
+    case d5 = 19
+    case d6 = 20
+    case d7 = 21
+    case d8 = 22
+    case d9 = 23
+    case d10 = 24
+    case d11 = 25
+    case d12 = 26
+    case d13 = 27
+    case d14 = 28
+    case d15 = 29
+    case d16 = 30
+    case d17 = 31
+    case d18 = 32
+    case d19 = 33
+    case d20 = 34
+    case d21 = 35
+    case d22 = 36
+    case d23 = 37
+    case d24 = 38
+    case d25 = 39
+    case d26 = 40
+    case d27 = 41
+    case d28 = 42
+    case d29 = 43
+    case d30 = 44
+    case d31 = 45
+    case fpinst2 = 46
+    case mvfr0 = 47
+    case mvfr1 = 48
+    case mvfr2 = 49
+    case q0 = 50
+    case q1 = 51
+    case q2 = 52
+    case q3 = 53
+    case q4 = 54
+    case q5 = 55
+    case q6 = 56
+    case q7 = 57
+    case q8 = 58
+    case q9 = 59
+    case q10 = 60
+    case q11 = 61
+    case q12 = 62
+    case q13 = 63
+    case q14 = 64
+    case q15 = 65
+    case r0 = 66
+    case r1 = 67
+    case r2 = 68
+    case r3 = 69
+    case r4 = 70
+    case r5 = 71
+    case r6 = 72
+    case r7 = 73
+    case r8 = 74
+    case r9 = 75
+    /// alias registers
+    public static let sb = 75
+    case r10 = 76
+    /// alias registers
+    public static let sl = 76
+    case r11 = 77
+    /// alias registers
+    public static let fp = 77
+    case r12 = 78
+    /// alias registers
+    public static let ip = 78
+    case s0 = 79
+    case s1 = 80
+    case s2 = 81
+    case s3 = 82
+    case s4 = 83
+    case s5 = 84
+    case s6 = 85
+    case s7 = 86
+    case s8 = 87
+    case s9 = 88
+    case s10 = 89
+    case s11 = 90
+    case s12 = 91
+    case s13 = 92
+    case s14 = 93
+    case s15 = 94
+    case s16 = 95
+    case s17 = 96
+    case s18 = 97
+    case s19 = 98
+    case s20 = 99
+    case s21 = 100
+    case s22 = 101
+    case s23 = 102
+    case s24 = 103
+    case s25 = 104
+    case s26 = 105
+    case s27 = 106
+    case s28 = 107
+    case s29 = 108
+    case s30 = 109
+    case s31 = 110
+    /// <-- mark the end of the list or registers
+    case ending = 111
+}
+
+/// Operand type for SETEND instruction
+public enum ArmSetend: UInt32 {
+    /// Uninitialized.
+    case invalid = 0
+    /// BE operand.
+    case be = 1
+    /// LE operand
+    case le = 2
+}
+
+/// ARM shift type
+public enum ArmSft: UInt32 {
+    case invalid = 0
+    /// shift with immediate const
+    case asr = 1
+    /// shift with immediate const
+    case lsl = 2
+    /// shift with immediate const
+    case lsr = 3
+    /// shift with immediate const
+    case ror = 4
+    /// shift with immediate const
+    case rrx = 5
+    /// shift with register
+    case asrReg = 6
+    /// shift with register
+    case lslReg = 7
+    /// shift with register
+    case lsrReg = 8
+    /// shift with register
+    case rorReg = 9
+    /// shift with register
+    case rrxReg = 10
+}
+
+public enum ArmSysreg: UInt32 {
+    /// Special registers for MSR
+    case invalid = 0
+    /// SPSR* registers can be OR combined
+    case spsrC = 1
+    /// SPSR* registers can be OR combined
+    case spsrX = 2
+    /// SPSR* registers can be OR combined
+    case spsrS = 4
+    /// SPSR* registers can be OR combined
+    case spsrF = 8
+    /// CPSR* registers can be OR combined
+    case cpsrC = 16
+    /// CPSR* registers can be OR combined
+    case cpsrX = 32
+    /// CPSR* registers can be OR combined
+    case cpsrS = 64
+    /// CPSR* registers can be OR combined
+    case cpsrF = 128
+    /// independent registers
+    case apsr = 256
+    /// independent registers
+    case apsrG = 257
+    /// independent registers
+    case apsrNzcvq = 258
+    /// independent registers
+    case apsrNzcvqg = 259
+    /// independent registers
+    case iapsr = 260
+    /// independent registers
+    case iapsrG = 261
+    /// independent registers
+    case iapsrNzcvqg = 262
+    /// independent registers
+    case iapsrNzcvq = 263
+    /// independent registers
+    case eapsr = 264
+    /// independent registers
+    case eapsrG = 265
+    /// independent registers
+    case eapsrNzcvqg = 266
+    /// independent registers
+    case eapsrNzcvq = 267
+    /// independent registers
+    case xpsr = 268
+    /// independent registers
+    case xpsrG = 269
+    /// independent registers
+    case xpsrNzcvqg = 270
+    /// independent registers
+    case xpsrNzcvq = 271
+    /// independent registers
+    case ipsr = 272
+    /// independent registers
+    case epsr = 273
+    /// independent registers
+    case iepsr = 274
+    /// independent registers
+    case msp = 275
+    /// independent registers
+    case psp = 276
+    /// independent registers
+    case primask = 277
+    /// independent registers
+    case basepri = 278
+    /// independent registers
+    case basepriMax = 279
+    /// independent registers
+    case faultmask = 280
+    /// independent registers
+    case control = 281
+    /// independent registers
+    case msplim = 282
+    /// independent registers
+    case psplim = 283
+    /// independent registers
+    case mspNs = 284
+    /// independent registers
+    case pspNs = 285
+    /// independent registers
+    case msplimNs = 286
+    /// independent registers
+    case psplimNs = 287
+    /// independent registers
+    case primaskNs = 288
+    /// independent registers
+    case basepriNs = 289
+    /// independent registers
+    case faultmaskNs = 290
+    /// independent registers
+    case controlNs = 291
+    /// independent registers
+    case spNs = 292
+    /// Banked Registers
+    case r8Usr = 293
+    /// Banked Registers
+    case r9Usr = 294
+    /// Banked Registers
+    case r10Usr = 295
+    /// Banked Registers
+    case r11Usr = 296
+    /// Banked Registers
+    case r12Usr = 297
+    /// Banked Registers
+    case spUsr = 298
+    /// Banked Registers
+    case lrUsr = 299
+    /// Banked Registers
+    case r8Fiq = 300
+    /// Banked Registers
+    case r9Fiq = 301
+    /// Banked Registers
+    case r10Fiq = 302
+    /// Banked Registers
+    case r11Fiq = 303
+    /// Banked Registers
+    case r12Fiq = 304
+    /// Banked Registers
+    case spFiq = 305
+    /// Banked Registers
+    case lrFiq = 306
+    /// Banked Registers
+    case lrIrq = 307
+    /// Banked Registers
+    case spIrq = 308
+    /// Banked Registers
+    case lrSvc = 309
+    /// Banked Registers
+    case spSvc = 310
+    /// Banked Registers
+    case lrAbt = 311
+    /// Banked Registers
+    case spAbt = 312
+    /// Banked Registers
+    case lrUnd = 313
+    /// Banked Registers
+    case spUnd = 314
+    /// Banked Registers
+    case lrMon = 315
+    /// Banked Registers
+    case spMon = 316
+    /// Banked Registers
+    case elrHyp = 317
+    /// Banked Registers
+    case spHyp = 318
+    /// Banked Registers
+    case spsrFiq = 319
+    /// Banked Registers
+    case spsrIrq = 320
+    /// Banked Registers
+    case spsrSvc = 321
+    /// Banked Registers
+    case spsrAbt = 322
+    /// Banked Registers
+    case spsrUnd = 323
+    /// Banked Registers
+    case spsrMon = 324
+    /// Banked Registers
+    case spsrHyp = 325
+}
+
+/// Data type for elements of vector instructions.
+public enum ArmVectordata: UInt32 {
+    case invalid = 0
+    /// Integer type
+    case i8 = 1
+    /// Integer type
+    case i16 = 2
+    /// Integer type
+    case i32 = 3
+    /// Integer type
+    case i64 = 4
+    /// Signed integer type
+    case s8 = 5
+    /// Signed integer type
+    case s16 = 6
+    /// Signed integer type
+    case s32 = 7
+    /// Signed integer type
+    case s64 = 8
+    /// Unsigned integer type
+    case u8 = 9
+    /// Unsigned integer type
+    case u16 = 10
+    /// Unsigned integer type
+    case u32 = 11
+    /// Unsigned integer type
+    case u64 = 12
+    /// Data type for VMUL/VMULL
+    case p8 = 13
+    /// Floating type
+    case f16 = 14
+    /// Floating type
+    case f32 = 15
+    /// Floating type
+    case f64 = 16
+    /// f16.f64
+    case f16f64 = 17
+    /// f64.f16
+    case f64f16 = 18
+    /// f32.f16
+    case f32f16 = 19
+    /// f32.f16
+    case f16f32 = 20
+    /// f64.f32
+    case f64f32 = 21
+    /// f32.f64
+    case f32f64 = 22
+    /// s32.f32
+    case s32f32 = 23
+    /// u32.f32
+    case u32f32 = 24
+    /// f32.s32
+    case f32s32 = 25
+    /// f32.u32
+    case f32u32 = 26
+    /// f64.s16
+    case f64s16 = 27
+    /// f32.s16
+    case f32s16 = 28
+    /// f64.s32
+    case f64s32 = 29
+    /// s16.f64
+    case s16f64 = 30
+    /// s16.f64
+    case s16f32 = 31
+    /// s32.f64
+    case s32f64 = 32
+    /// u16.f64
+    case u16f64 = 33
+    /// u16.f32
+    case u16f32 = 34
+    /// u32.f64
+    case u32f64 = 35
+    /// f64.u16
+    case f64u16 = 36
+    /// f32.u16
+    case f32u16 = 37
+    /// f64.u32
+    case f64u32 = 38
+    /// f16.u16
+    case f16u16 = 39
+    /// u16.f16
+    case u16f16 = 40
+    /// f16.u32
+    case f16u32 = 41
+    /// u32.f16
+    case u32f16 = 42
+}

@@ -1,201 +1,91 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mips)
 
-
-/// Operand type for instruction's operands
-public enum MipsOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
+/// Group of MIPS instructions
+public enum MipsGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-
-}
-
-/// MIPS registers
-public enum MipsReg: UInt16 {
-    case invalid = 0
-    case pc = 1
-    case reg0 = 2
-    case reg1 = 3
-    case reg2 = 4
-    case reg3 = 5
-    case reg4 = 6
-    case reg5 = 7
-    case reg6 = 8
-    case reg7 = 9
-    case reg8 = 10
-    case reg9 = 11
-    case reg10 = 12
-    case reg11 = 13
-    case reg12 = 14
-    case reg13 = 15
-    case reg14 = 16
-    case reg15 = 17
-    case reg16 = 18
-    case reg17 = 19
-    case reg18 = 20
-    case reg19 = 21
-    case reg20 = 22
-    case reg21 = 23
-    case reg22 = 24
-    case reg23 = 25
-    case reg24 = 26
-    case reg25 = 27
-    case reg26 = 28
-    case reg27 = 29
-    case reg28 = 30
-    case reg29 = 31
-    case reg30 = 32
-    case reg31 = 33
-    case dspccond = 34
-    case dspcarry = 35
-    case dspefi = 36
-    case dspoutflag = 37
-    case dspoutflag1619 = 38
-    case dspoutflag20 = 39
-    case dspoutflag21 = 40
-    case dspoutflag22 = 41
-    case dspoutflag23 = 42
-    case dsppos = 43
-    case dspscount = 44
-    case ac0 = 45
-    case ac1 = 46
-    case ac2 = 47
-    case ac3 = 48
-    case cc0 = 49
-    case cc1 = 50
-    case cc2 = 51
-    case cc3 = 52
-    case cc4 = 53
-    case cc5 = 54
-    case cc6 = 55
-    case cc7 = 56
-    case f0 = 57
-    case f1 = 58
-    case f2 = 59
-    case f3 = 60
-    case f4 = 61
-    case f5 = 62
-    case f6 = 63
-    case f7 = 64
-    case f8 = 65
-    case f9 = 66
-    case f10 = 67
-    case f11 = 68
-    case f12 = 69
-    case f13 = 70
-    case f14 = 71
-    case f15 = 72
-    case f16 = 73
-    case f17 = 74
-    case f18 = 75
-    case f19 = 76
-    case f20 = 77
-    case f21 = 78
-    case f22 = 79
-    case f23 = 80
-    case f24 = 81
-    case f25 = 82
-    case f26 = 83
-    case f27 = 84
-    case f28 = 85
-    case f29 = 86
-    case f30 = 87
-    case f31 = 88
-    case fcc0 = 89
-    case fcc1 = 90
-    case fcc2 = 91
-    case fcc3 = 92
-    case fcc4 = 93
-    case fcc5 = 94
-    case fcc6 = 95
-    case fcc7 = 96
-    case w0 = 97
-    case w1 = 98
-    case w2 = 99
-    case w3 = 100
-    case w4 = 101
-    case w5 = 102
-    case w6 = 103
-    case w7 = 104
-    case w8 = 105
-    case w9 = 106
-    case w10 = 107
-    case w11 = 108
-    case w12 = 109
-    case w13 = 110
-    case w14 = 111
-    case w15 = 112
-    case w16 = 113
-    case w17 = 114
-    case w18 = 115
-    case w19 = 116
-    case w20 = 117
-    case w21 = 118
-    case w22 = 119
-    case w23 = 120
-    case w24 = 121
-    case w25 = 122
-    case w26 = 123
-    case w27 = 124
-    case w28 = 125
-    case w29 = 126
-    case w30 = 127
-    case w31 = 128
-    case hi = 129
-    case lo = 130
-    case p0 = 131
-    case p1 = 132
-    case p2 = 133
-    case mpl0 = 134
-    case mpl1 = 135
-    case mpl2 = 136
-    case ending = 137
-    public static let zero = 2
-    public static let at = 3
-    public static let v0 = 4
-    public static let v1 = 5
-    public static let a0 = 6
-    public static let a1 = 7
-    public static let a2 = 8
-    public static let a3 = 9
-    public static let t0 = 10
-    public static let t1 = 11
-    public static let t2 = 12
-    public static let t3 = 13
-    public static let t4 = 14
-    public static let t5 = 15
-    public static let t6 = 16
-    public static let t7 = 17
-    public static let s0 = 18
-    public static let s1 = 19
-    public static let s2 = 20
-    public static let s3 = 21
-    public static let s4 = 22
-    public static let s5 = 23
-    public static let s6 = 24
-    public static let s7 = 25
-    public static let t8 = 26
-    public static let t9 = 27
-    public static let k0 = 28
-    public static let k1 = 29
-    public static let gp = 30
-    public static let sp = 31
-    public static let fp = 32
-    public static let s8 = 32
-    public static let ra = 33
-    public static let hi0 = 45
-    public static let hi1 = 46
-    public static let hi2 = 47
-    public static let hi3 = 48
-    public static let lo0 = 45
-    public static let lo1 = 46
-    public static let lo2 = 47
-    public static let lo3 = 48
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_CALL
+    case call = 2
+    /// = CS_GRP_RET
+    case ret = 3
+    /// = CS_GRP_INT
+    case int = 4
+    /// = CS_GRP_IRET
+    case iret = 5
+    /// = CS_GRP_PRIVILEGE
+    case privilege = 6
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    /// Architecture-specific groups
+    case bitcount = 128
+    /// Architecture-specific groups
+    case dsp = 129
+    /// Architecture-specific groups
+    case dspr2 = 130
+    /// Architecture-specific groups
+    case fpidx = 131
+    /// Architecture-specific groups
+    case msa = 132
+    /// Architecture-specific groups
+    case mips32r2 = 133
+    /// Architecture-specific groups
+    case mips64 = 134
+    /// Architecture-specific groups
+    case mips64r2 = 135
+    /// Architecture-specific groups
+    case seinreg = 136
+    /// Architecture-specific groups
+    case stdenc = 137
+    /// Architecture-specific groups
+    case swap = 138
+    /// Architecture-specific groups
+    case micromips = 139
+    /// Architecture-specific groups
+    case mips16mode = 140
+    /// Architecture-specific groups
+    case fp64bit = 141
+    /// Architecture-specific groups
+    case nonansfpmath = 142
+    /// Architecture-specific groups
+    case notfp64bit = 143
+    /// Architecture-specific groups
+    case notinmicromips = 144
+    /// Architecture-specific groups
+    case notnacl = 145
+    /// Architecture-specific groups
+    case notmips32r6 = 146
+    /// Architecture-specific groups
+    case notmips64r6 = 147
+    /// Architecture-specific groups
+    case cnmips = 148
+    /// Architecture-specific groups
+    case mips32 = 149
+    /// Architecture-specific groups
+    case mips32r6 = 150
+    /// Architecture-specific groups
+    case mips64r6 = 151
+    /// Architecture-specific groups
+    case mips2 = 152
+    /// Architecture-specific groups
+    case mips3 = 153
+    /// Architecture-specific groups
+    case mips332 = 154
+    /// Architecture-specific groups
+    case mips332R2 = 155
+    /// Architecture-specific groups
+    case mips432 = 156
+    /// Architecture-specific groups
+    case mips432R2 = 157
+    /// Architecture-specific groups
+    case mips532R2 = 158
+    /// Architecture-specific groups
+    case gp32bit = 159
+    /// Architecture-specific groups
+    case gp64bit = 160
+    /// Architecture-specific groups
+    case ending = 161
 }
 
 /// MIPS instruction
@@ -621,11 +511,8 @@ public enum MipsIns: UInt32 {
     case mod = 418
     case modsub = 419
     case modu = 420
-}
-
-public enum MipsInsMod: UInt32 {
-    case s = 421
-    case u = 422
+    case modS = 421
+    case modU = 422
     case move = 423
     case movep = 424
     case movf = 425
@@ -825,69 +712,386 @@ public enum MipsInsMod: UInt32 {
     case xor = 619
     case xor16 = 620
     case xori = 621
-
-	// some alias instructions
+    /// > some alias instructions
     case nop = 622
+    /// > some alias instructions
     case negu = 623
-
-	// special instructions
+    /// jump and link with Hazard Barrier
     case jalrHb = 624
+    /// jump register with Hazard Barrier
     case jrHb = 625
     case ending = 626
-
 }
 
-/// Group of MIPS instructions
-public enum MipsGrp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum MipsOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    /// = CS_GRP_CALL
-    case call = 2
-    /// = CS_GRP_RET
-    case ret = 3
-    /// = CS_GRP_INT
-    case int = 4
-    /// = CS_GRP_IRET
-    case iret = 5
-    /// = CS_GRP_PRIVILEGE
-    case privilege = 6
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 7
-    case bitcount = 128
-    case dsp = 129
-    case dspr2 = 130
-    case fpidx = 131
-    case msa = 132
-    case mips32r2 = 133
-    case mips64 = 134
-    case mips64r2 = 135
-    case seinreg = 136
-    case stdenc = 137
-    case swap = 138
-    case micromips = 139
-    case mips16mode = 140
-    case fp64bit = 141
-    case nonansfpmath = 142
-    case notfp64bit = 143
-    case notinmicromips = 144
-    case notnacl = 145
-    case notmips32r6 = 146
-    case notmips64r6 = 147
-    case cnmips = 148
-    case mips32 = 149
-    case mips32r6 = 150
-    case mips64r6 = 151
-    case mips2 = 152
-    case mips3 = 153
-    case mips332 = 154
-    case mips332r2 = 155
-    case mips432 = 156
-    case mips432r2 = 157
-    case mips532r2 = 158
-    case gp32bit = 159
-    case gp64bit = 160
-    case ending = 161
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
 }
 
+/// MIPS registers
+public enum MipsReg: UInt16 {
+    case invalid = 0
+    /// General purpose registers
+    case pc = 1
+    /// General purpose registers
+    case _0 = 2
+    /// alias registers
+    public static let zero = 2
+    /// General purpose registers
+    case _1 = 3
+    /// alias registers
+    public static let at = 3
+    /// General purpose registers
+    case _2 = 4
+    /// alias registers
+    public static let v0 = 4
+    /// General purpose registers
+    case _3 = 5
+    /// alias registers
+    public static let v1 = 5
+    /// General purpose registers
+    case _4 = 6
+    /// alias registers
+    public static let a0 = 6
+    /// General purpose registers
+    case _5 = 7
+    /// alias registers
+    public static let a1 = 7
+    /// General purpose registers
+    case _6 = 8
+    /// alias registers
+    public static let a2 = 8
+    /// General purpose registers
+    case _7 = 9
+    /// alias registers
+    public static let a3 = 9
+    /// General purpose registers
+    case _8 = 10
+    /// alias registers
+    public static let t0 = 10
+    /// General purpose registers
+    case _9 = 11
+    /// alias registers
+    public static let t1 = 11
+    /// General purpose registers
+    case _10 = 12
+    /// alias registers
+    public static let t2 = 12
+    /// General purpose registers
+    case _11 = 13
+    /// alias registers
+    public static let t3 = 13
+    /// General purpose registers
+    case _12 = 14
+    /// alias registers
+    public static let t4 = 14
+    /// General purpose registers
+    case _13 = 15
+    /// alias registers
+    public static let t5 = 15
+    /// General purpose registers
+    case _14 = 16
+    /// alias registers
+    public static let t6 = 16
+    /// General purpose registers
+    case _15 = 17
+    /// alias registers
+    public static let t7 = 17
+    /// General purpose registers
+    case _16 = 18
+    /// alias registers
+    public static let s0 = 18
+    /// General purpose registers
+    case _17 = 19
+    /// alias registers
+    public static let s1 = 19
+    /// General purpose registers
+    case _18 = 20
+    /// alias registers
+    public static let s2 = 20
+    /// General purpose registers
+    case _19 = 21
+    /// alias registers
+    public static let s3 = 21
+    /// General purpose registers
+    case _20 = 22
+    /// alias registers
+    public static let s4 = 22
+    /// General purpose registers
+    case _21 = 23
+    /// alias registers
+    public static let s5 = 23
+    /// General purpose registers
+    case _22 = 24
+    /// alias registers
+    public static let s6 = 24
+    /// General purpose registers
+    case _23 = 25
+    /// alias registers
+    public static let s7 = 25
+    /// General purpose registers
+    case _24 = 26
+    /// alias registers
+    public static let t8 = 26
+    /// General purpose registers
+    case _25 = 27
+    /// alias registers
+    public static let t9 = 27
+    /// General purpose registers
+    case _26 = 28
+    /// alias registers
+    public static let k0 = 28
+    /// General purpose registers
+    case _27 = 29
+    /// alias registers
+    public static let k1 = 29
+    /// General purpose registers
+    case _28 = 30
+    /// alias registers
+    public static let gp = 30
+    /// General purpose registers
+    case _29 = 31
+    /// alias registers
+    public static let sp = 31
+    /// General purpose registers
+    case _30 = 32
+    /// alias registers
+    public static let fp = 32
+    /// alias registers
+    public static let s8 = 32
+    /// General purpose registers
+    case _31 = 33
+    /// alias registers
+    public static let ra = 33
+    /// DSP registers
+    case dspccond = 34
+    /// DSP registers
+    case dspcarry = 35
+    /// DSP registers
+    case dspefi = 36
+    /// DSP registers
+    case dspoutflag = 37
+    /// DSP registers
+    case dspoutflag1619 = 38
+    /// DSP registers
+    case dspoutflag20 = 39
+    /// DSP registers
+    case dspoutflag21 = 40
+    /// DSP registers
+    case dspoutflag22 = 41
+    /// DSP registers
+    case dspoutflag23 = 42
+    /// DSP registers
+    case dsppos = 43
+    /// DSP registers
+    case dspscount = 44
+    /// ACC registers
+    case ac0 = 45
+    /// alias registers
+    public static let hi0 = 45
+    /// alias registers
+    public static let lo0 = 45
+    /// ACC registers
+    case ac1 = 46
+    /// alias registers
+    public static let hi1 = 46
+    /// alias registers
+    public static let lo1 = 46
+    /// ACC registers
+    case ac2 = 47
+    /// alias registers
+    public static let hi2 = 47
+    /// alias registers
+    public static let lo2 = 47
+    /// ACC registers
+    case ac3 = 48
+    /// alias registers
+    public static let hi3 = 48
+    /// alias registers
+    public static let lo3 = 48
+    /// COP registers
+    case cc0 = 49
+    /// COP registers
+    case cc1 = 50
+    /// COP registers
+    case cc2 = 51
+    /// COP registers
+    case cc3 = 52
+    /// COP registers
+    case cc4 = 53
+    /// COP registers
+    case cc5 = 54
+    /// COP registers
+    case cc6 = 55
+    /// COP registers
+    case cc7 = 56
+    /// FPU registers
+    case f0 = 57
+    /// FPU registers
+    case f1 = 58
+    /// FPU registers
+    case f2 = 59
+    /// FPU registers
+    case f3 = 60
+    /// FPU registers
+    case f4 = 61
+    /// FPU registers
+    case f5 = 62
+    /// FPU registers
+    case f6 = 63
+    /// FPU registers
+    case f7 = 64
+    /// FPU registers
+    case f8 = 65
+    /// FPU registers
+    case f9 = 66
+    /// FPU registers
+    case f10 = 67
+    /// FPU registers
+    case f11 = 68
+    /// FPU registers
+    case f12 = 69
+    /// FPU registers
+    case f13 = 70
+    /// FPU registers
+    case f14 = 71
+    /// FPU registers
+    case f15 = 72
+    /// FPU registers
+    case f16 = 73
+    /// FPU registers
+    case f17 = 74
+    /// FPU registers
+    case f18 = 75
+    /// FPU registers
+    case f19 = 76
+    /// FPU registers
+    case f20 = 77
+    /// FPU registers
+    case f21 = 78
+    /// FPU registers
+    case f22 = 79
+    /// FPU registers
+    case f23 = 80
+    /// FPU registers
+    case f24 = 81
+    /// FPU registers
+    case f25 = 82
+    /// FPU registers
+    case f26 = 83
+    /// FPU registers
+    case f27 = 84
+    /// FPU registers
+    case f28 = 85
+    /// FPU registers
+    case f29 = 86
+    /// FPU registers
+    case f30 = 87
+    /// FPU registers
+    case f31 = 88
+    /// FPU registers
+    case fcc0 = 89
+    /// FPU registers
+    case fcc1 = 90
+    /// FPU registers
+    case fcc2 = 91
+    /// FPU registers
+    case fcc3 = 92
+    /// FPU registers
+    case fcc4 = 93
+    /// FPU registers
+    case fcc5 = 94
+    /// FPU registers
+    case fcc6 = 95
+    /// FPU registers
+    case fcc7 = 96
+    /// AFPR128
+    case w0 = 97
+    /// AFPR128
+    case w1 = 98
+    /// AFPR128
+    case w2 = 99
+    /// AFPR128
+    case w3 = 100
+    /// AFPR128
+    case w4 = 101
+    /// AFPR128
+    case w5 = 102
+    /// AFPR128
+    case w6 = 103
+    /// AFPR128
+    case w7 = 104
+    /// AFPR128
+    case w8 = 105
+    /// AFPR128
+    case w9 = 106
+    /// AFPR128
+    case w10 = 107
+    /// AFPR128
+    case w11 = 108
+    /// AFPR128
+    case w12 = 109
+    /// AFPR128
+    case w13 = 110
+    /// AFPR128
+    case w14 = 111
+    /// AFPR128
+    case w15 = 112
+    /// AFPR128
+    case w16 = 113
+    /// AFPR128
+    case w17 = 114
+    /// AFPR128
+    case w18 = 115
+    /// AFPR128
+    case w19 = 116
+    /// AFPR128
+    case w20 = 117
+    /// AFPR128
+    case w21 = 118
+    /// AFPR128
+    case w22 = 119
+    /// AFPR128
+    case w23 = 120
+    /// AFPR128
+    case w24 = 121
+    /// AFPR128
+    case w25 = 122
+    /// AFPR128
+    case w26 = 123
+    /// AFPR128
+    case w27 = 124
+    /// AFPR128
+    case w28 = 125
+    /// AFPR128
+    case w29 = 126
+    /// AFPR128
+    case w30 = 127
+    /// AFPR128
+    case w31 = 128
+    /// AFPR128
+    case hi = 129
+    /// AFPR128
+    case lo = 130
+    /// AFPR128
+    case p0 = 131
+    /// AFPR128
+    case p1 = 132
+    /// AFPR128
+    case p2 = 133
+    /// AFPR128
+    case mpl0 = 134
+    /// AFPR128
+    case mpl1 = 135
+    /// AFPR128
+    case mpl2 = 136
+    /// <-- mark the end of the list or registers
+    case ending = 137
+}

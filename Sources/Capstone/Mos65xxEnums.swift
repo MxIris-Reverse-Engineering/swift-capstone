@@ -1,29 +1,5 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mos65xx)
 
-
-/// MOS65XX registers and special registers
-public enum Mos65xxReg: UInt16 {
-    case invalid = 0
-    /// accumulator
-    case acc = 1
-    /// X index register
-    case x = 2
-    /// Y index register
-    case y = 3
-    /// status register
-    case p = 4
-    /// stack pointer register
-    case sp = 5
-    /// direct page register
-    case dp = 6
-    /// data bank register
-    case b = 7
-    /// program bank register
-    case k = 8
-    case ending = 9
-
-}
-
 /// MOS65XX Addressing Modes
 public enum Mos65xxAm: UInt32 {
     /// No address mode.
@@ -78,7 +54,26 @@ public enum Mos65xxAm: UInt32 {
     case sr = 24
     /// indirect stack relative addressing indexed by the Y index register
     case srIndY = 25
+}
 
+/// Group of MOS65XX instructions
+public enum Mos65xxGrp: UInt8 {
+    /// CS_GRP_INVALID
+    case invalid = 0
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_RET
+    case call = 2
+    /// = CS_GRP_RET
+    case ret = 3
+    /// = CS_GRP_INT
+    case int = 4
+    /// = CS_GRP_IRET
+    case iret = 5
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 6
+    /// <-- mark the end of the list of groups
+    case ending = 7
 }
 
 /// MOS65XX instruction
@@ -180,28 +175,8 @@ public enum Mos65xxIns: UInt32 {
     case wdm = 94
     case xba = 95
     case xce = 96
+    /// <-- mark the end of the list of instructions
     case ending = 97
-
-}
-
-/// Group of MOS65XX instructions
-public enum Mos65xxGrp: UInt8 {
-    /// CS_GRP_INVALID
-    case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    /// = CS_GRP_RET
-    case call = 2
-    /// = CS_GRP_RET
-    case ret = 3
-    /// = CS_GRP_INT
-    case int = 4
-    /// = CS_GRP_IRET
-    case iret = 5
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 6
-    case ending = 7
-
 }
 
 /// Operand type for instruction's operands
@@ -216,3 +191,25 @@ public enum Mos65xxOp: UInt32 {
     case mem = 3
 }
 
+/// MOS65XX registers and special registers
+public enum Mos65xxReg: UInt16 {
+    case invalid = 0
+    /// accumulator
+    case acc = 1
+    /// X index register
+    case x = 2
+    /// Y index register
+    case y = 3
+    /// status register
+    case p = 4
+    /// stack pointer register
+    case sp = 5
+    /// direct page register
+    case dp = 6
+    /// data bank register
+    case b = 7
+    /// program bank register
+    case k = 8
+    /// <-- mark the end of the list of registers
+    case ending = 9
+}

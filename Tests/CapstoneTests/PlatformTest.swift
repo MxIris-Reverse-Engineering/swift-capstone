@@ -17,9 +17,12 @@ struct PlatformTest {
     }
 
     func run(address: UInt64, options testOptions: Options = Options.default) throws {
-        // swiftlint:disable force_cast
-        try run(address: address, options: testOptions) { ($1 as! InstructionDetailsPrintable).printInstructionDetails(cs: $0) }
-        // swiftlint:enable force_cast
+        try run(address: address, options: testOptions) { capstone, instruction in
+            guard let printable = instruction as? InstructionDetailsPrintable else {
+                return
+            }
+            printable.printInstructionDetails(cs: capstone)
+        }
     }
 
     func run(address: UInt64, options testOptions: Options = Options.default, iterator: (Capstone, Instruction) -> Void) throws {

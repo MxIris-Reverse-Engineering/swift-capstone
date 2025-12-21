@@ -1,1097 +1,39 @@
-import Foundation
+// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arm64)
 
-public enum Arm64Sft: UInt32, CaseIterable {
-    case invalid = 0
-    case lsl = 1
-    case msl = 2
-    case lsr = 3
-    case asr = 4
-    case ror = 5
+/// SYS operands (IC/DC/AC/TLBI)
+public enum Arm64At: UInt32 {
+    /// AT operations
+    case s1e1r = 165
+    /// AT operations
+    case s1e2r = 166
+    /// AT operations
+    case s1e3r = 167
+    /// AT operations
+    case s1e1w = 168
+    /// AT operations
+    case s1e2w = 169
+    /// AT operations
+    case s1e3w = 170
+    /// AT operations
+    case s1e0r = 171
+    /// AT operations
+    case s1e0w = 172
+    /// AT operations
+    case s12e1r = 173
+    /// AT operations
+    case s12e1w = 174
+    /// AT operations
+    case s12e0r = 175
+    /// AT operations
+    case s12e0w = 176
+    /// AT operations
+    case s1e1rp = 177
+    /// AT operations
+    case s1e1wp = 178
 }
 
-public enum Arm64Ext: UInt32, CaseIterable {
-    case invalid = 0
-    case uxtb = 1
-    case uxth = 2
-    case uxtw = 3
-    case uxtx = 4
-    case sxtb = 5
-    case sxth = 6
-    case sxtw = 7
-    case sxtx = 8
-}
-
-public enum Arm64Cc: UInt32, CaseIterable {
-    case invalid = 0
-    /// Equal
-    case eq = 1
-    /// Not equal:                 Not equal, or unordered
-    case ne = 2
-    /// Unsigned higher or same:   >, ==, or unordered
-    case hs = 3
-    /// Unsigned lower or same:    Less than
-    case lo = 4
-    /// Minus, negative:           Less than
-    case mi = 5
-    /// Plus, positive or zero:    >, ==, or unordered
-    case pl = 6
-    /// Overflow:                  Unordered
-    case vs = 7
-    /// No overflow:               Ordered
-    case vc = 8
-    /// Unsigned higher:           Greater than, or unordered
-    case hi = 9
-    /// Unsigned lower or same:    Less than or equal
-    case ls = 10
-    /// Greater than or equal:     Greater than or equal
-    case ge = 11
-    /// Less than:                 Less than, or unordered
-    case lt = 12
-    /// Signed greater than:       Greater than
-    case gt = 13
-    /// Signed less than or equal: <, ==, or unordered
-    case le = 14
-    /// Always (unconditional):    Always (unconditional)
-    case al = 15
-    /// Always (unconditional):   Always (unconditional)
-    case nv = 16
-}
-
-public enum Arm64Sysreg: UInt32, CaseIterable {
-    case invalid = 0
-    case accdataEl1 = 50821
-    case actlrEl1 = 49281
-    case actlrEl2 = 57473
-    case actlrEl3 = 61569
-    case afsr0El1 = 49800
-    case afsr0El12 = 60040
-    case afsr0El2 = 57992
-    case afsr0El3 = 62088
-    case afsr1El1 = 49801
-    case afsr1El12 = 60041
-    case afsr1El2 = 57993
-    case afsr1El3 = 62089
-    case aidrEl1 = 51207
-    case amairEl1 = 50456
-    case amairEl12 = 60696
-    case amairEl2 = 58648
-    case amairEl3 = 62744
-    case amcfgrEl0 = 56977
-    case amcgcrEl0 = 56978
-    case amcntenclr0El0 = 56980
-    case amcntenclr1El0 = 56984
-    case amcntenset0El0 = 56981
-    case amcntenset1El0 = 56985
-    case amcrEl0 = 56976
-    case amevcntr00El0 = 56992
-    case amevcntr01El0 = 56993
-    case amevcntr02El0 = 56994
-    case amevcntr03El0 = 56995
-    case amevcntr10El0 = 57056
-    case amevcntr110El0 = 57066
-    case amevcntr111El0 = 57067
-    case amevcntr112El0 = 57068
-    case amevcntr113El0 = 57069
-    case amevcntr114El0 = 57070
-    case amevcntr115El0 = 57071
-    case amevcntr11El0 = 57057
-    case amevcntr12El0 = 57058
-    case amevcntr13El0 = 57059
-    case amevcntr14El0 = 57060
-    case amevcntr15El0 = 57061
-    case amevcntr16El0 = 57062
-    case amevcntr17El0 = 57063
-    case amevcntr18El0 = 57064
-    case amevcntr19El0 = 57065
-    case amevcntvoff00El2 = 59072
-    case amevcntvoff010El2 = 59082
-    case amevcntvoff011El2 = 59083
-    case amevcntvoff012El2 = 59084
-    case amevcntvoff013El2 = 59085
-    case amevcntvoff014El2 = 59086
-    case amevcntvoff015El2 = 59087
-    case amevcntvoff01El2 = 59073
-    case amevcntvoff02El2 = 59074
-    case amevcntvoff03El2 = 59075
-    case amevcntvoff04El2 = 59076
-    case amevcntvoff05El2 = 59077
-    case amevcntvoff06El2 = 59078
-    case amevcntvoff07El2 = 59079
-    case amevcntvoff08El2 = 59080
-    case amevcntvoff09El2 = 59081
-    case amevcntvoff10El2 = 59088
-    case amevcntvoff110El2 = 59098
-    case amevcntvoff111El2 = 59099
-    case amevcntvoff112El2 = 59100
-    case amevcntvoff113El2 = 59101
-    case amevcntvoff114El2 = 59102
-    case amevcntvoff115El2 = 59103
-    case amevcntvoff11El2 = 59089
-    case amevcntvoff12El2 = 59090
-    case amevcntvoff13El2 = 59091
-    case amevcntvoff14El2 = 59092
-    case amevcntvoff15El2 = 59093
-    case amevcntvoff16El2 = 59094
-    case amevcntvoff17El2 = 59095
-    case amevcntvoff18El2 = 59096
-    case amevcntvoff19El2 = 59097
-    case amevtyper00El0 = 57008
-    case amevtyper01El0 = 57009
-    case amevtyper02El0 = 57010
-    case amevtyper03El0 = 57011
-    case amevtyper10El0 = 57072
-    case amevtyper110El0 = 57082
-    case amevtyper111El0 = 57083
-    case amevtyper112El0 = 57084
-    case amevtyper113El0 = 57085
-    case amevtyper114El0 = 57086
-    case amevtyper115El0 = 57087
-    case amevtyper11El0 = 57073
-    case amevtyper12El0 = 57074
-    case amevtyper13El0 = 57075
-    case amevtyper14El0 = 57076
-    case amevtyper15El0 = 57077
-    case amevtyper16El0 = 57078
-    case amevtyper17El0 = 57079
-    case amevtyper18El0 = 57080
-    case amevtyper19El0 = 57081
-    case amuserenrEl0 = 56979
-    case apdakeyhiEl1 = 49425
-    case apdakeyloEl1 = 49424
-    case apdbkeyhiEl1 = 49427
-    case apdbkeyloEl1 = 49426
-    case apgakeyhiEl1 = 49433
-    case apgakeyloEl1 = 49432
-    case apiakeyhiEl1 = 49417
-    case apiakeyloEl1 = 49416
-    case apibkeyhiEl1 = 49419
-    case apibkeyloEl1 = 49418
-    case brbcrEl1 = 35968
-    case brbcrEl12 = 44160
-    case brbcrEl2 = 42112
-    case brbfcrEl1 = 35969
-    case brbidr0El1 = 35984
-    case brbinf0El1 = 35840
-    case brbinf10El1 = 35920
-    case brbinf11El1 = 35928
-    case brbinf12El1 = 35936
-    case brbinf13El1 = 35944
-    case brbinf14El1 = 35952
-    case brbinf15El1 = 35960
-    case brbinf16El1 = 35844
-    case brbinf17El1 = 35852
-    case brbinf18El1 = 35860
-    case brbinf19El1 = 35868
-    case brbinf1El1 = 35848
-    case brbinf20El1 = 35876
-    case brbinf21El1 = 35884
-    case brbinf22El1 = 35892
-    case brbinf23El1 = 35900
-    case brbinf24El1 = 35908
-    case brbinf25El1 = 35916
-    case brbinf26El1 = 35924
-    case brbinf27El1 = 35932
-    case brbinf28El1 = 35940
-    case brbinf29El1 = 35948
-    case brbinf2El1 = 35856
-    case brbinf30El1 = 35956
-    case brbinf31El1 = 35964
-    case brbinf3El1 = 35864
-    case brbinf4El1 = 35872
-    case brbinf5El1 = 35880
-    case brbinf6El1 = 35888
-    case brbinf7El1 = 35896
-    case brbinf8El1 = 35904
-    case brbinf9El1 = 35912
-    case brbinfinjEl1 = 35976
-    case brbsrc0El1 = 35841
-    case brbsrc10El1 = 35921
-    case brbsrc11El1 = 35929
-    case brbsrc12El1 = 35937
-    case brbsrc13El1 = 35945
-    case brbsrc14El1 = 35953
-    case brbsrc15El1 = 35961
-    case brbsrc16El1 = 35845
-    case brbsrc17El1 = 35853
-    case brbsrc18El1 = 35861
-    case brbsrc19El1 = 35869
-    case brbsrc1El1 = 35849
-    case brbsrc20El1 = 35877
-    case brbsrc21El1 = 35885
-    case brbsrc22El1 = 35893
-    case brbsrc23El1 = 35901
-    case brbsrc24El1 = 35909
-    case brbsrc25El1 = 35917
-    case brbsrc26El1 = 35925
-    case brbsrc27El1 = 35933
-    case brbsrc28El1 = 35941
-    case brbsrc29El1 = 35949
-    case brbsrc2El1 = 35857
-    case brbsrc30El1 = 35957
-    case brbsrc31El1 = 35965
-    case brbsrc3El1 = 35865
-    case brbsrc4El1 = 35873
-    case brbsrc5El1 = 35881
-    case brbsrc6El1 = 35889
-    case brbsrc7El1 = 35897
-    case brbsrc8El1 = 35905
-    case brbsrc9El1 = 35913
-    case brbsrcinjEl1 = 35977
-    case brbtgt0El1 = 35842
-    case brbtgt10El1 = 35922
-    case brbtgt11El1 = 35930
-    case brbtgt12El1 = 35938
-    case brbtgt13El1 = 35946
-    case brbtgt14El1 = 35954
-    case brbtgt15El1 = 35962
-    case brbtgt16El1 = 35846
-    case brbtgt17El1 = 35854
-    case brbtgt18El1 = 35862
-    case brbtgt19El1 = 35870
-    case brbtgt1El1 = 35850
-    case brbtgt20El1 = 35878
-    case brbtgt21El1 = 35886
-    case brbtgt22El1 = 35894
-    case brbtgt23El1 = 35902
-    case brbtgt24El1 = 35910
-    case brbtgt25El1 = 35918
-    case brbtgt26El1 = 35926
-    case brbtgt27El1 = 35934
-    case brbtgt28El1 = 35942
-    case brbtgt29El1 = 35950
-    case brbtgt2El1 = 35858
-    case brbtgt30El1 = 35958
-    case brbtgt31El1 = 35966
-    case brbtgt3El1 = 35866
-    case brbtgt4El1 = 35874
-    case brbtgt5El1 = 35882
-    case brbtgt6El1 = 35890
-    case brbtgt7El1 = 35898
-    case brbtgt8El1 = 35906
-    case brbtgt9El1 = 35914
-    case brbtgtinjEl1 = 35978
-    case brbtsEl1 = 35970
-    case ccsidr2El1 = 51202
-    case ccsidrEl1 = 51200
-    case clidrEl1 = 51201
-    case cntfrqEl0 = 57088
-    case cnthctlEl2 = 59144
-    case cnthpsCtlEl2 = 59177
-    case cnthpsCvalEl2 = 59178
-    case cnthpsTvalEl2 = 59176
-    case cnthpCtlEl2 = 59153
-    case cnthpCvalEl2 = 59154
-    case cnthpTvalEl2 = 59152
-    case cnthvsCtlEl2 = 59169
-    case cnthvsCvalEl2 = 59170
-    case cnthvsTvalEl2 = 59168
-    case cnthvCtlEl2 = 59161
-    case cnthvCvalEl2 = 59162
-    case cnthvTvalEl2 = 59160
-    case cntiscaleEl2 = 59141
-    case cntkctlEl1 = 50952
-    case cntkctlEl12 = 61192
-    case cntpctssEl0 = 57093
-    case cntpctEl0 = 57089
-    case cntpoffEl2 = 59142
-    case cntpsCtlEl1 = 65297
-    case cntpsCvalEl1 = 65298
-    case cntpsTvalEl1 = 65296
-    case cntpCtlEl0 = 57105
-    case cntpCtlEl02 = 61201
-    case cntpCvalEl0 = 57106
-    case cntpCvalEl02 = 61202
-    case cntpTvalEl0 = 57104
-    case cntpTvalEl02 = 61200
-    case cntscaleEl2 = 59140
-    case cntvctssEl0 = 57094
-    case cntvctEl0 = 57090
-    case cntvfrqEl2 = 59143
-    case cntvoffEl2 = 59139
-    case cntvCtlEl0 = 57113
-    case cntvCtlEl02 = 61209
-    case cntvCvalEl0 = 57114
-    case cntvCvalEl02 = 61210
-    case cntvTvalEl0 = 57112
-    case cntvTvalEl02 = 61208
-    case contextidrEl1 = 50817
-    case contextidrEl12 = 61057
-    case contextidrEl2 = 59009
-    case cpacrEl1 = 49282
-    case cpacrEl12 = 59522
-    case cpmIoaccCtlEl3 = 65424
-    case cptrEl2 = 57482
-    case cptrEl3 = 61578
-    case csselrEl1 = 53248
-    case ctrEl0 = 55297
-    case currentel = 49682
-    case dacr32El2 = 57728
-    case daif = 55825
-    case dbgauthstatusEl1 = 33782
-    case dbgbcr0El1 = 32773
-    case dbgbcr10El1 = 32853
-    case dbgbcr11El1 = 32861
-    case dbgbcr12El1 = 32869
-    case dbgbcr13El1 = 32877
-    case dbgbcr14El1 = 32885
-    case dbgbcr15El1 = 32893
-    case dbgbcr1El1 = 32781
-    case dbgbcr2El1 = 32789
-    case dbgbcr3El1 = 32797
-    case dbgbcr4El1 = 32805
-    case dbgbcr5El1 = 32813
-    case dbgbcr6El1 = 32821
-    case dbgbcr7El1 = 32829
-    case dbgbcr8El1 = 32837
-    case dbgbcr9El1 = 32845
-    case dbgbvr0El1 = 32772
-    case dbgbvr10El1 = 32852
-    case dbgbvr11El1 = 32860
-    case dbgbvr12El1 = 32868
-    case dbgbvr13El1 = 32876
-    case dbgbvr14El1 = 32884
-    case dbgbvr15El1 = 32892
-    case dbgbvr1El1 = 32780
-    case dbgbvr2El1 = 32788
-    case dbgbvr3El1 = 32796
-    case dbgbvr4El1 = 32804
-    case dbgbvr5El1 = 32812
-    case dbgbvr6El1 = 32820
-    case dbgbvr7El1 = 32828
-    case dbgbvr8El1 = 32836
-    case dbgbvr9El1 = 32844
-    case dbgclaimclrEl1 = 33742
-    case dbgclaimsetEl1 = 33734
-    case dbgdtrrxEl0 = 38952
-    case dbgdtrEl0 = 38944
-    case dbgprcrEl1 = 32932
-    case dbgvcr32El2 = 41016
-    case dbgwcr0El1 = 32775
-    case dbgwcr10El1 = 32855
-    case dbgwcr11El1 = 32863
-    case dbgwcr12El1 = 32871
-    case dbgwcr13El1 = 32879
-    case dbgwcr14El1 = 32887
-    case dbgwcr15El1 = 32895
-    case dbgwcr1El1 = 32783
-    case dbgwcr2El1 = 32791
-    case dbgwcr3El1 = 32799
-    case dbgwcr4El1 = 32807
-    case dbgwcr5El1 = 32815
-    case dbgwcr6El1 = 32823
-    case dbgwcr7El1 = 32831
-    case dbgwcr8El1 = 32839
-    case dbgwcr9El1 = 32847
-    case dbgwvr0El1 = 32774
-    case dbgwvr10El1 = 32854
-    case dbgwvr11El1 = 32862
-    case dbgwvr12El1 = 32870
-    case dbgwvr13El1 = 32878
-    case dbgwvr14El1 = 32886
-    case dbgwvr15El1 = 32894
-    case dbgwvr1El1 = 32782
-    case dbgwvr2El1 = 32790
-    case dbgwvr3El1 = 32798
-    case dbgwvr4El1 = 32806
-    case dbgwvr5El1 = 32814
-    case dbgwvr6El1 = 32822
-    case dbgwvr7El1 = 32830
-    case dbgwvr8El1 = 32838
-    case dbgwvr9El1 = 32846
-    case dczidEl0 = 55303
-    case disrEl1 = 50697
-    case dit = 55829
-    case dlrEl0 = 55849
-    case dspsrEl0 = 55848
-    case elrEl1 = 49665
-    case elrEl12 = 59905
-    case elrEl2 = 57857
-    case elrEl3 = 61953
-    case erridrEl1 = 49816
-    case errselrEl1 = 49817
-    case erxaddrEl1 = 49827
-    case erxctlrEl1 = 49825
-    case erxfrEl1 = 49824
-    case erxmisc0El1 = 49832
-    case erxmisc1El1 = 49833
-    case erxmisc2El1 = 49834
-    case erxmisc3El1 = 49835
-    case erxpfgcdnEl1 = 49830
-    case erxpfgctlEl1 = 49829
-    case erxpfgfEl1 = 49828
-    case erxstatusEl1 = 49826
-    case esrEl1 = 49808
-    case esrEl12 = 60048
-    case esrEl2 = 58000
-    case esrEl3 = 62096
-    case farEl1 = 49920
-    case farEl12 = 60160
-    case farEl2 = 58112
-    case farEl3 = 62208
-    case fpcr = 55840
-    case fpexc32El2 = 58008
-    case fpsr = 55841
-    case gcrEl1 = 49286
-    case gmidEl1 = 51204
-    case gpccrEl3 = 61710
-    case gptbrEl3 = 61708
-    case hacrEl2 = 57487
-    case hcrxEl2 = 57490
-    case hcrEl2 = 57480
-    case hdfgrtrEl2 = 57740
-    case hdfgwtrEl2 = 57741
-    case hfgitrEl2 = 57486
-    case hfgrtrEl2 = 57484
-    case hfgwtrEl2 = 57485
-    case hpfarEl2 = 58116
-    case hstrEl2 = 57483
-    case iccAp0r0El1 = 50756
-    case iccAp0r1El1 = 50757
-    case iccAp0r2El1 = 50758
-    case iccAp0r3El1 = 50759
-    case iccAp1r0El1 = 50760
-    case iccAp1r1El1 = 50761
-    case iccAp1r2El1 = 50762
-    case iccAp1r3El1 = 50763
-    case iccAsgi1rEl1 = 50782
-    case iccBpr0El1 = 50755
-    case iccBpr1El1 = 50787
-    case iccCtlrEl1 = 50788
-    case iccCtlrEl3 = 63076
-    case iccDirEl1 = 50777
-    case iccEoir0El1 = 50753
-    case iccEoir1El1 = 50785
-    case iccHppir0El1 = 50754
-    case iccHppir1El1 = 50786
-    case iccIar0El1 = 50752
-    case iccIar1El1 = 50784
-    case iccIgrpen0El1 = 50790
-    case iccIgrpen1El1 = 50791
-    case iccIgrpen1El3 = 63079
-    case iccPmrEl1 = 49712
-    case iccRprEl1 = 50779
-    case iccSgi0rEl1 = 50783
-    case iccSgi1rEl1 = 50781
-    case iccSreEl1 = 50789
-    case iccSreEl2 = 58957
-    case iccSreEl3 = 63077
-    case ichAp0r0El2 = 58944
-    case ichAp0r1El2 = 58945
-    case ichAp0r2El2 = 58946
-    case ichAp0r3El2 = 58947
-    case ichAp1r0El2 = 58952
-    case ichAp1r1El2 = 58953
-    case ichAp1r2El2 = 58954
-    case ichAp1r3El2 = 58955
-    case ichEisrEl2 = 58971
-    case ichElrsrEl2 = 58973
-    case ichHcrEl2 = 58968
-    case ichLr0El2 = 58976
-    case ichLr10El2 = 58986
-    case ichLr11El2 = 58987
-    case ichLr12El2 = 58988
-    case ichLr13El2 = 58989
-    case ichLr14El2 = 58990
-    case ichLr15El2 = 58991
-    case ichLr1El2 = 58977
-    case ichLr2El2 = 58978
-    case ichLr3El2 = 58979
-    case ichLr4El2 = 58980
-    case ichLr5El2 = 58981
-    case ichLr6El2 = 58982
-    case ichLr7El2 = 58983
-    case ichLr8El2 = 58984
-    case ichLr9El2 = 58985
-    case ichMisrEl2 = 58970
-    case ichVmcrEl2 = 58975
-    case ichVtrEl2 = 58969
-    case idAa64afr0El1 = 49196
-    case idAa64afr1El1 = 49197
-    case idAa64dfr0El1 = 49192
-    case idAa64dfr1El1 = 49193
-    case idAa64isar0El1 = 49200
-    case idAa64isar1El1 = 49201
-    case idAa64isar2El1 = 49202
-    case idAa64mmfr0El1 = 49208
-    case idAa64mmfr1El1 = 49209
-    case idAa64mmfr2El1 = 49210
-    case idAa64pfr0El1 = 49184
-    case idAa64pfr1El1 = 49185
-    case idAa64smfr0El1 = 49189
-    case idAa64zfr0El1 = 49188
-    case idAfr0El1 = 49163
-    case idDfr0El1 = 49162
-    case idIsar0El1 = 49168
-    case idIsar1El1 = 49169
-    case idIsar2El1 = 49170
-    case idIsar3El1 = 49171
-    case idIsar4El1 = 49172
-    case idIsar5El1 = 49173
-    case idIsar6El1 = 49175
-    case idMmfr0El1 = 49164
-    case idMmfr1El1 = 49165
-    case idMmfr2El1 = 49166
-    case idMmfr3El1 = 49167
-    case idMmfr4El1 = 49174
-    case idMmfr5El1 = 49182
-    case idPfr0El1 = 49160
-    case idPfr1El1 = 49161
-    case idPfr2El1 = 49180
-    case ifsr32El2 = 57985
-    case isrEl1 = 50696
-    case lorcEl1 = 50467
-    case loreaEl1 = 50465
-    case loridEl1 = 50471
-    case lornEl1 = 50466
-    case lorsaEl1 = 50464
-    case mairEl1 = 50448
-    case mairEl12 = 60688
-    case mairEl2 = 58640
-    case mairEl3 = 62736
-    case mdccintEl1 = 32784
-    case mdccsrEl0 = 38920
-    case mdcrEl2 = 57481
-    case mdcrEl3 = 61593
-    case mdrarEl1 = 32896
-    case mdscrEl1 = 32786
-    case mfarEl3 = 62213
-    case midrEl1 = 49152
-    case mpam0El1 = 50473
-    case mpam1El1 = 50472
-    case mpam1El12 = 60712
-    case mpam2El2 = 58664
-    case mpam3El3 = 62760
-    case mpamhcrEl2 = 58656
-    case mpamidrEl1 = 50468
-    case mpamsmEl1 = 50475
-    case mpamvpm0El2 = 58672
-    case mpamvpm1El2 = 58673
-    case mpamvpm2El2 = 58674
-    case mpamvpm3El2 = 58675
-    case mpamvpm4El2 = 58676
-    case mpamvpm5El2 = 58677
-    case mpamvpm6El2 = 58678
-    case mpamvpm7El2 = 58679
-    case mpamvpmvEl2 = 58657
-    case mpidrEl1 = 49157
-    case mpuirEl1 = 49156
-    case mpuirEl2 = 57348
-    case mvfr0El1 = 49176
-    case mvfr1El1 = 49177
-    case mvfr2El1 = 49178
-    case nzcv = 55824
-    case osdlrEl1 = 32924
-    case osdtrrxEl1 = 32770
-    case osdtrtxEl1 = 32794
-    case oseccrEl1 = 32818
-    case oslarEl1 = 32900
-    case oslsrEl1 = 32908
-    case pan = 49683
-    case parEl1 = 50080
-    case pmbidrEl1 = 50391
-    case pmblimitrEl1 = 50384
-    case pmbptrEl1 = 50385
-    case pmbsrEl1 = 50387
-    case pmccfiltrEl0 = 57215
-    case pmccntrEl0 = 56552
-    case pmceid0El0 = 56550
-    case pmceid1El0 = 56551
-    case pmcntenclrEl0 = 56546
-    case pmcntensetEl0 = 56545
-    case pmcrEl0 = 56544
-    case pmevcntr0El0 = 57152
-    case pmevcntr10El0 = 57162
-    case pmevcntr11El0 = 57163
-    case pmevcntr12El0 = 57164
-    case pmevcntr13El0 = 57165
-    case pmevcntr14El0 = 57166
-    case pmevcntr15El0 = 57167
-    case pmevcntr16El0 = 57168
-    case pmevcntr17El0 = 57169
-    case pmevcntr18El0 = 57170
-    case pmevcntr19El0 = 57171
-    case pmevcntr1El0 = 57153
-    case pmevcntr20El0 = 57172
-    case pmevcntr21El0 = 57173
-    case pmevcntr22El0 = 57174
-    case pmevcntr23El0 = 57175
-    case pmevcntr24El0 = 57176
-    case pmevcntr25El0 = 57177
-    case pmevcntr26El0 = 57178
-    case pmevcntr27El0 = 57179
-    case pmevcntr28El0 = 57180
-    case pmevcntr29El0 = 57181
-    case pmevcntr2El0 = 57154
-    case pmevcntr30El0 = 57182
-    case pmevcntr3El0 = 57155
-    case pmevcntr4El0 = 57156
-    case pmevcntr5El0 = 57157
-    case pmevcntr6El0 = 57158
-    case pmevcntr7El0 = 57159
-    case pmevcntr8El0 = 57160
-    case pmevcntr9El0 = 57161
-    case pmevtyper0El0 = 57184
-    case pmevtyper10El0 = 57194
-    case pmevtyper11El0 = 57195
-    case pmevtyper12El0 = 57196
-    case pmevtyper13El0 = 57197
-    case pmevtyper14El0 = 57198
-    case pmevtyper15El0 = 57199
-    case pmevtyper16El0 = 57200
-    case pmevtyper17El0 = 57201
-    case pmevtyper18El0 = 57202
-    case pmevtyper19El0 = 57203
-    case pmevtyper1El0 = 57185
-    case pmevtyper20El0 = 57204
-    case pmevtyper21El0 = 57205
-    case pmevtyper22El0 = 57206
-    case pmevtyper23El0 = 57207
-    case pmevtyper24El0 = 57208
-    case pmevtyper25El0 = 57209
-    case pmevtyper26El0 = 57210
-    case pmevtyper27El0 = 57211
-    case pmevtyper28El0 = 57212
-    case pmevtyper29El0 = 57213
-    case pmevtyper2El0 = 57186
-    case pmevtyper30El0 = 57214
-    case pmevtyper3El0 = 57187
-    case pmevtyper4El0 = 57188
-    case pmevtyper5El0 = 57189
-    case pmevtyper6El0 = 57190
-    case pmevtyper7El0 = 57191
-    case pmevtyper8El0 = 57192
-    case pmevtyper9El0 = 57193
-    case pmintenclrEl1 = 50418
-    case pmintensetEl1 = 50417
-    case pmmirEl1 = 50422
-    case pmovsclrEl0 = 56547
-    case pmovssetEl0 = 56563
-    case pmscrEl1 = 50376
-    case pmscrEl12 = 60616
-    case pmscrEl2 = 58568
-    case pmselrEl0 = 56549
-    case pmsevfrEl1 = 50381
-    case pmsfcrEl1 = 50380
-    case pmsicrEl1 = 50378
-    case pmsidrEl1 = 50383
-    case pmsirrEl1 = 50379
-    case pmslatfrEl1 = 50382
-    case pmsnevfrEl1 = 50377
-    case pmswincEl0 = 56548
-    case pmuserenrEl0 = 56560
-    case pmxevcntrEl0 = 56554
-    case pmxevtyperEl0 = 56553
-    case prbar10El1 = 50024
-    case prbar10El2 = 58216
-    case prbar11El1 = 50028
-    case prbar11El2 = 58220
-    case prbar12El1 = 50032
-    case prbar12El2 = 58224
-    case prbar13El1 = 50036
-    case prbar13El2 = 58228
-    case prbar14El1 = 50040
-    case prbar14El2 = 58232
-    case prbar15El1 = 50044
-    case prbar15El2 = 58236
-    case prbar1El1 = 49988
-    case prbar1El2 = 58180
-    case prbar2El1 = 49992
-    case prbar2El2 = 58184
-    case prbar3El1 = 49996
-    case prbar3El2 = 58188
-    case prbar4El1 = 50000
-    case prbar4El2 = 58192
-    case prbar5El1 = 50004
-    case prbar5El2 = 58196
-    case prbar6El1 = 50008
-    case prbar6El2 = 58200
-    case prbar7El1 = 50012
-    case prbar7El2 = 58204
-    case prbar8El1 = 50016
-    case prbar8El2 = 58208
-    case prbar9El1 = 50020
-    case prbar9El2 = 58212
-    case prbarEl1 = 49984
-    case prbarEl2 = 58176
-    case prenrEl1 = 49929
-    case prenrEl2 = 58121
-    case prlar10El1 = 50025
-    case prlar10El2 = 58217
-    case prlar11El1 = 50029
-    case prlar11El2 = 58221
-    case prlar12El1 = 50033
-    case prlar12El2 = 58225
-    case prlar13El1 = 50037
-    case prlar13El2 = 58229
-    case prlar14El1 = 50041
-    case prlar14El2 = 58233
-    case prlar15El1 = 50045
-    case prlar15El2 = 58237
-    case prlar1El1 = 49989
-    case prlar1El2 = 58181
-    case prlar2El1 = 49993
-    case prlar2El2 = 58185
-    case prlar3El1 = 49997
-    case prlar3El2 = 58189
-    case prlar4El1 = 50001
-    case prlar4El2 = 58193
-    case prlar5El1 = 50005
-    case prlar5El2 = 58197
-    case prlar6El1 = 50009
-    case prlar6El2 = 58201
-    case prlar7El1 = 50013
-    case prlar7El2 = 58205
-    case prlar8El1 = 50017
-    case prlar8El2 = 58209
-    case prlar9El1 = 50021
-    case prlar9El2 = 58213
-    case prlarEl1 = 49985
-    case prlarEl2 = 58177
-    case prselrEl1 = 49937
-    case prselrEl2 = 58129
-    case revidrEl1 = 49158
-    case rgsrEl1 = 49285
-    case rmrEl1 = 50690
-    case rmrEl2 = 58882
-    case rmrEl3 = 62978
-    case rndr = 55584
-    case rndrrs = 55585
-    case rvbarEl1 = 50689
-    case rvbarEl2 = 58881
-    case rvbarEl3 = 62977
-    case scrEl3 = 61576
-    case sctlrEl1 = 49280
-    case sctlrEl12 = 59520
-    case sctlrEl2 = 57472
-    case sctlrEl3 = 61568
-    case scxtnumEl0 = 56967
-    case scxtnumEl1 = 50823
-    case scxtnumEl12 = 61063
-    case scxtnumEl2 = 59015
-    case scxtnumEl3 = 63111
-    case sder32El2 = 57497
-    case sder32El3 = 61577
-    case smcrEl1 = 49302
-    case smcrEl12 = 59542
-    case smcrEl2 = 57494
-    case smcrEl3 = 61590
-    case smidrEl1 = 51206
-    case smprimapEl2 = 57493
-    case smpriEl1 = 49300
-    case spsel = 49680
-    case spsrAbt = 57881
-    case spsrEl1 = 49664
-    case spsrEl12 = 59904
-    case spsrEl2 = 57856
-    case spsrEl3 = 61952
-    case spsrFiq = 57883
-    case spsrIrq = 57880
-    case spsrUnd = 57882
-    case spEl0 = 49672
-    case spEl1 = 57864
-    case spEl2 = 61960
-    case ssbs = 55830
-    case svcr = 55826
-    case tco = 55831
-    case tcrEl1 = 49410
-    case tcrEl12 = 59650
-    case tcrEl2 = 57602
-    case tcrEl3 = 61698
-    case teecr32El1 = 36864
-    case teehbr32El1 = 36992
-    case tfsre0El1 = 49841
-    case tfsrEl1 = 49840
-    case tfsrEl12 = 60080
-    case tfsrEl2 = 58032
-    case tfsrEl3 = 62128
-    case tpidr2El0 = 56965
-    case tpidrroEl0 = 56963
-    case tpidrEl0 = 56962
-    case tpidrEl1 = 50820
-    case tpidrEl2 = 59010
-    case tpidrEl3 = 63106
-    case trbbaserEl1 = 50394
-    case trbidrEl1 = 50399
-    case trblimitrEl1 = 50392
-    case trbmarEl1 = 50396
-    case trbptrEl1 = 50393
-    case trbsrEl1 = 50395
-    case trbtrgEl1 = 50398
-    case trcacatr0 = 35074
-    case trcacatr1 = 35090
-    case trcacatr10 = 35107
-    case trcacatr11 = 35123
-    case trcacatr12 = 35139
-    case trcacatr13 = 35155
-    case trcacatr14 = 35171
-    case trcacatr15 = 35187
-    case trcacatr2 = 35106
-    case trcacatr3 = 35122
-    case trcacatr4 = 35138
-    case trcacatr5 = 35154
-    case trcacatr6 = 35170
-    case trcacatr7 = 35186
-    case trcacatr8 = 35075
-    case trcacatr9 = 35091
-    case trcacvr0 = 35072
-    case trcacvr1 = 35088
-    case trcacvr10 = 35105
-    case trcacvr11 = 35121
-    case trcacvr12 = 35137
-    case trcacvr13 = 35153
-    case trcacvr14 = 35169
-    case trcacvr15 = 35185
-    case trcacvr2 = 35104
-    case trcacvr3 = 35120
-    case trcacvr4 = 35136
-    case trcacvr5 = 35152
-    case trcacvr6 = 35168
-    case trcacvr7 = 35184
-    case trcacvr8 = 35073
-    case trcacvr9 = 35089
-    case trcauthstatus = 35830
-    case trcauxctlr = 34864
-    case trcbbctlr = 34936
-    case trcccctlr = 34928
-    case trccidcctlr0 = 35202
-    case trccidcctlr1 = 35210
-    case trccidcvr0 = 35200
-    case trccidcvr1 = 35216
-    case trccidcvr2 = 35232
-    case trccidcvr3 = 35248
-    case trccidcvr4 = 35264
-    case trccidcvr5 = 35280
-    case trccidcvr6 = 35296
-    case trccidcvr7 = 35312
-    case trccidr0 = 35815
-    case trccidr1 = 35823
-    case trccidr2 = 35831
-    case trccidr3 = 35839
-    case trcclaimclr = 35790
-    case trcclaimset = 35782
-    case trccntctlr0 = 34853
-    case trccntctlr1 = 34861
-    case trccntctlr2 = 34869
-    case trccntctlr3 = 34877
-    case trccntrldvr0 = 34821
-    case trccntrldvr1 = 34829
-    case trccntrldvr2 = 34837
-    case trccntrldvr3 = 34845
-    case trccntvr0 = 34885
-    case trccntvr1 = 34893
-    case trccntvr2 = 34901
-    case trccntvr3 = 34909
-    case trcconfigr = 34848
-    case trcdevaff0 = 35798
-    case trcdevaff1 = 35806
-    case trcdevarch = 35838
-    case trcdevid = 35735
-    case trcdevtype = 35743
-    case trcdvcmr0 = 35078
-    case trcdvcmr1 = 35110
-    case trcdvcmr2 = 35142
-    case trcdvcmr3 = 35174
-    case trcdvcmr4 = 35079
-    case trcdvcmr5 = 35111
-    case trcdvcmr6 = 35143
-    case trcdvcmr7 = 35175
-    case trcdvcvr0 = 35076
-    case trcdvcvr1 = 35108
-    case trcdvcvr2 = 35140
-    case trcdvcvr3 = 35172
-    case trcdvcvr4 = 35077
-    case trcdvcvr5 = 35109
-    case trcdvcvr6 = 35141
-    case trcdvcvr7 = 35173
-    case trceventctl0r = 34880
-    case trceventctl1r = 34888
-    static let trcextinselr = trcextinselr0
-    case trcextinselr0 = 34884
-    case trcextinselr1 = 34892
-    case trcextinselr2 = 34900
-    case trcextinselr3 = 34908
-    case trcidr0 = 34887
-    case trcidr1 = 34895
-    case trcidr10 = 34838
-    case trcidr11 = 34846
-    case trcidr12 = 34854
-    case trcidr13 = 34862
-    case trcidr2 = 34903
-    case trcidr3 = 34911
-    case trcidr4 = 34919
-    case trcidr5 = 34927
-    case trcidr6 = 34935
-    case trcidr7 = 34943
-    case trcidr8 = 34822
-    case trcidr9 = 34830
-    case trcimspec0 = 34823
-    case trcimspec1 = 34831
-    case trcimspec2 = 34839
-    case trcimspec3 = 34847
-    case trcimspec4 = 34855
-    case trcimspec5 = 34863
-    case trcimspec6 = 34871
-    case trcimspec7 = 34879
-    case trcitctrl = 35716
-    case trclar = 35814
-    case trclsr = 35822
-    case trcoslar = 34948
-    case trcoslsr = 34956
-    case trcpdcr = 34980
-    case trcpdsr = 34988
-    case trcpidr0 = 35783
-    case trcpidr1 = 35791
-    case trcpidr2 = 35799
-    case trcpidr3 = 35807
-    case trcpidr4 = 35751
-    case trcpidr5 = 35759
-    case trcpidr6 = 35767
-    case trcpidr7 = 35775
-    case trcprgctlr = 34824
-    case trcprocselr = 34832
-    case trcqctlr = 34825
-    case trcrsctlr10 = 35024
-    case trcrsctlr11 = 35032
-    case trcrsctlr12 = 35040
-    case trcrsctlr13 = 35048
-    case trcrsctlr14 = 35056
-    case trcrsctlr15 = 35064
-    case trcrsctlr16 = 34945
-    case trcrsctlr17 = 34953
-    case trcrsctlr18 = 34961
-    case trcrsctlr19 = 34969
-    case trcrsctlr2 = 34960
-    case trcrsctlr20 = 34977
-    case trcrsctlr21 = 34985
-    case trcrsctlr22 = 34993
-    case trcrsctlr23 = 35001
-    case trcrsctlr24 = 35009
-    case trcrsctlr25 = 35017
-    case trcrsctlr26 = 35025
-    case trcrsctlr27 = 35033
-    case trcrsctlr28 = 35041
-    case trcrsctlr29 = 35049
-    case trcrsctlr3 = 34968
-    case trcrsctlr30 = 35057
-    case trcrsctlr31 = 35065
-    case trcrsctlr4 = 34976
-    case trcrsctlr5 = 34984
-    case trcrsctlr6 = 34992
-    case trcrsctlr7 = 35000
-    case trcrsctlr8 = 35008
-    case trcrsctlr9 = 35016
-    case trcrsr = 34896
-    case trcseqevr0 = 34820
-    case trcseqevr1 = 34828
-    case trcseqevr2 = 34836
-    case trcseqrstevr = 34868
-    case trcseqstr = 34876
-    case trcssccr0 = 34946
-    case trcssccr1 = 34954
-    case trcssccr2 = 34962
-    case trcssccr3 = 34970
-    case trcssccr4 = 34978
-    case trcssccr5 = 34986
-    case trcssccr6 = 34994
-    case trcssccr7 = 35002
-    case trcsscsr0 = 35010
-    case trcsscsr1 = 35018
-    case trcsscsr2 = 35026
-    case trcsscsr3 = 35034
-    case trcsscsr4 = 35042
-    case trcsscsr5 = 35050
-    case trcsscsr6 = 35058
-    case trcsscsr7 = 35066
-    case trcsspcicr0 = 34947
-    case trcsspcicr1 = 34955
-    case trcsspcicr2 = 34963
-    case trcsspcicr3 = 34971
-    case trcsspcicr4 = 34979
-    case trcsspcicr5 = 34987
-    case trcsspcicr6 = 34995
-    case trcsspcicr7 = 35003
-    case trcstallctlr = 34904
-    case trcstatr = 34840
-    case trcsyncpr = 34920
-    case trctraceidr = 34817
-    case trctsctlr = 34912
-    case trcvdarcctlr = 34898
-    case trcvdctlr = 34882
-    case trcvdsacctlr = 34890
-    case trcvictlr = 34818
-    case trcviiectlr = 34826
-    case trcvipcssctlr = 34842
-    case trcvissctlr = 34834
-    case trcvmidcctlr0 = 35218
-    case trcvmidcctlr1 = 35226
-    case trcvmidcvr0 = 35201
-    case trcvmidcvr1 = 35217
-    case trcvmidcvr2 = 35233
-    case trcvmidcvr3 = 35249
-    case trcvmidcvr4 = 35265
-    case trcvmidcvr5 = 35281
-    case trcvmidcvr6 = 35297
-    case trcvmidcvr7 = 35313
-    case trfcrEl1 = 49297
-    case trfcrEl12 = 59537
-    case trfcrEl2 = 57489
-    case ttbr0El1 = 49408
-    case ttbr0El12 = 59648
-    case ttbr0El2 = 57600
-    case ttbr0El3 = 61696
-    case ttbr1El1 = 49409
-    case ttbr1El12 = 59649
-    case ttbr1El2 = 57601
-    case uao = 49684
-    case vbarEl1 = 50688
-    case vbarEl12 = 60928
-    case vbarEl2 = 58880
-    case vbarEl3 = 62976
-    case vdisrEl2 = 58889
-    case vmpidrEl2 = 57349
-    case vncrEl2 = 57616
-    case vpidrEl2 = 57344
-    static let vsctlrEl2 = 57600
-    case vsesrEl2 = 58003
-    case vstcrEl2 = 57650
-    case vsttbrEl2 = 57648
-    case vtcrEl2 = 57610
-    case vttbrEl2 = 57608
-    case zcrEl1 = 49296
-    case zcrEl12 = 59536
-    case zcrEl2 = 57488
-    case zcrEl3 = 61584
-}
-
-public enum Arm64Pstate: UInt32, CaseIterable {
-    case invalid = 0
-    case spsel = 5
-    case daifset = 30
-    case daifclr = 31
-    case pan = 4
-    case uao = 3
-    case dit = 26
-}
-
-public enum Arm64Vas: UInt32, CaseIterable {
-    case invalid = 0
-    case vas16b = 1
-    case vas8b = 2
-    case vas4b = 3
-    case vas1b = 4
-    case vas8h = 5
-    case vas4h = 6
-    case vas2h = 7
-    case vas1h = 8
-    case vas4s = 9
-    case vas2s = 10
-    case vas1s = 11
-    case vas2d = 12
-    case vas1d = 13
-    case vas1q = 14
-}
-
-public enum Arm64Barrier: UInt32, CaseIterable {
+/// Memory barrier operands
+public enum Arm64Barrier: UInt32 {
     case invalid = 0
     case oshld = 1
     case oshst = 2
@@ -1107,633 +49,202 @@ public enum Arm64Barrier: UInt32, CaseIterable {
     case sy = 15
 }
 
-public enum Arm64Op: UInt32, CaseIterable {
-    /// = CS_OP_INVALID (Uninitialized).
+/// ARM64 condition code
+public enum Arm64Cc: UInt32 {
     case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-    /// = CS_OP_FP (Floating-Point operand).
-    case fp = 4
-    /// C-Immediate
-    case cimm = 64
-    /// MRS register operand.
-    case regMrs = 65
-    /// MSR register operand.
-    case regMsr = 66
-    /// PState operand.
-    case pstate = 67
-    /// SYS operand for IC/DC/AT/TLBI instructions.
-    case sys = 68
-    /// SVCR operand for MSR SVCR instructions.
-    case svcr = 69
-    /// Prefetch operand (PRFM).
-    case prefetch = 70
-    /// Memory barrier operand (ISB/DMB/DSB instructions).
-    case barrier = 71
-    /// SME instruction operand with with index.
-    case smeIndex = 72
+    /// Equal
+    case eq = 1
+    /// Not equal: Not equal, or unordered
+    case ne = 2
+    /// Unsigned higher or same: >, ==, or unordered
+    case hs = 3
+    /// Unsigned lower or same: Less than
+    case lo = 4
+    /// Minus, negative: Less than
+    case mi = 5
+    /// Plus, positive or zero: >, ==, or unordered
+    case pl = 6
+    /// Overflow: Unordered
+    case vs = 7
+    /// No overflow: Ordered
+    case vc = 8
+    /// Unsigned higher: Greater than, or unordered
+    case hi = 9
+    /// Unsigned lower or same: Less than or equal
+    case ls = 10
+    /// Greater than or equal: Greater than or equal
+    case ge = 11
+    /// Less than: Less than, or unordered
+    case lt = 12
+    /// Signed greater than: Greater than
+    case gt = 13
+    /// Signed less than or equal: <, ==, or unordered
+    case le = 14
+    /// Always (unconditional): Always (unconditional)
+    case al = 15
+    /// Always (unconditional): Always (unconditional)
+    case nv = 16
 }
 
-public enum Arm64SysOp: UInt32, CaseIterable {
-    case sysInvalid = 0
-    case tlbiAlle1 = 1
-    case tlbiAlle1is = 2
-    case tlbiAlle1isnxs = 3
-    case tlbiAlle1nxs = 4
-    case tlbiAlle1os = 5
-    case tlbiAlle1osnxs = 6
-    case tlbiAlle2 = 7
-    case tlbiAlle2is = 8
-    case tlbiAlle2isnxs = 9
-    case tlbiAlle2nxs = 10
-    case tlbiAlle2os = 11
-    case tlbiAlle2osnxs = 12
-    case tlbiAlle3 = 13
-    case tlbiAlle3is = 14
-    case tlbiAlle3isnxs = 15
-    case tlbiAlle3nxs = 16
-    case tlbiAlle3os = 17
-    case tlbiAlle3osnxs = 18
-    case tlbiAside1 = 19
-    case tlbiAside1is = 20
-    case tlbiAside1isnxs = 21
-    case tlbiAside1nxs = 22
-    case tlbiAside1os = 23
-    case tlbiAside1osnxs = 24
-    case tlbiIpas2e1 = 25
-    case tlbiIpas2e1is = 26
-    case tlbiIpas2e1isnxs = 27
-    case tlbiIpas2e1nxs = 28
-    case tlbiIpas2e1os = 29
-    case tlbiIpas2e1osnxs = 30
-    case tlbiIpas2le1 = 31
-    case tlbiIpas2le1is = 32
-    case tlbiIpas2le1isnxs = 33
-    case tlbiIpas2le1nxs = 34
-    case tlbiIpas2le1os = 35
-    case tlbiIpas2le1osnxs = 36
-    case tlbiPaall = 37
-    case tlbiPaallnxs = 38
-    case tlbiPaallos = 39
-    case tlbiPaallosnxs = 40
-    case tlbiRipas2e1 = 41
-    case tlbiRipas2e1is = 42
-    case tlbiRipas2e1isnxs = 43
-    case tlbiRipas2e1nxs = 44
-    case tlbiRipas2e1os = 45
-    case tlbiRipas2e1osnxs = 46
-    case tlbiRipas2le1 = 47
-    case tlbiRipas2le1is = 48
-    case tlbiRipas2le1isnxs = 49
-    case tlbiRipas2le1nxs = 50
-    case tlbiRipas2le1os = 51
-    case tlbiRipas2le1osnxs = 52
-    case tlbiRpalos = 53
-    case tlbiRpalosnxs = 54
-    case tlbiRpaos = 55
-    case tlbiRpaosnxs = 56
-    case tlbiRvaae1 = 57
-    case tlbiRvaae1is = 58
-    case tlbiRvaae1isnxs = 59
-    case tlbiRvaae1nxs = 60
-    case tlbiRvaae1os = 61
-    case tlbiRvaae1osnxs = 62
-    case tlbiRvaale1 = 63
-    case tlbiRvaale1is = 64
-    case tlbiRvaale1isnxs = 65
-    case tlbiRvaale1nxs = 66
-    case tlbiRvaale1os = 67
-    case tlbiRvaale1osnxs = 68
-    case tlbiRvae1 = 69
-    case tlbiRvae1is = 70
-    case tlbiRvae1isnxs = 71
-    case tlbiRvae1nxs = 72
-    case tlbiRvae1os = 73
-    case tlbiRvae1osnxs = 74
-    case tlbiRvae2 = 75
-    case tlbiRvae2is = 76
-    case tlbiRvae2isnxs = 77
-    case tlbiRvae2nxs = 78
-    case tlbiRvae2os = 79
-    case tlbiRvae2osnxs = 80
-    case tlbiRvae3 = 81
-    case tlbiRvae3is = 82
-    case tlbiRvae3isnxs = 83
-    case tlbiRvae3nxs = 84
-    case tlbiRvae3os = 85
-    case tlbiRvae3osnxs = 86
-    case tlbiRvale1 = 87
-    case tlbiRvale1is = 88
-    case tlbiRvale1isnxs = 89
-    case tlbiRvale1nxs = 90
-    case tlbiRvale1os = 91
-    case tlbiRvale1osnxs = 92
-    case tlbiRvale2 = 93
-    case tlbiRvale2is = 94
-    case tlbiRvale2isnxs = 95
-    case tlbiRvale2nxs = 96
-    case tlbiRvale2os = 97
-    case tlbiRvale2osnxs = 98
-    case tlbiRvale3 = 99
-    case tlbiRvale3is = 100
-    case tlbiRvale3isnxs = 101
-    case tlbiRvale3nxs = 102
-    case tlbiRvale3os = 103
-    case tlbiRvale3osnxs = 104
-    case tlbiVaae1 = 105
-    case tlbiVaae1is = 106
-    case tlbiVaae1isnxs = 107
-    case tlbiVaae1nxs = 108
-    case tlbiVaae1os = 109
-    case tlbiVaae1osnxs = 110
-    case tlbiVaale1 = 111
-    case tlbiVaale1is = 112
-    case tlbiVaale1isnxs = 113
-    case tlbiVaale1nxs = 114
-    case tlbiVaale1os = 115
-    case tlbiVaale1osnxs = 116
-    case tlbiVae1 = 117
-    case tlbiVae1is = 118
-    case tlbiVae1isnxs = 119
-    case tlbiVae1nxs = 120
-    case tlbiVae1os = 121
-    case tlbiVae1osnxs = 122
-    case tlbiVae2 = 123
-    case tlbiVae2is = 124
-    case tlbiVae2isnxs = 125
-    case tlbiVae2nxs = 126
-    case tlbiVae2os = 127
-    case tlbiVae2osnxs = 128
-    case tlbiVae3 = 129
-    case tlbiVae3is = 130
-    case tlbiVae3isnxs = 131
-    case tlbiVae3nxs = 132
-    case tlbiVae3os = 133
-    case tlbiVae3osnxs = 134
-    case tlbiVale1 = 135
-    case tlbiVale1is = 136
-    case tlbiVale1isnxs = 137
-    case tlbiVale1nxs = 138
-    case tlbiVale1os = 139
-    case tlbiVale1osnxs = 140
-    case tlbiVale2 = 141
-    case tlbiVale2is = 142
-    case tlbiVale2isnxs = 143
-    case tlbiVale2nxs = 144
-    case tlbiVale2os = 145
-    case tlbiVale2osnxs = 146
-    case tlbiVale3 = 147
-    case tlbiVale3is = 148
-    case tlbiVale3isnxs = 149
-    case tlbiVale3nxs = 150
-    case tlbiVale3os = 151
-    case tlbiVale3osnxs = 152
-    case tlbiVmalle1 = 153
-    case tlbiVmalle1is = 154
-    case tlbiVmalle1isnxs = 155
-    case tlbiVmalle1nxs = 156
-    case tlbiVmalle1os = 157
-    case tlbiVmalle1osnxs = 158
-    case tlbiVmalls12e1 = 159
-    case tlbiVmalls12e1is = 160
-    case tlbiVmalls12e1isnxs = 161
-    case tlbiVmalls12e1nxs = 162
-    case tlbiVmalls12e1os = 163
-    case tlbiVmalls12e1osnxs = 164
-    case atS1e1r = 165
-    case atS1e2r = 166
-    case atS1e3r = 167
-    case atS1e1w = 168
-    case atS1e2w = 169
-    case atS1e3w = 170
-    case atS1e0r = 171
-    case atS1e0w = 172
-    case atS12e1r = 173
-    case atS12e1w = 174
-    case atS12e0r = 175
-    case atS12e0w = 176
-    case atS1e1rp = 177
-    case atS1e1wp = 178
-    case dcCgdsw = 179
-    case dcCgdvac = 180
-    case dcCgdvadp = 181
-    case dcCgdvap = 182
-    case dcCgsw = 183
-    case dcCgvac = 184
-    case dcCgvadp = 185
-    case dcCgvap = 186
-    case dcCigdsw = 187
-    case dcCigdvac = 188
-    case dcCigsw = 189
-    case dcCigvac = 190
-    case dcCisw = 191
-    case dcCivac = 192
-    case dcCsw = 193
-    case dcCvac = 194
-    case dcCvadp = 195
-    case dcCvap = 196
-    case dcCvau = 197
-    case dcGva = 198
-    case dcGzva = 199
-    case dcIgdsw = 200
-    case dcIgdvac = 201
-    case dcIgsw = 202
-    case dcIgvac = 203
-    case dcIsw = 204
-    case dcIvac = 205
-    case dcZva = 206
-    case icIalluis = 207
-    case icIallu = 208
-    case icIvau = 209
+/// SYS operands (IC/DC/AC/TLBI)
+public enum Arm64Dc: UInt32 {
+    /// DC operations
+    case cgdsw = 179
+    /// DC operations
+    case cgdvac = 180
+    /// DC operations
+    case cgdvadp = 181
+    /// DC operations
+    case cgdvap = 182
+    /// DC operations
+    case cgsw = 183
+    /// DC operations
+    case cgvac = 184
+    /// DC operations
+    case cgvadp = 185
+    /// DC operations
+    case cgvap = 186
+    /// DC operations
+    case cigdsw = 187
+    /// DC operations
+    case cigdvac = 188
+    /// DC operations
+    case cigsw = 189
+    /// DC operations
+    case cigvac = 190
+    /// DC operations
+    case cisw = 191
+    /// DC operations
+    case civac = 192
+    /// DC operations
+    case csw = 193
+    /// DC operations
+    case cvac = 194
+    /// DC operations
+    case cvadp = 195
+    /// DC operations
+    case cvap = 196
+    /// DC operations
+    case cvau = 197
+    /// DC operations
+    case gva = 198
+    /// DC operations
+    case gzva = 199
+    /// DC operations
+    case igdsw = 200
+    /// DC operations
+    case igdvac = 201
+    /// DC operations
+    case igsw = 202
+    /// DC operations
+    case igvac = 203
+    /// DC operations
+    case isw = 204
+    /// DC operations
+    case ivac = 205
+    /// DC operations
+    case zva = 206
 }
 
-public enum Arm64SvcrOp: UInt32, CaseIterable {
+/// ARM64 extender type
+public enum Arm64Ext: UInt32 {
     case invalid = 0
-    case svcrsm = 1
-    case svcrsmza = 3
-    case svcrza = 2
+    case uxtb = 1
+    case uxth = 2
+    case uxtw = 3
+    case uxtx = 4
+    case sxtb = 5
+    case sxth = 6
+    case sxtw = 7
+    case sxtx = 8
 }
 
-/// Prefetch operations (PRFM)
-public enum Arm64Prfm: UInt32 {
+/// Group of ARM64 instructions
+public enum Arm64Grp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    case pldl1keep = 1
-    case pldl1strm = 2
-    case pldl2keep = 3
-    case pldl2strm = 4
-    case pldl3keep = 5
-    case pldl3strm = 6
-    case plil1keep = 9
-    case plil1strm = 10
-    case plil2keep = 11
-    case plil2strm = 12
-    case plil3keep = 13
-    case plil3strm = 14
-    case pstl1keep = 17
-    case pstl1strm = 18
-    case pstl2keep = 19
-    case pstl2strm = 20
-    case pstl3keep = 21
-    case pstl3strm = 22
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    case call = 2
+    case ret = 3
+    case int = 4
+    /// = CS_GRP_PRIVILEGE
+    case privilege = 6
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    case pac = 8
+    /// Architecture-specific groups
+    case crypto = 128
+    /// Architecture-specific groups
+    case fparmv8 = 129
+    /// Architecture-specific groups
+    case neon = 130
+    /// Architecture-specific groups
+    case crc = 131
+    /// Architecture-specific groups
+    case aes = 132
+    /// Architecture-specific groups
+    case dotprod = 133
+    /// Architecture-specific groups
+    case fullfp16 = 134
+    /// Architecture-specific groups
+    case lse = 135
+    /// Architecture-specific groups
+    case rcpc = 136
+    /// Architecture-specific groups
+    case rdm = 137
+    /// Architecture-specific groups
+    case sha2 = 138
+    /// Architecture-specific groups
+    case sha3 = 139
+    /// Architecture-specific groups
+    case sm4 = 140
+    /// Architecture-specific groups
+    case sve = 141
+    /// Architecture-specific groups
+    case sve2 = 142
+    /// Architecture-specific groups
+    case sve2aes = 143
+    /// Architecture-specific groups
+    case sve2bitperm = 144
+    /// Architecture-specific groups
+    case sve2sha3 = 145
+    /// Architecture-specific groups
+    case sve2sm4 = 146
+    /// Architecture-specific groups
+    case sme = 147
+    /// Architecture-specific groups
+    case smef64 = 148
+    /// Architecture-specific groups
+    case smei64 = 149
+    /// Architecture-specific groups
+    case matmulfp32 = 150
+    /// Architecture-specific groups
+    case matmulfp64 = 151
+    /// Architecture-specific groups
+    case matmulint8 = 152
+    /// Architecture-specific groups
+    case v81A = 153
+    /// Architecture-specific groups
+    case v83A = 154
+    /// Architecture-specific groups
+    case v84A = 155
+    /// <-- mark the end of the list of groups
+    case ending = 156
 }
 
-public enum Arm64Reg: UInt16, CaseIterable {
-    case invalid = 0
-    case ffr = 1
-    case fp = 2
-    case lr = 3
-    case nzcv = 4
-    case sp = 5
-    case vg = 6
-    case wsp = 7
-    case wzr = 8
-    case xzr = 9
-    case za = 10
-    case b0 = 11
-    case b1 = 12
-    case b2 = 13
-    case b3 = 14
-    case b4 = 15
-    case b5 = 16
-    case b6 = 17
-    case b7 = 18
-    case b8 = 19
-    case b9 = 20
-    case b10 = 21
-    case b11 = 22
-    case b12 = 23
-    case b13 = 24
-    case b14 = 25
-    case b15 = 26
-    case b16 = 27
-    case b17 = 28
-    case b18 = 29
-    case b19 = 30
-    case b20 = 31
-    case b21 = 32
-    case b22 = 33
-    case b23 = 34
-    case b24 = 35
-    case b25 = 36
-    case b26 = 37
-    case b27 = 38
-    case b28 = 39
-    case b29 = 40
-    case b30 = 41
-    case b31 = 42
-    case d0 = 43
-    case d1 = 44
-    case d2 = 45
-    case d3 = 46
-    case d4 = 47
-    case d5 = 48
-    case d6 = 49
-    case d7 = 50
-    case d8 = 51
-    case d9 = 52
-    case d10 = 53
-    case d11 = 54
-    case d12 = 55
-    case d13 = 56
-    case d14 = 57
-    case d15 = 58
-    case d16 = 59
-    case d17 = 60
-    case d18 = 61
-    case d19 = 62
-    case d20 = 63
-    case d21 = 64
-    case d22 = 65
-    case d23 = 66
-    case d24 = 67
-    case d25 = 68
-    case d26 = 69
-    case d27 = 70
-    case d28 = 71
-    case d29 = 72
-    case d30 = 73
-    case d31 = 74
-    case h0 = 75
-    case h1 = 76
-    case h2 = 77
-    case h3 = 78
-    case h4 = 79
-    case h5 = 80
-    case h6 = 81
-    case h7 = 82
-    case h8 = 83
-    case h9 = 84
-    case h10 = 85
-    case h11 = 86
-    case h12 = 87
-    case h13 = 88
-    case h14 = 89
-    case h15 = 90
-    case h16 = 91
-    case h17 = 92
-    case h18 = 93
-    case h19 = 94
-    case h20 = 95
-    case h21 = 96
-    case h22 = 97
-    case h23 = 98
-    case h24 = 99
-    case h25 = 100
-    case h26 = 101
-    case h27 = 102
-    case h28 = 103
-    case h29 = 104
-    case h30 = 105
-    case h31 = 106
-    case p0 = 107
-    case p1 = 108
-    case p2 = 109
-    case p3 = 110
-    case p4 = 111
-    case p5 = 112
-    case p6 = 113
-    case p7 = 114
-    case p8 = 115
-    case p9 = 116
-    case p10 = 117
-    case p11 = 118
-    case p12 = 119
-    case p13 = 120
-    case p14 = 121
-    case p15 = 122
-    case q0 = 123
-    case q1 = 124
-    case q2 = 125
-    case q3 = 126
-    case q4 = 127
-    case q5 = 128
-    case q6 = 129
-    case q7 = 130
-    case q8 = 131
-    case q9 = 132
-    case q10 = 133
-    case q11 = 134
-    case q12 = 135
-    case q13 = 136
-    case q14 = 137
-    case q15 = 138
-    case q16 = 139
-    case q17 = 140
-    case q18 = 141
-    case q19 = 142
-    case q20 = 143
-    case q21 = 144
-    case q22 = 145
-    case q23 = 146
-    case q24 = 147
-    case q25 = 148
-    case q26 = 149
-    case q27 = 150
-    case q28 = 151
-    case q29 = 152
-    case q30 = 153
-    case q31 = 154
-    case s0 = 155
-    case s1 = 156
-    case s2 = 157
-    case s3 = 158
-    case s4 = 159
-    case s5 = 160
-    case s6 = 161
-    case s7 = 162
-    case s8 = 163
-    case s9 = 164
-    case s10 = 165
-    case s11 = 166
-    case s12 = 167
-    case s13 = 168
-    case s14 = 169
-    case s15 = 170
-    case s16 = 171
-    case s17 = 172
-    case s18 = 173
-    case s19 = 174
-    case s20 = 175
-    case s21 = 176
-    case s22 = 177
-    case s23 = 178
-    case s24 = 179
-    case s25 = 180
-    case s26 = 181
-    case s27 = 182
-    case s28 = 183
-    case s29 = 184
-    case s30 = 185
-    case s31 = 186
-    case w0 = 187
-    case w1 = 188
-    case w2 = 189
-    case w3 = 190
-    case w4 = 191
-    case w5 = 192
-    case w6 = 193
-    case w7 = 194
-    case w8 = 195
-    case w9 = 196
-    case w10 = 197
-    case w11 = 198
-    case w12 = 199
-    case w13 = 200
-    case w14 = 201
-    case w15 = 202
-    case w16 = 203
-    case w17 = 204
-    case w18 = 205
-    case w19 = 206
-    case w20 = 207
-    case w21 = 208
-    case w22 = 209
-    case w23 = 210
-    case w24 = 211
-    case w25 = 212
-    case w26 = 213
-    case w27 = 214
-    case w28 = 215
-    case w29 = 216
-    case w30 = 217
-    case x0 = 218
-    case x1 = 219
-    case x2 = 220
-    case x3 = 221
-    case x4 = 222
-    case x5 = 223
-    case x6 = 224
-    case x7 = 225
-    case x8 = 226
-    case x9 = 227
-    case x10 = 228
-    case x11 = 229
-    case x12 = 230
-    case x13 = 231
-    case x14 = 232
-    case x15 = 233
-    case x16 = 234
-    case x17 = 235
-    case x18 = 236
-    case x19 = 237
-    case x20 = 238
-    case x21 = 239
-    case x22 = 240
-    case x23 = 241
-    case x24 = 242
-    case x25 = 243
-    case x26 = 244
-    case x27 = 245
-    case x28 = 246
-    case z0 = 247
-    case z1 = 248
-    case z2 = 249
-    case z3 = 250
-    case z4 = 251
-    case z5 = 252
-    case z6 = 253
-    case z7 = 254
-    case z8 = 255
-    case z9 = 256
-    case z10 = 257
-    case z11 = 258
-    case z12 = 259
-    case z13 = 260
-    case z14 = 261
-    case z15 = 262
-    case z16 = 263
-    case z17 = 264
-    case z18 = 265
-    case z19 = 266
-    case z20 = 267
-    case z21 = 268
-    case z22 = 269
-    case z23 = 270
-    case z24 = 271
-    case z25 = 272
-    case z26 = 273
-    case z27 = 274
-    case z28 = 275
-    case z29 = 276
-    case z30 = 277
-    case z31 = 278
-    case zab0 = 279
-    case zad0 = 280
-    case zad1 = 281
-    case zad2 = 282
-    case zad3 = 283
-    case zad4 = 284
-    case zad5 = 285
-    case zad6 = 286
-    case zad7 = 287
-    case zah0 = 288
-    case zah1 = 289
-    case zaq0 = 290
-    case zaq1 = 291
-    case zaq2 = 292
-    case zaq3 = 293
-    case zaq4 = 294
-    case zaq5 = 295
-    case zaq6 = 296
-    case zaq7 = 297
-    case zaq8 = 298
-    case zaq9 = 299
-    case zaq10 = 300
-    case zaq11 = 301
-    case zaq12 = 302
-    case zaq13 = 303
-    case zaq14 = 304
-    case zaq15 = 305
-    case zas0 = 306
-    case zas1 = 307
-    case zas2 = 308
-    case zas3 = 309
-    case v0 = 310
-    case v1 = 311
-    case v2 = 312
-    case v3 = 313
-    case v4 = 314
-    case v5 = 315
-    case v6 = 316
-    case v7 = 317
-    case v8 = 318
-    case v9 = 319
-    case v10 = 320
-    case v11 = 321
-    case v12 = 322
-    case v13 = 323
-    case v14 = 324
-    case v15 = 325
-    case v16 = 326
-    case v17 = 327
-    case v18 = 328
-    case v19 = 329
-    case v20 = 330
-    case v21 = 331
-    case v22 = 332
-    case v23 = 333
-    case v24 = 334
-    case v25 = 335
-    case v26 = 336
-    case v27 = 337
-    case v28 = 338
-    case v29 = 339
-    case v30 = 340
-    case v31 = 341
-
-    // MARK: - Aliases
-    public static let ip0 = Self.x16
-    public static let ip1 = Self.x17
-    public static let x29 = Self.fp
-    public static let x30 = Self.lr
+/// SYS operands (IC/DC/AC/TLBI)
+public enum Arm64Ic: UInt32 {
+    /// IC operations
+    case ialluis = 207
+    /// IC operations
+    case iallu = 208
+    /// IC operations
+    case ivau = 209
 }
 
-public enum Arm64Ins: UInt32, CaseIterable {
+/// ARM64 instruction
+public enum Arm64Ins: UInt32 {
     case invalid = 0
     case abs = 1
     case adc = 2
@@ -3013,177 +1524,2834 @@ public enum Arm64Ins: UInt32, CaseIterable {
     case zero = 1276
     case zip1 = 1277
     case zip2 = 1278
+    /// alias insn
     case sbfiz = 1279
+    /// alias insn
     case ubfiz = 1280
+    /// alias insn
     case sbfx = 1281
+    /// alias insn
     case ubfx = 1282
+    /// alias insn
     case bfi = 1283
+    /// alias insn
     case bfxil = 1284
+    /// alias insn
     case ic = 1285
+    /// alias insn
     case dc = 1286
+    /// alias insn
     case at = 1287
+    /// alias insn
     case tlbi = 1288
+    /// <-- mark the end of the list of insn
+    case ending = 1289
 }
 
-public enum Arm64Grp: UInt8, CaseIterable {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum Arm64Op: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    case call = 2
-    case ret = 3
-    case int = 4
-    /// = CS_GRP_PRIVILEGE
-    case privilege = 6
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 7
-    case pac = 8
-    case crypto = 128
-    case fparmv8 = 129
-    case neon = 130
-    case crc = 131
-    case aes = 132
-    case dotprod = 133
-    case fullfp16 = 134
-    case lse = 135
-    case rcpc = 136
-    case rdm = 137
-    case sha2 = 138
-    case sha3 = 139
-    case sm4 = 140
-    case sve = 141
-    case sve2 = 142
-    case sve2aes = 143
-    case sve2sha3 = 144
-    case sve2sm4 = 145
-    case sme = 146
-    case smef64 = 147
-    case smei64 = 148
-    case v81a = 149
-    case v83a = 150
-    case v84a = 151
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
+    /// = CS_OP_FP (Floating-Point operand).
+    case fp = 4
+    /// C-Immediate
+    case cimm = 64
+    /// MRS register operand.
+    case regMrs = 65
+    /// MSR register operand.
+    case regMsr = 66
+    /// PState operand.
+    case pstate = 67
+    /// SYS operand for IC/DC/AT/TLBI instructions.
+    case sys = 68
+    /// SVCR operand for MSR SVCR instructions.
+    case svcr = 69
+    /// Prefetch operand (PRFM).
+    case prefetch = 70
+    /// Memory barrier operand (ISB/DMB/DSB instructions).
+    case barrier = 71
+    /// SME instruction operand with with index.
+    case smeIndex = 72
 }
 
-/// TLBI operations
+/// Prefetch operations (PRFM)
+public enum Arm64Prfm: UInt32 {
+    case invalid = 0
+    case pldl1keep = 1
+    case pldl1strm = 2
+    case pldl2keep = 3
+    case pldl2strm = 4
+    case pldl3keep = 5
+    case pldl3strm = 6
+    case plil1keep = 9
+    case plil1strm = 10
+    case plil2keep = 11
+    case plil2strm = 12
+    case plil3keep = 13
+    case plil3strm = 14
+    case pstl1keep = 17
+    case pstl1strm = 18
+    case pstl2keep = 19
+    case pstl2strm = 20
+    case pstl3keep = 21
+    case pstl3strm = 22
+}
+
+/// System PState Field (MSR instruction)
+public enum Arm64Pstate: UInt32 {
+    case invalid = 0
+    case uao = 3
+    case pan = 4
+    case spsel = 5
+    case dit = 26
+    case daifset = 30
+    case daifclr = 31
+}
+
+/// ARM64 registers
+public enum Arm64Reg: UInt16 {
+    case invalid = 0
+    case ffr = 1
+    case fp = 2
+    /// alias registers
+    public static let x29 = 2
+    case lr = 3
+    /// alias registers
+    public static let x30 = 3
+    case nzcv = 4
+    case sp = 5
+    case vg = 6
+    case wsp = 7
+    case wzr = 8
+    case xzr = 9
+    case za = 10
+    case b0 = 11
+    case b1 = 12
+    case b2 = 13
+    case b3 = 14
+    case b4 = 15
+    case b5 = 16
+    case b6 = 17
+    case b7 = 18
+    case b8 = 19
+    case b9 = 20
+    case b10 = 21
+    case b11 = 22
+    case b12 = 23
+    case b13 = 24
+    case b14 = 25
+    case b15 = 26
+    case b16 = 27
+    case b17 = 28
+    case b18 = 29
+    case b19 = 30
+    case b20 = 31
+    case b21 = 32
+    case b22 = 33
+    case b23 = 34
+    case b24 = 35
+    case b25 = 36
+    case b26 = 37
+    case b27 = 38
+    case b28 = 39
+    case b29 = 40
+    case b30 = 41
+    case b31 = 42
+    case d0 = 43
+    case d1 = 44
+    case d2 = 45
+    case d3 = 46
+    case d4 = 47
+    case d5 = 48
+    case d6 = 49
+    case d7 = 50
+    case d8 = 51
+    case d9 = 52
+    case d10 = 53
+    case d11 = 54
+    case d12 = 55
+    case d13 = 56
+    case d14 = 57
+    case d15 = 58
+    case d16 = 59
+    case d17 = 60
+    case d18 = 61
+    case d19 = 62
+    case d20 = 63
+    case d21 = 64
+    case d22 = 65
+    case d23 = 66
+    case d24 = 67
+    case d25 = 68
+    case d26 = 69
+    case d27 = 70
+    case d28 = 71
+    case d29 = 72
+    case d30 = 73
+    case d31 = 74
+    case h0 = 75
+    case h1 = 76
+    case h2 = 77
+    case h3 = 78
+    case h4 = 79
+    case h5 = 80
+    case h6 = 81
+    case h7 = 82
+    case h8 = 83
+    case h9 = 84
+    case h10 = 85
+    case h11 = 86
+    case h12 = 87
+    case h13 = 88
+    case h14 = 89
+    case h15 = 90
+    case h16 = 91
+    case h17 = 92
+    case h18 = 93
+    case h19 = 94
+    case h20 = 95
+    case h21 = 96
+    case h22 = 97
+    case h23 = 98
+    case h24 = 99
+    case h25 = 100
+    case h26 = 101
+    case h27 = 102
+    case h28 = 103
+    case h29 = 104
+    case h30 = 105
+    case h31 = 106
+    case p0 = 107
+    case p1 = 108
+    case p2 = 109
+    case p3 = 110
+    case p4 = 111
+    case p5 = 112
+    case p6 = 113
+    case p7 = 114
+    case p8 = 115
+    case p9 = 116
+    case p10 = 117
+    case p11 = 118
+    case p12 = 119
+    case p13 = 120
+    case p14 = 121
+    case p15 = 122
+    case q0 = 123
+    case q1 = 124
+    case q2 = 125
+    case q3 = 126
+    case q4 = 127
+    case q5 = 128
+    case q6 = 129
+    case q7 = 130
+    case q8 = 131
+    case q9 = 132
+    case q10 = 133
+    case q11 = 134
+    case q12 = 135
+    case q13 = 136
+    case q14 = 137
+    case q15 = 138
+    case q16 = 139
+    case q17 = 140
+    case q18 = 141
+    case q19 = 142
+    case q20 = 143
+    case q21 = 144
+    case q22 = 145
+    case q23 = 146
+    case q24 = 147
+    case q25 = 148
+    case q26 = 149
+    case q27 = 150
+    case q28 = 151
+    case q29 = 152
+    case q30 = 153
+    case q31 = 154
+    case s0 = 155
+    case s1 = 156
+    case s2 = 157
+    case s3 = 158
+    case s4 = 159
+    case s5 = 160
+    case s6 = 161
+    case s7 = 162
+    case s8 = 163
+    case s9 = 164
+    case s10 = 165
+    case s11 = 166
+    case s12 = 167
+    case s13 = 168
+    case s14 = 169
+    case s15 = 170
+    case s16 = 171
+    case s17 = 172
+    case s18 = 173
+    case s19 = 174
+    case s20 = 175
+    case s21 = 176
+    case s22 = 177
+    case s23 = 178
+    case s24 = 179
+    case s25 = 180
+    case s26 = 181
+    case s27 = 182
+    case s28 = 183
+    case s29 = 184
+    case s30 = 185
+    case s31 = 186
+    case w0 = 187
+    case w1 = 188
+    case w2 = 189
+    case w3 = 190
+    case w4 = 191
+    case w5 = 192
+    case w6 = 193
+    case w7 = 194
+    case w8 = 195
+    case w9 = 196
+    case w10 = 197
+    case w11 = 198
+    case w12 = 199
+    case w13 = 200
+    case w14 = 201
+    case w15 = 202
+    case w16 = 203
+    case w17 = 204
+    case w18 = 205
+    case w19 = 206
+    case w20 = 207
+    case w21 = 208
+    case w22 = 209
+    case w23 = 210
+    case w24 = 211
+    case w25 = 212
+    case w26 = 213
+    case w27 = 214
+    case w28 = 215
+    case w29 = 216
+    case w30 = 217
+    case x0 = 218
+    case x1 = 219
+    case x2 = 220
+    case x3 = 221
+    case x4 = 222
+    case x5 = 223
+    case x6 = 224
+    case x7 = 225
+    case x8 = 226
+    case x9 = 227
+    case x10 = 228
+    case x11 = 229
+    case x12 = 230
+    case x13 = 231
+    case x14 = 232
+    case x15 = 233
+    case x16 = 234
+    /// alias registers
+    public static let ip0 = 234
+    case x17 = 235
+    /// alias registers
+    public static let ip1 = 235
+    case x18 = 236
+    case x19 = 237
+    case x20 = 238
+    case x21 = 239
+    case x22 = 240
+    case x23 = 241
+    case x24 = 242
+    case x25 = 243
+    case x26 = 244
+    case x27 = 245
+    case x28 = 246
+    case z0 = 247
+    case z1 = 248
+    case z2 = 249
+    case z3 = 250
+    case z4 = 251
+    case z5 = 252
+    case z6 = 253
+    case z7 = 254
+    case z8 = 255
+    case z9 = 256
+    case z10 = 257
+    case z11 = 258
+    case z12 = 259
+    case z13 = 260
+    case z14 = 261
+    case z15 = 262
+    case z16 = 263
+    case z17 = 264
+    case z18 = 265
+    case z19 = 266
+    case z20 = 267
+    case z21 = 268
+    case z22 = 269
+    case z23 = 270
+    case z24 = 271
+    case z25 = 272
+    case z26 = 273
+    case z27 = 274
+    case z28 = 275
+    case z29 = 276
+    case z30 = 277
+    case z31 = 278
+    case zab0 = 279
+    case zad0 = 280
+    case zad1 = 281
+    case zad2 = 282
+    case zad3 = 283
+    case zad4 = 284
+    case zad5 = 285
+    case zad6 = 286
+    case zad7 = 287
+    case zah0 = 288
+    case zah1 = 289
+    case zaq0 = 290
+    case zaq1 = 291
+    case zaq2 = 292
+    case zaq3 = 293
+    case zaq4 = 294
+    case zaq5 = 295
+    case zaq6 = 296
+    case zaq7 = 297
+    case zaq8 = 298
+    case zaq9 = 299
+    case zaq10 = 300
+    case zaq11 = 301
+    case zaq12 = 302
+    case zaq13 = 303
+    case zaq14 = 304
+    case zaq15 = 305
+    case zas0 = 306
+    case zas1 = 307
+    case zas2 = 308
+    case zas3 = 309
+    case v0 = 310
+    case v1 = 311
+    case v2 = 312
+    case v3 = 313
+    case v4 = 314
+    case v5 = 315
+    case v6 = 316
+    case v7 = 317
+    case v8 = 318
+    case v9 = 319
+    case v10 = 320
+    case v11 = 321
+    case v12 = 322
+    case v13 = 323
+    case v14 = 324
+    case v15 = 325
+    case v16 = 326
+    case v17 = 327
+    case v18 = 328
+    case v19 = 329
+    case v20 = 330
+    case v21 = 331
+    case v22 = 332
+    case v23 = 333
+    case v24 = 334
+    case v25 = 335
+    case v26 = 336
+    case v27 = 337
+    case v28 = 338
+    case v29 = 339
+    case v30 = 340
+    case v31 = 341
+    /// <-- mark the end of the list of registers
+    case ending = 342
+}
+
+/// ARM64 shift type
+public enum Arm64Sft: UInt32 {
+    case invalid = 0
+    case lsl = 1
+    case msl = 2
+    case lsr = 3
+    case asr = 4
+    case ror = 5
+}
+
+/// SVCR operands
+public enum Arm64Svcr: UInt32 {
+    case invalid = 0
+    case svcrsm = 1
+    case svcrza = 2
+    case svcrsmza = 3
+}
+
+/// SYS operands (IC/DC/AC/TLBI)
+public enum Arm64Sys: UInt32 {
+    case invalid = 0
+}
+
+/// System registers
+public enum Arm64Sysreg: UInt32 {
+    /// System registers for MRS
+    case invalid = 0
+    /// System registers for MRS
+    case osdtrrxEl1 = 32770
+    /// System registers for MRS
+    case dbgbvr0El1 = 32772
+    /// System registers for MRS
+    case dbgbcr0El1 = 32773
+    /// System registers for MRS
+    case dbgwvr0El1 = 32774
+    /// System registers for MRS
+    case dbgwcr0El1 = 32775
+    /// System registers for MRS
+    case dbgbvr1El1 = 32780
+    /// System registers for MRS
+    case dbgbcr1El1 = 32781
+    /// System registers for MRS
+    case dbgwvr1El1 = 32782
+    /// System registers for MRS
+    case dbgwcr1El1 = 32783
+    /// System registers for MRS
+    case mdccintEl1 = 32784
+    /// System registers for MRS
+    case mdscrEl1 = 32786
+    /// System registers for MRS
+    case dbgbvr2El1 = 32788
+    /// System registers for MRS
+    case dbgbcr2El1 = 32789
+    /// System registers for MRS
+    case dbgwvr2El1 = 32790
+    /// System registers for MRS
+    case dbgwcr2El1 = 32791
+    /// System registers for MRS
+    case osdtrtxEl1 = 32794
+    /// System registers for MRS
+    case dbgbvr3El1 = 32796
+    /// System registers for MRS
+    case dbgbcr3El1 = 32797
+    /// System registers for MRS
+    case dbgwvr3El1 = 32798
+    /// System registers for MRS
+    case dbgwcr3El1 = 32799
+    /// System registers for MRS
+    case dbgbvr4El1 = 32804
+    /// System registers for MRS
+    case dbgbcr4El1 = 32805
+    /// System registers for MRS
+    case dbgwvr4El1 = 32806
+    /// System registers for MRS
+    case dbgwcr4El1 = 32807
+    /// System registers for MRS
+    case dbgbvr5El1 = 32812
+    /// System registers for MRS
+    case dbgbcr5El1 = 32813
+    /// System registers for MRS
+    case dbgwvr5El1 = 32814
+    /// System registers for MRS
+    case dbgwcr5El1 = 32815
+    /// System registers for MRS
+    case oseccrEl1 = 32818
+    /// System registers for MRS
+    case dbgbvr6El1 = 32820
+    /// System registers for MRS
+    case dbgbcr6El1 = 32821
+    /// System registers for MRS
+    case dbgwvr6El1 = 32822
+    /// System registers for MRS
+    case dbgwcr6El1 = 32823
+    /// System registers for MRS
+    case dbgbvr7El1 = 32828
+    /// System registers for MRS
+    case dbgbcr7El1 = 32829
+    /// System registers for MRS
+    case dbgwvr7El1 = 32830
+    /// System registers for MRS
+    case dbgwcr7El1 = 32831
+    /// System registers for MRS
+    case dbgbvr8El1 = 32836
+    /// System registers for MRS
+    case dbgbcr8El1 = 32837
+    /// System registers for MRS
+    case dbgwvr8El1 = 32838
+    /// System registers for MRS
+    case dbgwcr8El1 = 32839
+    /// System registers for MRS
+    case dbgbvr9El1 = 32844
+    /// System registers for MRS
+    case dbgbcr9El1 = 32845
+    /// System registers for MRS
+    case dbgwvr9El1 = 32846
+    /// System registers for MRS
+    case dbgwcr9El1 = 32847
+    /// System registers for MRS
+    case dbgbvr10El1 = 32852
+    /// System registers for MRS
+    case dbgbcr10El1 = 32853
+    /// System registers for MRS
+    case dbgwvr10El1 = 32854
+    /// System registers for MRS
+    case dbgwcr10El1 = 32855
+    /// System registers for MRS
+    case dbgbvr11El1 = 32860
+    /// System registers for MRS
+    case dbgbcr11El1 = 32861
+    /// System registers for MRS
+    case dbgwvr11El1 = 32862
+    /// System registers for MRS
+    case dbgwcr11El1 = 32863
+    /// System registers for MRS
+    case dbgbvr12El1 = 32868
+    /// System registers for MRS
+    case dbgbcr12El1 = 32869
+    /// System registers for MRS
+    case dbgwvr12El1 = 32870
+    /// System registers for MRS
+    case dbgwcr12El1 = 32871
+    /// System registers for MRS
+    case dbgbvr13El1 = 32876
+    /// System registers for MRS
+    case dbgbcr13El1 = 32877
+    /// System registers for MRS
+    case dbgwvr13El1 = 32878
+    /// System registers for MRS
+    case dbgwcr13El1 = 32879
+    /// System registers for MRS
+    case dbgbvr14El1 = 32884
+    /// System registers for MRS
+    case dbgbcr14El1 = 32885
+    /// System registers for MRS
+    case dbgwvr14El1 = 32886
+    /// System registers for MRS
+    case dbgwcr14El1 = 32887
+    /// System registers for MRS
+    case dbgbvr15El1 = 32892
+    /// System registers for MRS
+    case dbgbcr15El1 = 32893
+    /// System registers for MRS
+    case dbgwvr15El1 = 32894
+    /// System registers for MRS
+    case dbgwcr15El1 = 32895
+    /// System registers for MRS
+    case mdrarEl1 = 32896
+    /// System registers for MRS
+    case oslarEl1 = 32900
+    /// System registers for MRS
+    case oslsrEl1 = 32908
+    /// System registers for MRS
+    case osdlrEl1 = 32924
+    /// System registers for MRS
+    case dbgprcrEl1 = 32932
+    /// System registers for MRS
+    case dbgclaimsetEl1 = 33734
+    /// System registers for MRS
+    case dbgclaimclrEl1 = 33742
+    /// System registers for MRS
+    case dbgauthstatusEl1 = 33782
+    /// System registers for MRS
+    case trctraceidr = 34817
+    /// System registers for MRS
+    case trcvictlr = 34818
+    /// System registers for MRS
+    case trcseqevr0 = 34820
+    /// System registers for MRS
+    case trccntrldvr0 = 34821
+    /// System registers for MRS
+    case trcidr8 = 34822
+    /// System registers for MRS
+    case trcimspec0 = 34823
+    /// System registers for MRS
+    case trcprgctlr = 34824
+    /// System registers for MRS
+    case trcqctlr = 34825
+    /// System registers for MRS
+    case trcviiectlr = 34826
+    /// System registers for MRS
+    case trcseqevr1 = 34828
+    /// System registers for MRS
+    case trccntrldvr1 = 34829
+    /// System registers for MRS
+    case trcidr9 = 34830
+    /// System registers for MRS
+    case trcimspec1 = 34831
+    /// System registers for MRS
+    case trcprocselr = 34832
+    /// System registers for MRS
+    case trcvissctlr = 34834
+    /// System registers for MRS
+    case trcseqevr2 = 34836
+    /// System registers for MRS
+    case trccntrldvr2 = 34837
+    /// System registers for MRS
+    case trcidr10 = 34838
+    /// System registers for MRS
+    case trcimspec2 = 34839
+    /// System registers for MRS
+    case trcstatr = 34840
+    /// System registers for MRS
+    case trcvipcssctlr = 34842
+    /// System registers for MRS
+    case trccntrldvr3 = 34845
+    /// System registers for MRS
+    case trcidr11 = 34846
+    /// System registers for MRS
+    case trcimspec3 = 34847
+    /// System registers for MRS
+    case trcconfigr = 34848
+    /// System registers for MRS
+    case trccntctlr0 = 34853
+    /// System registers for MRS
+    case trcidr12 = 34854
+    /// System registers for MRS
+    case trcimspec4 = 34855
+    /// System registers for MRS
+    case trccntctlr1 = 34861
+    /// System registers for MRS
+    case trcidr13 = 34862
+    /// System registers for MRS
+    case trcimspec5 = 34863
+    /// System registers for MRS
+    case trcauxctlr = 34864
+    /// System registers for MRS
+    case trcseqrstevr = 34868
+    /// System registers for MRS
+    case trccntctlr2 = 34869
+    /// System registers for MRS
+    case trcimspec6 = 34871
+    /// System registers for MRS
+    case trcseqstr = 34876
+    /// System registers for MRS
+    case trccntctlr3 = 34877
+    /// System registers for MRS
+    case trcimspec7 = 34879
+    /// System registers for MRS
+    case trceventctl0r = 34880
+    /// System registers for MRS
+    case trcvdctlr = 34882
+    /// System registers for MRS
+    case trcextinselr = 34884
+    /// System registers for MRS
+    public static let trcextinselr0 = 34884
+    /// System registers for MRS
+    case trccntvr0 = 34885
+    /// System registers for MRS
+    case trcidr0 = 34887
+    /// System registers for MRS
+    case trceventctl1r = 34888
+    /// System registers for MRS
+    case trcvdsacctlr = 34890
+    /// System registers for MRS
+    case trcextinselr1 = 34892
+    /// System registers for MRS
+    case trccntvr1 = 34893
+    /// System registers for MRS
+    case trcidr1 = 34895
+    /// System registers for MRS
+    case trcrsr = 34896
+    /// System registers for MRS
+    case trcvdarcctlr = 34898
+    /// System registers for MRS
+    case trcextinselr2 = 34900
+    /// System registers for MRS
+    case trccntvr2 = 34901
+    /// System registers for MRS
+    case trcidr2 = 34903
+    /// System registers for MRS
+    case trcstallctlr = 34904
+    /// System registers for MRS
+    case trcextinselr3 = 34908
+    /// System registers for MRS
+    case trccntvr3 = 34909
+    /// System registers for MRS
+    case trcidr3 = 34911
+    /// System registers for MRS
+    case trctsctlr = 34912
+    /// System registers for MRS
+    case trcidr4 = 34919
+    /// System registers for MRS
+    case trcsyncpr = 34920
+    /// System registers for MRS
+    case trcidr5 = 34927
+    /// System registers for MRS
+    case trcccctlr = 34928
+    /// System registers for MRS
+    case trcidr6 = 34935
+    /// System registers for MRS
+    case trcbbctlr = 34936
+    /// System registers for MRS
+    case trcidr7 = 34943
+    /// System registers for MRS
+    case trcrsctlr16 = 34945
+    /// System registers for MRS
+    case trcssccr0 = 34946
+    /// System registers for MRS
+    case trcsspcicr0 = 34947
+    /// System registers for MRS
+    case trcoslar = 34948
+    /// System registers for MRS
+    case trcrsctlr17 = 34953
+    /// System registers for MRS
+    case trcssccr1 = 34954
+    /// System registers for MRS
+    case trcsspcicr1 = 34955
+    /// System registers for MRS
+    case trcoslsr = 34956
+    /// System registers for MRS
+    case trcrsctlr2 = 34960
+    /// System registers for MRS
+    case trcrsctlr18 = 34961
+    /// System registers for MRS
+    case trcssccr2 = 34962
+    /// System registers for MRS
+    case trcsspcicr2 = 34963
+    /// System registers for MRS
+    case trcrsctlr3 = 34968
+    /// System registers for MRS
+    case trcrsctlr19 = 34969
+    /// System registers for MRS
+    case trcssccr3 = 34970
+    /// System registers for MRS
+    case trcsspcicr3 = 34971
+    /// System registers for MRS
+    case trcrsctlr4 = 34976
+    /// System registers for MRS
+    case trcrsctlr20 = 34977
+    /// System registers for MRS
+    case trcssccr4 = 34978
+    /// System registers for MRS
+    case trcsspcicr4 = 34979
+    /// System registers for MRS
+    case trcpdcr = 34980
+    /// System registers for MRS
+    case trcrsctlr5 = 34984
+    /// System registers for MRS
+    case trcrsctlr21 = 34985
+    /// System registers for MRS
+    case trcssccr5 = 34986
+    /// System registers for MRS
+    case trcsspcicr5 = 34987
+    /// System registers for MRS
+    case trcpdsr = 34988
+    /// System registers for MRS
+    case trcrsctlr6 = 34992
+    /// System registers for MRS
+    case trcrsctlr22 = 34993
+    /// System registers for MRS
+    case trcssccr6 = 34994
+    /// System registers for MRS
+    case trcsspcicr6 = 34995
+    /// System registers for MRS
+    case trcrsctlr7 = 35000
+    /// System registers for MRS
+    case trcrsctlr23 = 35001
+    /// System registers for MRS
+    case trcssccr7 = 35002
+    /// System registers for MRS
+    case trcsspcicr7 = 35003
+    /// System registers for MRS
+    case trcrsctlr8 = 35008
+    /// System registers for MRS
+    case trcrsctlr24 = 35009
+    /// System registers for MRS
+    case trcsscsr0 = 35010
+    /// System registers for MRS
+    case trcrsctlr9 = 35016
+    /// System registers for MRS
+    case trcrsctlr25 = 35017
+    /// System registers for MRS
+    case trcsscsr1 = 35018
+    /// System registers for MRS
+    case trcrsctlr10 = 35024
+    /// System registers for MRS
+    case trcrsctlr26 = 35025
+    /// System registers for MRS
+    case trcsscsr2 = 35026
+    /// System registers for MRS
+    case trcrsctlr11 = 35032
+    /// System registers for MRS
+    case trcrsctlr27 = 35033
+    /// System registers for MRS
+    case trcsscsr3 = 35034
+    /// System registers for MRS
+    case trcrsctlr12 = 35040
+    /// System registers for MRS
+    case trcrsctlr28 = 35041
+    /// System registers for MRS
+    case trcsscsr4 = 35042
+    /// System registers for MRS
+    case trcrsctlr13 = 35048
+    /// System registers for MRS
+    case trcrsctlr29 = 35049
+    /// System registers for MRS
+    case trcsscsr5 = 35050
+    /// System registers for MRS
+    case trcrsctlr14 = 35056
+    /// System registers for MRS
+    case trcrsctlr30 = 35057
+    /// System registers for MRS
+    case trcsscsr6 = 35058
+    /// System registers for MRS
+    case trcrsctlr15 = 35064
+    /// System registers for MRS
+    case trcrsctlr31 = 35065
+    /// System registers for MRS
+    case trcsscsr7 = 35066
+    /// System registers for MRS
+    case trcacvr0 = 35072
+    /// System registers for MRS
+    case trcacvr8 = 35073
+    /// System registers for MRS
+    case trcacatr0 = 35074
+    /// System registers for MRS
+    case trcacatr8 = 35075
+    /// System registers for MRS
+    case trcdvcvr0 = 35076
+    /// System registers for MRS
+    case trcdvcvr4 = 35077
+    /// System registers for MRS
+    case trcdvcmr0 = 35078
+    /// System registers for MRS
+    case trcdvcmr4 = 35079
+    /// System registers for MRS
+    case trcacvr1 = 35088
+    /// System registers for MRS
+    case trcacvr9 = 35089
+    /// System registers for MRS
+    case trcacatr1 = 35090
+    /// System registers for MRS
+    case trcacatr9 = 35091
+    /// System registers for MRS
+    case trcacvr2 = 35104
+    /// System registers for MRS
+    case trcacvr10 = 35105
+    /// System registers for MRS
+    case trcacatr2 = 35106
+    /// System registers for MRS
+    case trcacatr10 = 35107
+    /// System registers for MRS
+    case trcdvcvr1 = 35108
+    /// System registers for MRS
+    case trcdvcvr5 = 35109
+    /// System registers for MRS
+    case trcdvcmr1 = 35110
+    /// System registers for MRS
+    case trcdvcmr5 = 35111
+    /// System registers for MRS
+    case trcacvr3 = 35120
+    /// System registers for MRS
+    case trcacvr11 = 35121
+    /// System registers for MRS
+    case trcacatr3 = 35122
+    /// System registers for MRS
+    case trcacatr11 = 35123
+    /// System registers for MRS
+    case trcacvr4 = 35136
+    /// System registers for MRS
+    case trcacvr12 = 35137
+    /// System registers for MRS
+    case trcacatr4 = 35138
+    /// System registers for MRS
+    case trcacatr12 = 35139
+    /// System registers for MRS
+    case trcdvcvr2 = 35140
+    /// System registers for MRS
+    case trcdvcvr6 = 35141
+    /// System registers for MRS
+    case trcdvcmr2 = 35142
+    /// System registers for MRS
+    case trcdvcmr6 = 35143
+    /// System registers for MRS
+    case trcacvr5 = 35152
+    /// System registers for MRS
+    case trcacvr13 = 35153
+    /// System registers for MRS
+    case trcacatr5 = 35154
+    /// System registers for MRS
+    case trcacatr13 = 35155
+    /// System registers for MRS
+    case trcacvr6 = 35168
+    /// System registers for MRS
+    case trcacvr14 = 35169
+    /// System registers for MRS
+    case trcacatr6 = 35170
+    /// System registers for MRS
+    case trcacatr14 = 35171
+    /// System registers for MRS
+    case trcdvcvr3 = 35172
+    /// System registers for MRS
+    case trcdvcvr7 = 35173
+    /// System registers for MRS
+    case trcdvcmr3 = 35174
+    /// System registers for MRS
+    case trcdvcmr7 = 35175
+    /// System registers for MRS
+    case trcacvr7 = 35184
+    /// System registers for MRS
+    case trcacvr15 = 35185
+    /// System registers for MRS
+    case trcacatr7 = 35186
+    /// System registers for MRS
+    case trcacatr15 = 35187
+    /// System registers for MRS
+    case trccidcvr0 = 35200
+    /// System registers for MRS
+    case trcvmidcvr0 = 35201
+    /// System registers for MRS
+    case trccidcctlr0 = 35202
+    /// System registers for MRS
+    case trccidcctlr1 = 35210
+    /// System registers for MRS
+    case trccidcvr1 = 35216
+    /// System registers for MRS
+    case trcvmidcvr1 = 35217
+    /// System registers for MRS
+    case trcvmidcctlr0 = 35218
+    /// System registers for MRS
+    case trcvmidcctlr1 = 35226
+    /// System registers for MRS
+    case trccidcvr2 = 35232
+    /// System registers for MRS
+    case trcvmidcvr2 = 35233
+    /// System registers for MRS
+    case trccidcvr3 = 35248
+    /// System registers for MRS
+    case trcvmidcvr3 = 35249
+    /// System registers for MRS
+    case trccidcvr4 = 35264
+    /// System registers for MRS
+    case trcvmidcvr4 = 35265
+    /// System registers for MRS
+    case trccidcvr5 = 35280
+    /// System registers for MRS
+    case trcvmidcvr5 = 35281
+    /// System registers for MRS
+    case trccidcvr6 = 35296
+    /// System registers for MRS
+    case trcvmidcvr6 = 35297
+    /// System registers for MRS
+    case trccidcvr7 = 35312
+    /// System registers for MRS
+    case trcvmidcvr7 = 35313
+    /// System registers for MRS
+    case trcitctrl = 35716
+    /// System registers for MRS
+    case trcdevid = 35735
+    /// System registers for MRS
+    case trcdevtype = 35743
+    /// System registers for MRS
+    case trcpidr4 = 35751
+    /// System registers for MRS
+    case trcpidr5 = 35759
+    /// System registers for MRS
+    case trcpidr6 = 35767
+    /// System registers for MRS
+    case trcpidr7 = 35775
+    /// System registers for MRS
+    case trcclaimset = 35782
+    /// System registers for MRS
+    case trcpidr0 = 35783
+    /// System registers for MRS
+    case trcclaimclr = 35790
+    /// System registers for MRS
+    case trcpidr1 = 35791
+    /// System registers for MRS
+    case trcdevaff0 = 35798
+    /// System registers for MRS
+    case trcpidr2 = 35799
+    /// System registers for MRS
+    case trcdevaff1 = 35806
+    /// System registers for MRS
+    case trcpidr3 = 35807
+    /// System registers for MRS
+    case trclar = 35814
+    /// System registers for MRS
+    case trccidr0 = 35815
+    /// System registers for MRS
+    case trclsr = 35822
+    /// System registers for MRS
+    case trccidr1 = 35823
+    /// System registers for MRS
+    case trcauthstatus = 35830
+    /// System registers for MRS
+    case trccidr2 = 35831
+    /// System registers for MRS
+    case trcdevarch = 35838
+    /// System registers for MRS
+    case trccidr3 = 35839
+    /// System registers for MRS
+    case brbinf0El1 = 35840
+    /// System registers for MRS
+    case brbsrc0El1 = 35841
+    /// System registers for MRS
+    case brbtgt0El1 = 35842
+    /// System registers for MRS
+    case brbinf16El1 = 35844
+    /// System registers for MRS
+    case brbsrc16El1 = 35845
+    /// System registers for MRS
+    case brbtgt16El1 = 35846
+    /// System registers for MRS
+    case brbinf1El1 = 35848
+    /// System registers for MRS
+    case brbsrc1El1 = 35849
+    /// System registers for MRS
+    case brbtgt1El1 = 35850
+    /// System registers for MRS
+    case brbinf17El1 = 35852
+    /// System registers for MRS
+    case brbsrc17El1 = 35853
+    /// System registers for MRS
+    case brbtgt17El1 = 35854
+    /// System registers for MRS
+    case brbinf2El1 = 35856
+    /// System registers for MRS
+    case brbsrc2El1 = 35857
+    /// System registers for MRS
+    case brbtgt2El1 = 35858
+    /// System registers for MRS
+    case brbinf18El1 = 35860
+    /// System registers for MRS
+    case brbsrc18El1 = 35861
+    /// System registers for MRS
+    case brbtgt18El1 = 35862
+    /// System registers for MRS
+    case brbinf3El1 = 35864
+    /// System registers for MRS
+    case brbsrc3El1 = 35865
+    /// System registers for MRS
+    case brbtgt3El1 = 35866
+    /// System registers for MRS
+    case brbinf19El1 = 35868
+    /// System registers for MRS
+    case brbsrc19El1 = 35869
+    /// System registers for MRS
+    case brbtgt19El1 = 35870
+    /// System registers for MRS
+    case brbinf4El1 = 35872
+    /// System registers for MRS
+    case brbsrc4El1 = 35873
+    /// System registers for MRS
+    case brbtgt4El1 = 35874
+    /// System registers for MRS
+    case brbinf20El1 = 35876
+    /// System registers for MRS
+    case brbsrc20El1 = 35877
+    /// System registers for MRS
+    case brbtgt20El1 = 35878
+    /// System registers for MRS
+    case brbinf5El1 = 35880
+    /// System registers for MRS
+    case brbsrc5El1 = 35881
+    /// System registers for MRS
+    case brbtgt5El1 = 35882
+    /// System registers for MRS
+    case brbinf21El1 = 35884
+    /// System registers for MRS
+    case brbsrc21El1 = 35885
+    /// System registers for MRS
+    case brbtgt21El1 = 35886
+    /// System registers for MRS
+    case brbinf6El1 = 35888
+    /// System registers for MRS
+    case brbsrc6El1 = 35889
+    /// System registers for MRS
+    case brbtgt6El1 = 35890
+    /// System registers for MRS
+    case brbinf22El1 = 35892
+    /// System registers for MRS
+    case brbsrc22El1 = 35893
+    /// System registers for MRS
+    case brbtgt22El1 = 35894
+    /// System registers for MRS
+    case brbinf7El1 = 35896
+    /// System registers for MRS
+    case brbsrc7El1 = 35897
+    /// System registers for MRS
+    case brbtgt7El1 = 35898
+    /// System registers for MRS
+    case brbinf23El1 = 35900
+    /// System registers for MRS
+    case brbsrc23El1 = 35901
+    /// System registers for MRS
+    case brbtgt23El1 = 35902
+    /// System registers for MRS
+    case brbinf8El1 = 35904
+    /// System registers for MRS
+    case brbsrc8El1 = 35905
+    /// System registers for MRS
+    case brbtgt8El1 = 35906
+    /// System registers for MRS
+    case brbinf24El1 = 35908
+    /// System registers for MRS
+    case brbsrc24El1 = 35909
+    /// System registers for MRS
+    case brbtgt24El1 = 35910
+    /// System registers for MRS
+    case brbinf9El1 = 35912
+    /// System registers for MRS
+    case brbsrc9El1 = 35913
+    /// System registers for MRS
+    case brbtgt9El1 = 35914
+    /// System registers for MRS
+    case brbinf25El1 = 35916
+    /// System registers for MRS
+    case brbsrc25El1 = 35917
+    /// System registers for MRS
+    case brbtgt25El1 = 35918
+    /// System registers for MRS
+    case brbinf10El1 = 35920
+    /// System registers for MRS
+    case brbsrc10El1 = 35921
+    /// System registers for MRS
+    case brbtgt10El1 = 35922
+    /// System registers for MRS
+    case brbinf26El1 = 35924
+    /// System registers for MRS
+    case brbsrc26El1 = 35925
+    /// System registers for MRS
+    case brbtgt26El1 = 35926
+    /// System registers for MRS
+    case brbinf11El1 = 35928
+    /// System registers for MRS
+    case brbsrc11El1 = 35929
+    /// System registers for MRS
+    case brbtgt11El1 = 35930
+    /// System registers for MRS
+    case brbinf27El1 = 35932
+    /// System registers for MRS
+    case brbsrc27El1 = 35933
+    /// System registers for MRS
+    case brbtgt27El1 = 35934
+    /// System registers for MRS
+    case brbinf12El1 = 35936
+    /// System registers for MRS
+    case brbsrc12El1 = 35937
+    /// System registers for MRS
+    case brbtgt12El1 = 35938
+    /// System registers for MRS
+    case brbinf28El1 = 35940
+    /// System registers for MRS
+    case brbsrc28El1 = 35941
+    /// System registers for MRS
+    case brbtgt28El1 = 35942
+    /// System registers for MRS
+    case brbinf13El1 = 35944
+    /// System registers for MRS
+    case brbsrc13El1 = 35945
+    /// System registers for MRS
+    case brbtgt13El1 = 35946
+    /// System registers for MRS
+    case brbinf29El1 = 35948
+    /// System registers for MRS
+    case brbsrc29El1 = 35949
+    /// System registers for MRS
+    case brbtgt29El1 = 35950
+    /// System registers for MRS
+    case brbinf14El1 = 35952
+    /// System registers for MRS
+    case brbsrc14El1 = 35953
+    /// System registers for MRS
+    case brbtgt14El1 = 35954
+    /// System registers for MRS
+    case brbinf30El1 = 35956
+    /// System registers for MRS
+    case brbsrc30El1 = 35957
+    /// System registers for MRS
+    case brbtgt30El1 = 35958
+    /// System registers for MRS
+    case brbinf15El1 = 35960
+    /// System registers for MRS
+    case brbsrc15El1 = 35961
+    /// System registers for MRS
+    case brbtgt15El1 = 35962
+    /// System registers for MRS
+    case brbinf31El1 = 35964
+    /// System registers for MRS
+    case brbsrc31El1 = 35965
+    /// System registers for MRS
+    case brbtgt31El1 = 35966
+    /// System registers for MRS
+    case brbcrEl1 = 35968
+    /// System registers for MRS
+    case brbfcrEl1 = 35969
+    /// System registers for MRS
+    case brbtsEl1 = 35970
+    /// System registers for MRS
+    case brbinfinjEl1 = 35976
+    /// System registers for MRS
+    case brbsrcinjEl1 = 35977
+    /// System registers for MRS
+    case brbtgtinjEl1 = 35978
+    /// System registers for MRS
+    case brbidr0El1 = 35984
+    /// System registers for MRS
+    case teecr32El1 = 36864
+    /// System registers for MRS
+    case teehbr32El1 = 36992
+    /// System registers for MRS
+    case mdccsrEl0 = 38920
+    /// System registers for MRS
+    case dbgdtrEl0 = 38944
+    /// System registers for MRS
+    case dbgdtrrxEl0 = 38952
+    /// System registers for MRS
+    public static let dbgdtrtxEl0 = 38952
+    /// System registers for MRS
+    case dbgvcr32El2 = 41016
+    /// System registers for MRS
+    case brbcrEl2 = 42112
+    /// System registers for MRS
+    case brbcrEl12 = 44160
+    /// System registers for MRS
+    case midrEl1 = 49152
+    /// System registers for MRS
+    case mpuirEl1 = 49156
+    /// System registers for MRS
+    case mpidrEl1 = 49157
+    /// System registers for MRS
+    case revidrEl1 = 49158
+    /// System registers for MRS
+    case idPfr0El1 = 49160
+    /// System registers for MRS
+    case idPfr1El1 = 49161
+    /// System registers for MRS
+    case idDfr0El1 = 49162
+    /// System registers for MRS
+    case idAfr0El1 = 49163
+    /// System registers for MRS
+    case idMmfr0El1 = 49164
+    /// System registers for MRS
+    case idMmfr1El1 = 49165
+    /// System registers for MRS
+    case idMmfr2El1 = 49166
+    /// System registers for MRS
+    case idMmfr3El1 = 49167
+    /// System registers for MRS
+    case idIsar0El1 = 49168
+    /// System registers for MRS
+    case idIsar1El1 = 49169
+    /// System registers for MRS
+    case idIsar2El1 = 49170
+    /// System registers for MRS
+    case idIsar3El1 = 49171
+    /// System registers for MRS
+    case idIsar4El1 = 49172
+    /// System registers for MRS
+    case idIsar5El1 = 49173
+    /// System registers for MRS
+    case idMmfr4El1 = 49174
+    /// System registers for MRS
+    case idIsar6El1 = 49175
+    /// System registers for MRS
+    case mvfr0El1 = 49176
+    /// System registers for MRS
+    case mvfr1El1 = 49177
+    /// System registers for MRS
+    case mvfr2El1 = 49178
+    /// System registers for MRS
+    case idPfr2El1 = 49180
+    /// System registers for MRS
+    case idMmfr5El1 = 49182
+    /// System registers for MRS
+    case idAa64Pfr0El1 = 49184
+    /// System registers for MRS
+    case idAa64Pfr1El1 = 49185
+    /// System registers for MRS
+    case idAa64Zfr0El1 = 49188
+    /// System registers for MRS
+    case idAa64Smfr0El1 = 49189
+    /// System registers for MRS
+    case idAa64Dfr0El1 = 49192
+    /// System registers for MRS
+    case idAa64Dfr1El1 = 49193
+    /// System registers for MRS
+    case idAa64Afr0El1 = 49196
+    /// System registers for MRS
+    case idAa64Afr1El1 = 49197
+    /// System registers for MRS
+    case idAa64Isar0El1 = 49200
+    /// System registers for MRS
+    case idAa64Isar1El1 = 49201
+    /// System registers for MRS
+    case idAa64Isar2El1 = 49202
+    /// System registers for MRS
+    case idAa64Mmfr0El1 = 49208
+    /// System registers for MRS
+    case idAa64Mmfr1El1 = 49209
+    /// System registers for MRS
+    case idAa64Mmfr2El1 = 49210
+    /// System registers for MRS
+    case sctlrEl1 = 49280
+    /// System registers for MRS
+    case actlrEl1 = 49281
+    /// System registers for MRS
+    case cpacrEl1 = 49282
+    /// System registers for MRS
+    case rgsrEl1 = 49285
+    /// System registers for MRS
+    case gcrEl1 = 49286
+    /// System registers for MRS
+    case zcrEl1 = 49296
+    /// System registers for MRS
+    case trfcrEl1 = 49297
+    /// System registers for MRS
+    case smpriEl1 = 49300
+    /// System registers for MRS
+    case smcrEl1 = 49302
+    /// System registers for MRS
+    case ttbr0El1 = 49408
+    /// System registers for MRS
+    case ttbr1El1 = 49409
+    /// System registers for MRS
+    case tcrEl1 = 49410
+    /// System registers for MRS
+    case apiakeyloEl1 = 49416
+    /// System registers for MRS
+    case apiakeyhiEl1 = 49417
+    /// System registers for MRS
+    case apibkeyloEl1 = 49418
+    /// System registers for MRS
+    case apibkeyhiEl1 = 49419
+    /// System registers for MRS
+    case apdakeyloEl1 = 49424
+    /// System registers for MRS
+    case apdakeyhiEl1 = 49425
+    /// System registers for MRS
+    case apdbkeyloEl1 = 49426
+    /// System registers for MRS
+    case apdbkeyhiEl1 = 49427
+    /// System registers for MRS
+    case apgakeyloEl1 = 49432
+    /// System registers for MRS
+    case apgakeyhiEl1 = 49433
+    /// System registers for MRS
+    case spsrEl1 = 49664
+    /// System registers for MRS
+    case elrEl1 = 49665
+    /// System registers for MRS
+    case spEl0 = 49672
+    /// System registers for MRS
+    case spsel = 49680
+    /// System registers for MRS
+    case currentel = 49682
+    /// System registers for MRS
+    case pan = 49683
+    /// System registers for MRS
+    case uao = 49684
+    /// System registers for MRS
+    case iccPmrEl1 = 49712
+    /// System registers for MRS
+    case afsr0El1 = 49800
+    /// System registers for MRS
+    case afsr1El1 = 49801
+    /// System registers for MRS
+    case esrEl1 = 49808
+    /// System registers for MRS
+    case erridrEl1 = 49816
+    /// System registers for MRS
+    case errselrEl1 = 49817
+    /// System registers for MRS
+    case erxfrEl1 = 49824
+    /// System registers for MRS
+    case erxctlrEl1 = 49825
+    /// System registers for MRS
+    case erxstatusEl1 = 49826
+    /// System registers for MRS
+    case erxaddrEl1 = 49827
+    /// System registers for MRS
+    case erxpfgfEl1 = 49828
+    /// System registers for MRS
+    case erxpfgctlEl1 = 49829
+    /// System registers for MRS
+    case erxpfgcdnEl1 = 49830
+    /// System registers for MRS
+    case erxmisc0El1 = 49832
+    /// System registers for MRS
+    case erxmisc1El1 = 49833
+    /// System registers for MRS
+    case erxmisc2El1 = 49834
+    /// System registers for MRS
+    case erxmisc3El1 = 49835
+    /// System registers for MRS
+    case tfsrEl1 = 49840
+    /// System registers for MRS
+    case tfsre0El1 = 49841
+    /// System registers for MRS
+    case farEl1 = 49920
+    /// System registers for MRS
+    case prenrEl1 = 49929
+    /// System registers for MRS
+    case prselrEl1 = 49937
+    /// System registers for MRS
+    case prbarEl1 = 49984
+    /// System registers for MRS
+    case prlarEl1 = 49985
+    /// System registers for MRS
+    case prbar1El1 = 49988
+    /// System registers for MRS
+    case prlar1El1 = 49989
+    /// System registers for MRS
+    case prbar2El1 = 49992
+    /// System registers for MRS
+    case prlar2El1 = 49993
+    /// System registers for MRS
+    case prbar3El1 = 49996
+    /// System registers for MRS
+    case prlar3El1 = 49997
+    /// System registers for MRS
+    case prbar4El1 = 50000
+    /// System registers for MRS
+    case prlar4El1 = 50001
+    /// System registers for MRS
+    case prbar5El1 = 50004
+    /// System registers for MRS
+    case prlar5El1 = 50005
+    /// System registers for MRS
+    case prbar6El1 = 50008
+    /// System registers for MRS
+    case prlar6El1 = 50009
+    /// System registers for MRS
+    case prbar7El1 = 50012
+    /// System registers for MRS
+    case prlar7El1 = 50013
+    /// System registers for MRS
+    case prbar8El1 = 50016
+    /// System registers for MRS
+    case prlar8El1 = 50017
+    /// System registers for MRS
+    case prbar9El1 = 50020
+    /// System registers for MRS
+    case prlar9El1 = 50021
+    /// System registers for MRS
+    case prbar10El1 = 50024
+    /// System registers for MRS
+    case prlar10El1 = 50025
+    /// System registers for MRS
+    case prbar11El1 = 50028
+    /// System registers for MRS
+    case prlar11El1 = 50029
+    /// System registers for MRS
+    case prbar12El1 = 50032
+    /// System registers for MRS
+    case prlar12El1 = 50033
+    /// System registers for MRS
+    case prbar13El1 = 50036
+    /// System registers for MRS
+    case prlar13El1 = 50037
+    /// System registers for MRS
+    case prbar14El1 = 50040
+    /// System registers for MRS
+    case prlar14El1 = 50041
+    /// System registers for MRS
+    case prbar15El1 = 50044
+    /// System registers for MRS
+    case prlar15El1 = 50045
+    /// System registers for MRS
+    case parEl1 = 50080
+    /// System registers for MRS
+    case pmscrEl1 = 50376
+    /// System registers for MRS
+    case pmsnevfrEl1 = 50377
+    /// System registers for MRS
+    case pmsicrEl1 = 50378
+    /// System registers for MRS
+    case pmsirrEl1 = 50379
+    /// System registers for MRS
+    case pmsfcrEl1 = 50380
+    /// System registers for MRS
+    case pmsevfrEl1 = 50381
+    /// System registers for MRS
+    case pmslatfrEl1 = 50382
+    /// System registers for MRS
+    case pmsidrEl1 = 50383
+    /// System registers for MRS
+    case pmblimitrEl1 = 50384
+    /// System registers for MRS
+    case pmbptrEl1 = 50385
+    /// System registers for MRS
+    case pmbsrEl1 = 50387
+    /// System registers for MRS
+    case pmbidrEl1 = 50391
+    /// System registers for MRS
+    case trblimitrEl1 = 50392
+    /// System registers for MRS
+    case trbptrEl1 = 50393
+    /// System registers for MRS
+    case trbbaserEl1 = 50394
+    /// System registers for MRS
+    case trbsrEl1 = 50395
+    /// System registers for MRS
+    case trbmarEl1 = 50396
+    /// System registers for MRS
+    case trbtrgEl1 = 50398
+    /// System registers for MRS
+    case trbidrEl1 = 50399
+    /// System registers for MRS
+    case pmintensetEl1 = 50417
+    /// System registers for MRS
+    case pmintenclrEl1 = 50418
+    /// System registers for MRS
+    case pmmirEl1 = 50422
+    /// System registers for MRS
+    case mairEl1 = 50448
+    /// System registers for MRS
+    case amairEl1 = 50456
+    /// System registers for MRS
+    case lorsaEl1 = 50464
+    /// System registers for MRS
+    case loreaEl1 = 50465
+    /// System registers for MRS
+    case lornEl1 = 50466
+    /// System registers for MRS
+    case lorcEl1 = 50467
+    /// System registers for MRS
+    case mpamidrEl1 = 50468
+    /// System registers for MRS
+    case loridEl1 = 50471
+    /// System registers for MRS
+    case mpam1El1 = 50472
+    /// System registers for MRS
+    case mpam0El1 = 50473
+    /// System registers for MRS
+    case mpamsmEl1 = 50475
+    /// System registers for MRS
+    case vbarEl1 = 50688
+    /// System registers for MRS
+    case rvbarEl1 = 50689
+    /// System registers for MRS
+    case rmrEl1 = 50690
+    /// System registers for MRS
+    case isrEl1 = 50696
+    /// System registers for MRS
+    case disrEl1 = 50697
+    /// System registers for MRS
+    case iccIar0El1 = 50752
+    /// System registers for MRS
+    case iccEoir0El1 = 50753
+    /// System registers for MRS
+    case iccHppir0El1 = 50754
+    /// System registers for MRS
+    case iccBpr0El1 = 50755
+    /// System registers for MRS
+    case iccAp0R0El1 = 50756
+    /// System registers for MRS
+    case iccAp0R1El1 = 50757
+    /// System registers for MRS
+    case iccAp0R2El1 = 50758
+    /// System registers for MRS
+    case iccAp0R3El1 = 50759
+    /// System registers for MRS
+    case iccAp1R0El1 = 50760
+    /// System registers for MRS
+    case iccAp1R1El1 = 50761
+    /// System registers for MRS
+    case iccAp1R2El1 = 50762
+    /// System registers for MRS
+    case iccAp1R3El1 = 50763
+    /// System registers for MRS
+    case iccDirEl1 = 50777
+    /// System registers for MRS
+    case iccRprEl1 = 50779
+    /// System registers for MRS
+    case iccSgi1REl1 = 50781
+    /// System registers for MRS
+    case iccAsgi1REl1 = 50782
+    /// System registers for MRS
+    case iccSgi0REl1 = 50783
+    /// System registers for MRS
+    case iccIar1El1 = 50784
+    /// System registers for MRS
+    case iccEoir1El1 = 50785
+    /// System registers for MRS
+    case iccHppir1El1 = 50786
+    /// System registers for MRS
+    case iccBpr1El1 = 50787
+    /// System registers for MRS
+    case iccCtlrEl1 = 50788
+    /// System registers for MRS
+    case iccSreEl1 = 50789
+    /// System registers for MRS
+    case iccIgrpen0El1 = 50790
+    /// System registers for MRS
+    case iccIgrpen1El1 = 50791
+    /// System registers for MRS
+    case contextidrEl1 = 50817
+    /// System registers for MRS
+    case tpidrEl1 = 50820
+    /// System registers for MRS
+    case accdataEl1 = 50821
+    /// System registers for MRS
+    case scxtnumEl1 = 50823
+    /// System registers for MRS
+    case cntkctlEl1 = 50952
+    /// System registers for MRS
+    case ccsidrEl1 = 51200
+    /// System registers for MRS
+    case clidrEl1 = 51201
+    /// System registers for MRS
+    case ccsidr2El1 = 51202
+    /// System registers for MRS
+    case gmidEl1 = 51204
+    /// System registers for MRS
+    case smidrEl1 = 51206
+    /// System registers for MRS
+    case aidrEl1 = 51207
+    /// System registers for MRS
+    case csselrEl1 = 53248
+    /// System registers for MRS
+    case ctrEl0 = 55297
+    /// System registers for MRS
+    case dczidEl0 = 55303
+    /// System registers for MRS
+    case rndr = 55584
+    /// System registers for MRS
+    case rndrrs = 55585
+    /// System registers for MRS
+    case nzcv = 55824
+    /// System registers for MRS
+    case daif = 55825
+    /// System registers for MRS
+    case svcr = 55826
+    /// System registers for MRS
+    case dit = 55829
+    /// System registers for MRS
+    case ssbs = 55830
+    /// System registers for MRS
+    case tco = 55831
+    /// System registers for MRS
+    case fpcr = 55840
+    /// System registers for MRS
+    case fpsr = 55841
+    /// System registers for MRS
+    case dspsrEl0 = 55848
+    /// System registers for MRS
+    case dlrEl0 = 55849
+    /// System registers for MRS
+    case pmcrEl0 = 56544
+    /// System registers for MRS
+    case pmcntensetEl0 = 56545
+    /// System registers for MRS
+    case pmcntenclrEl0 = 56546
+    /// System registers for MRS
+    case pmovsclrEl0 = 56547
+    /// System registers for MRS
+    case pmswincEl0 = 56548
+    /// System registers for MRS
+    case pmselrEl0 = 56549
+    /// System registers for MRS
+    case pmceid0El0 = 56550
+    /// System registers for MRS
+    case pmceid1El0 = 56551
+    /// System registers for MRS
+    case pmccntrEl0 = 56552
+    /// System registers for MRS
+    case pmxevtyperEl0 = 56553
+    /// System registers for MRS
+    case pmxevcntrEl0 = 56554
+    /// System registers for MRS
+    case pmuserenrEl0 = 56560
+    /// System registers for MRS
+    case pmovssetEl0 = 56563
+    /// System registers for MRS
+    case tpidrEl0 = 56962
+    /// System registers for MRS
+    case tpidrroEl0 = 56963
+    /// System registers for MRS
+    case tpidr2El0 = 56965
+    /// System registers for MRS
+    case scxtnumEl0 = 56967
+    /// System registers for MRS
+    case amcrEl0 = 56976
+    /// System registers for MRS
+    case amcfgrEl0 = 56977
+    /// System registers for MRS
+    case amcgcrEl0 = 56978
+    /// System registers for MRS
+    case amuserenrEl0 = 56979
+    /// System registers for MRS
+    case amcntenclr0El0 = 56980
+    /// System registers for MRS
+    case amcntenset0El0 = 56981
+    /// System registers for MRS
+    case amcntenclr1El0 = 56984
+    /// System registers for MRS
+    case amcntenset1El0 = 56985
+    /// System registers for MRS
+    case amevcntr00El0 = 56992
+    /// System registers for MRS
+    case amevcntr01El0 = 56993
+    /// System registers for MRS
+    case amevcntr02El0 = 56994
+    /// System registers for MRS
+    case amevcntr03El0 = 56995
+    /// System registers for MRS
+    case amevtyper00El0 = 57008
+    /// System registers for MRS
+    case amevtyper01El0 = 57009
+    /// System registers for MRS
+    case amevtyper02El0 = 57010
+    /// System registers for MRS
+    case amevtyper03El0 = 57011
+    /// System registers for MRS
+    case amevcntr10El0 = 57056
+    /// System registers for MRS
+    case amevcntr11El0 = 57057
+    /// System registers for MRS
+    case amevcntr12El0 = 57058
+    /// System registers for MRS
+    case amevcntr13El0 = 57059
+    /// System registers for MRS
+    case amevcntr14El0 = 57060
+    /// System registers for MRS
+    case amevcntr15El0 = 57061
+    /// System registers for MRS
+    case amevcntr16El0 = 57062
+    /// System registers for MRS
+    case amevcntr17El0 = 57063
+    /// System registers for MRS
+    case amevcntr18El0 = 57064
+    /// System registers for MRS
+    case amevcntr19El0 = 57065
+    /// System registers for MRS
+    case amevcntr110El0 = 57066
+    /// System registers for MRS
+    case amevcntr111El0 = 57067
+    /// System registers for MRS
+    case amevcntr112El0 = 57068
+    /// System registers for MRS
+    case amevcntr113El0 = 57069
+    /// System registers for MRS
+    case amevcntr114El0 = 57070
+    /// System registers for MRS
+    case amevcntr115El0 = 57071
+    /// System registers for MRS
+    case amevtyper10El0 = 57072
+    /// System registers for MRS
+    case amevtyper11El0 = 57073
+    /// System registers for MRS
+    case amevtyper12El0 = 57074
+    /// System registers for MRS
+    case amevtyper13El0 = 57075
+    /// System registers for MRS
+    case amevtyper14El0 = 57076
+    /// System registers for MRS
+    case amevtyper15El0 = 57077
+    /// System registers for MRS
+    case amevtyper16El0 = 57078
+    /// System registers for MRS
+    case amevtyper17El0 = 57079
+    /// System registers for MRS
+    case amevtyper18El0 = 57080
+    /// System registers for MRS
+    case amevtyper19El0 = 57081
+    /// System registers for MRS
+    case amevtyper110El0 = 57082
+    /// System registers for MRS
+    case amevtyper111El0 = 57083
+    /// System registers for MRS
+    case amevtyper112El0 = 57084
+    /// System registers for MRS
+    case amevtyper113El0 = 57085
+    /// System registers for MRS
+    case amevtyper114El0 = 57086
+    /// System registers for MRS
+    case amevtyper115El0 = 57087
+    /// System registers for MRS
+    case cntfrqEl0 = 57088
+    /// System registers for MRS
+    case cntpctEl0 = 57089
+    /// System registers for MRS
+    case cntvctEl0 = 57090
+    /// System registers for MRS
+    case cntpctssEl0 = 57093
+    /// System registers for MRS
+    case cntvctssEl0 = 57094
+    /// System registers for MRS
+    case cntpTvalEl0 = 57104
+    /// System registers for MRS
+    case cntpCtlEl0 = 57105
+    /// System registers for MRS
+    case cntpCvalEl0 = 57106
+    /// System registers for MRS
+    case cntvTvalEl0 = 57112
+    /// System registers for MRS
+    case cntvCtlEl0 = 57113
+    /// System registers for MRS
+    case cntvCvalEl0 = 57114
+    /// System registers for MRS
+    case pmevcntr0El0 = 57152
+    /// System registers for MRS
+    case pmevcntr1El0 = 57153
+    /// System registers for MRS
+    case pmevcntr2El0 = 57154
+    /// System registers for MRS
+    case pmevcntr3El0 = 57155
+    /// System registers for MRS
+    case pmevcntr4El0 = 57156
+    /// System registers for MRS
+    case pmevcntr5El0 = 57157
+    /// System registers for MRS
+    case pmevcntr6El0 = 57158
+    /// System registers for MRS
+    case pmevcntr7El0 = 57159
+    /// System registers for MRS
+    case pmevcntr8El0 = 57160
+    /// System registers for MRS
+    case pmevcntr9El0 = 57161
+    /// System registers for MRS
+    case pmevcntr10El0 = 57162
+    /// System registers for MRS
+    case pmevcntr11El0 = 57163
+    /// System registers for MRS
+    case pmevcntr12El0 = 57164
+    /// System registers for MRS
+    case pmevcntr13El0 = 57165
+    /// System registers for MRS
+    case pmevcntr14El0 = 57166
+    /// System registers for MRS
+    case pmevcntr15El0 = 57167
+    /// System registers for MRS
+    case pmevcntr16El0 = 57168
+    /// System registers for MRS
+    case pmevcntr17El0 = 57169
+    /// System registers for MRS
+    case pmevcntr18El0 = 57170
+    /// System registers for MRS
+    case pmevcntr19El0 = 57171
+    /// System registers for MRS
+    case pmevcntr20El0 = 57172
+    /// System registers for MRS
+    case pmevcntr21El0 = 57173
+    /// System registers for MRS
+    case pmevcntr22El0 = 57174
+    /// System registers for MRS
+    case pmevcntr23El0 = 57175
+    /// System registers for MRS
+    case pmevcntr24El0 = 57176
+    /// System registers for MRS
+    case pmevcntr25El0 = 57177
+    /// System registers for MRS
+    case pmevcntr26El0 = 57178
+    /// System registers for MRS
+    case pmevcntr27El0 = 57179
+    /// System registers for MRS
+    case pmevcntr28El0 = 57180
+    /// System registers for MRS
+    case pmevcntr29El0 = 57181
+    /// System registers for MRS
+    case pmevcntr30El0 = 57182
+    /// System registers for MRS
+    case pmevtyper0El0 = 57184
+    /// System registers for MRS
+    case pmevtyper1El0 = 57185
+    /// System registers for MRS
+    case pmevtyper2El0 = 57186
+    /// System registers for MRS
+    case pmevtyper3El0 = 57187
+    /// System registers for MRS
+    case pmevtyper4El0 = 57188
+    /// System registers for MRS
+    case pmevtyper5El0 = 57189
+    /// System registers for MRS
+    case pmevtyper6El0 = 57190
+    /// System registers for MRS
+    case pmevtyper7El0 = 57191
+    /// System registers for MRS
+    case pmevtyper8El0 = 57192
+    /// System registers for MRS
+    case pmevtyper9El0 = 57193
+    /// System registers for MRS
+    case pmevtyper10El0 = 57194
+    /// System registers for MRS
+    case pmevtyper11El0 = 57195
+    /// System registers for MRS
+    case pmevtyper12El0 = 57196
+    /// System registers for MRS
+    case pmevtyper13El0 = 57197
+    /// System registers for MRS
+    case pmevtyper14El0 = 57198
+    /// System registers for MRS
+    case pmevtyper15El0 = 57199
+    /// System registers for MRS
+    case pmevtyper16El0 = 57200
+    /// System registers for MRS
+    case pmevtyper17El0 = 57201
+    /// System registers for MRS
+    case pmevtyper18El0 = 57202
+    /// System registers for MRS
+    case pmevtyper19El0 = 57203
+    /// System registers for MRS
+    case pmevtyper20El0 = 57204
+    /// System registers for MRS
+    case pmevtyper21El0 = 57205
+    /// System registers for MRS
+    case pmevtyper22El0 = 57206
+    /// System registers for MRS
+    case pmevtyper23El0 = 57207
+    /// System registers for MRS
+    case pmevtyper24El0 = 57208
+    /// System registers for MRS
+    case pmevtyper25El0 = 57209
+    /// System registers for MRS
+    case pmevtyper26El0 = 57210
+    /// System registers for MRS
+    case pmevtyper27El0 = 57211
+    /// System registers for MRS
+    case pmevtyper28El0 = 57212
+    /// System registers for MRS
+    case pmevtyper29El0 = 57213
+    /// System registers for MRS
+    case pmevtyper30El0 = 57214
+    /// System registers for MRS
+    case pmccfiltrEl0 = 57215
+    /// System registers for MRS
+    case vpidrEl2 = 57344
+    /// System registers for MRS
+    case mpuirEl2 = 57348
+    /// System registers for MRS
+    case vmpidrEl2 = 57349
+    /// System registers for MRS
+    case sctlrEl2 = 57472
+    /// System registers for MRS
+    case actlrEl2 = 57473
+    /// System registers for MRS
+    case hcrEl2 = 57480
+    /// System registers for MRS
+    case mdcrEl2 = 57481
+    /// System registers for MRS
+    case cptrEl2 = 57482
+    /// System registers for MRS
+    case hstrEl2 = 57483
+    /// System registers for MRS
+    case hfgrtrEl2 = 57484
+    /// System registers for MRS
+    case hfgwtrEl2 = 57485
+    /// System registers for MRS
+    case hfgitrEl2 = 57486
+    /// System registers for MRS
+    case hacrEl2 = 57487
+    /// System registers for MRS
+    case zcrEl2 = 57488
+    /// System registers for MRS
+    case trfcrEl2 = 57489
+    /// System registers for MRS
+    case hcrxEl2 = 57490
+    /// System registers for MRS
+    case smprimapEl2 = 57493
+    /// System registers for MRS
+    case smcrEl2 = 57494
+    /// System registers for MRS
+    case sder32El2 = 57497
+    /// System registers for MRS
+    case ttbr0El2 = 57600
+    /// System registers for MRS
+    public static let vsctlrEl2 = 57600
+    /// System registers for MRS
+    case ttbr1El2 = 57601
+    /// System registers for MRS
+    case tcrEl2 = 57602
+    /// System registers for MRS
+    case vttbrEl2 = 57608
+    /// System registers for MRS
+    case vtcrEl2 = 57610
+    /// System registers for MRS
+    case vncrEl2 = 57616
+    /// System registers for MRS
+    case vsttbrEl2 = 57648
+    /// System registers for MRS
+    case vstcrEl2 = 57650
+    /// System registers for MRS
+    case dacr32El2 = 57728
+    /// System registers for MRS
+    case hdfgrtrEl2 = 57740
+    /// System registers for MRS
+    case hdfgwtrEl2 = 57741
+    /// System registers for MRS
+    case spsrEl2 = 57856
+    /// System registers for MRS
+    case elrEl2 = 57857
+    /// System registers for MRS
+    case spEl1 = 57864
+    /// System registers for MRS
+    case spsrIrq = 57880
+    /// System registers for MRS
+    case spsrAbt = 57881
+    /// System registers for MRS
+    case spsrUnd = 57882
+    /// System registers for MRS
+    case spsrFiq = 57883
+    /// System registers for MRS
+    case ifsr32El2 = 57985
+    /// System registers for MRS
+    case afsr0El2 = 57992
+    /// System registers for MRS
+    case afsr1El2 = 57993
+    /// System registers for MRS
+    case esrEl2 = 58000
+    /// System registers for MRS
+    case vsesrEl2 = 58003
+    /// System registers for MRS
+    case fpexc32El2 = 58008
+    /// System registers for MRS
+    case tfsrEl2 = 58032
+    /// System registers for MRS
+    case farEl2 = 58112
+    /// System registers for MRS
+    case hpfarEl2 = 58116
+    /// System registers for MRS
+    case prenrEl2 = 58121
+    /// System registers for MRS
+    case prselrEl2 = 58129
+    /// System registers for MRS
+    case prbarEl2 = 58176
+    /// System registers for MRS
+    case prlarEl2 = 58177
+    /// System registers for MRS
+    case prbar1El2 = 58180
+    /// System registers for MRS
+    case prlar1El2 = 58181
+    /// System registers for MRS
+    case prbar2El2 = 58184
+    /// System registers for MRS
+    case prlar2El2 = 58185
+    /// System registers for MRS
+    case prbar3El2 = 58188
+    /// System registers for MRS
+    case prlar3El2 = 58189
+    /// System registers for MRS
+    case prbar4El2 = 58192
+    /// System registers for MRS
+    case prlar4El2 = 58193
+    /// System registers for MRS
+    case prbar5El2 = 58196
+    /// System registers for MRS
+    case prlar5El2 = 58197
+    /// System registers for MRS
+    case prbar6El2 = 58200
+    /// System registers for MRS
+    case prlar6El2 = 58201
+    /// System registers for MRS
+    case prbar7El2 = 58204
+    /// System registers for MRS
+    case prlar7El2 = 58205
+    /// System registers for MRS
+    case prbar8El2 = 58208
+    /// System registers for MRS
+    case prlar8El2 = 58209
+    /// System registers for MRS
+    case prbar9El2 = 58212
+    /// System registers for MRS
+    case prlar9El2 = 58213
+    /// System registers for MRS
+    case prbar10El2 = 58216
+    /// System registers for MRS
+    case prlar10El2 = 58217
+    /// System registers for MRS
+    case prbar11El2 = 58220
+    /// System registers for MRS
+    case prlar11El2 = 58221
+    /// System registers for MRS
+    case prbar12El2 = 58224
+    /// System registers for MRS
+    case prlar12El2 = 58225
+    /// System registers for MRS
+    case prbar13El2 = 58228
+    /// System registers for MRS
+    case prlar13El2 = 58229
+    /// System registers for MRS
+    case prbar14El2 = 58232
+    /// System registers for MRS
+    case prlar14El2 = 58233
+    /// System registers for MRS
+    case prbar15El2 = 58236
+    /// System registers for MRS
+    case prlar15El2 = 58237
+    /// System registers for MRS
+    case pmscrEl2 = 58568
+    /// System registers for MRS
+    case mairEl2 = 58640
+    /// System registers for MRS
+    case amairEl2 = 58648
+    /// System registers for MRS
+    case mpamhcrEl2 = 58656
+    /// System registers for MRS
+    case mpamvpmvEl2 = 58657
+    /// System registers for MRS
+    case mpam2El2 = 58664
+    /// System registers for MRS
+    case mpamvpm0El2 = 58672
+    /// System registers for MRS
+    case mpamvpm1El2 = 58673
+    /// System registers for MRS
+    case mpamvpm2El2 = 58674
+    /// System registers for MRS
+    case mpamvpm3El2 = 58675
+    /// System registers for MRS
+    case mpamvpm4El2 = 58676
+    /// System registers for MRS
+    case mpamvpm5El2 = 58677
+    /// System registers for MRS
+    case mpamvpm6El2 = 58678
+    /// System registers for MRS
+    case mpamvpm7El2 = 58679
+    /// System registers for MRS
+    case vbarEl2 = 58880
+    /// System registers for MRS
+    case rvbarEl2 = 58881
+    /// System registers for MRS
+    case rmrEl2 = 58882
+    /// System registers for MRS
+    case vdisrEl2 = 58889
+    /// System registers for MRS
+    case ichAp0R0El2 = 58944
+    /// System registers for MRS
+    case ichAp0R1El2 = 58945
+    /// System registers for MRS
+    case ichAp0R2El2 = 58946
+    /// System registers for MRS
+    case ichAp0R3El2 = 58947
+    /// System registers for MRS
+    case ichAp1R0El2 = 58952
+    /// System registers for MRS
+    case ichAp1R1El2 = 58953
+    /// System registers for MRS
+    case ichAp1R2El2 = 58954
+    /// System registers for MRS
+    case ichAp1R3El2 = 58955
+    /// System registers for MRS
+    case iccSreEl2 = 58957
+    /// System registers for MRS
+    case ichHcrEl2 = 58968
+    /// System registers for MRS
+    case ichVtrEl2 = 58969
+    /// System registers for MRS
+    case ichMisrEl2 = 58970
+    /// System registers for MRS
+    case ichEisrEl2 = 58971
+    /// System registers for MRS
+    case ichElrsrEl2 = 58973
+    /// System registers for MRS
+    case ichVmcrEl2 = 58975
+    /// System registers for MRS
+    case ichLr0El2 = 58976
+    /// System registers for MRS
+    case ichLr1El2 = 58977
+    /// System registers for MRS
+    case ichLr2El2 = 58978
+    /// System registers for MRS
+    case ichLr3El2 = 58979
+    /// System registers for MRS
+    case ichLr4El2 = 58980
+    /// System registers for MRS
+    case ichLr5El2 = 58981
+    /// System registers for MRS
+    case ichLr6El2 = 58982
+    /// System registers for MRS
+    case ichLr7El2 = 58983
+    /// System registers for MRS
+    case ichLr8El2 = 58984
+    /// System registers for MRS
+    case ichLr9El2 = 58985
+    /// System registers for MRS
+    case ichLr10El2 = 58986
+    /// System registers for MRS
+    case ichLr11El2 = 58987
+    /// System registers for MRS
+    case ichLr12El2 = 58988
+    /// System registers for MRS
+    case ichLr13El2 = 58989
+    /// System registers for MRS
+    case ichLr14El2 = 58990
+    /// System registers for MRS
+    case ichLr15El2 = 58991
+    /// System registers for MRS
+    case contextidrEl2 = 59009
+    /// System registers for MRS
+    case tpidrEl2 = 59010
+    /// System registers for MRS
+    case scxtnumEl2 = 59015
+    /// System registers for MRS
+    case amevcntvoff00El2 = 59072
+    /// System registers for MRS
+    case amevcntvoff01El2 = 59073
+    /// System registers for MRS
+    case amevcntvoff02El2 = 59074
+    /// System registers for MRS
+    case amevcntvoff03El2 = 59075
+    /// System registers for MRS
+    case amevcntvoff04El2 = 59076
+    /// System registers for MRS
+    case amevcntvoff05El2 = 59077
+    /// System registers for MRS
+    case amevcntvoff06El2 = 59078
+    /// System registers for MRS
+    case amevcntvoff07El2 = 59079
+    /// System registers for MRS
+    case amevcntvoff08El2 = 59080
+    /// System registers for MRS
+    case amevcntvoff09El2 = 59081
+    /// System registers for MRS
+    case amevcntvoff010El2 = 59082
+    /// System registers for MRS
+    case amevcntvoff011El2 = 59083
+    /// System registers for MRS
+    case amevcntvoff012El2 = 59084
+    /// System registers for MRS
+    case amevcntvoff013El2 = 59085
+    /// System registers for MRS
+    case amevcntvoff014El2 = 59086
+    /// System registers for MRS
+    case amevcntvoff015El2 = 59087
+    /// System registers for MRS
+    case amevcntvoff10El2 = 59088
+    /// System registers for MRS
+    case amevcntvoff11El2 = 59089
+    /// System registers for MRS
+    case amevcntvoff12El2 = 59090
+    /// System registers for MRS
+    case amevcntvoff13El2 = 59091
+    /// System registers for MRS
+    case amevcntvoff14El2 = 59092
+    /// System registers for MRS
+    case amevcntvoff15El2 = 59093
+    /// System registers for MRS
+    case amevcntvoff16El2 = 59094
+    /// System registers for MRS
+    case amevcntvoff17El2 = 59095
+    /// System registers for MRS
+    case amevcntvoff18El2 = 59096
+    /// System registers for MRS
+    case amevcntvoff19El2 = 59097
+    /// System registers for MRS
+    case amevcntvoff110El2 = 59098
+    /// System registers for MRS
+    case amevcntvoff111El2 = 59099
+    /// System registers for MRS
+    case amevcntvoff112El2 = 59100
+    /// System registers for MRS
+    case amevcntvoff113El2 = 59101
+    /// System registers for MRS
+    case amevcntvoff114El2 = 59102
+    /// System registers for MRS
+    case amevcntvoff115El2 = 59103
+    /// System registers for MRS
+    case cntvoffEl2 = 59139
+    /// System registers for MRS
+    case cntscaleEl2 = 59140
+    /// System registers for MRS
+    case cntiscaleEl2 = 59141
+    /// System registers for MRS
+    case cntpoffEl2 = 59142
+    /// System registers for MRS
+    case cntvfrqEl2 = 59143
+    /// System registers for MRS
+    case cnthctlEl2 = 59144
+    /// System registers for MRS
+    case cnthpTvalEl2 = 59152
+    /// System registers for MRS
+    case cnthpCtlEl2 = 59153
+    /// System registers for MRS
+    case cnthpCvalEl2 = 59154
+    /// System registers for MRS
+    case cnthvTvalEl2 = 59160
+    /// System registers for MRS
+    case cnthvCtlEl2 = 59161
+    /// System registers for MRS
+    case cnthvCvalEl2 = 59162
+    /// System registers for MRS
+    case cnthvsTvalEl2 = 59168
+    /// System registers for MRS
+    case cnthvsCtlEl2 = 59169
+    /// System registers for MRS
+    case cnthvsCvalEl2 = 59170
+    /// System registers for MRS
+    case cnthpsTvalEl2 = 59176
+    /// System registers for MRS
+    case cnthpsCtlEl2 = 59177
+    /// System registers for MRS
+    case cnthpsCvalEl2 = 59178
+    /// System registers for MRS
+    case sctlrEl12 = 59520
+    /// System registers for MRS
+    case cpacrEl12 = 59522
+    /// System registers for MRS
+    case zcrEl12 = 59536
+    /// System registers for MRS
+    case trfcrEl12 = 59537
+    /// System registers for MRS
+    case smcrEl12 = 59542
+    /// System registers for MRS
+    case ttbr0El12 = 59648
+    /// System registers for MRS
+    case ttbr1El12 = 59649
+    /// System registers for MRS
+    case tcrEl12 = 59650
+    /// System registers for MRS
+    case spsrEl12 = 59904
+    /// System registers for MRS
+    case elrEl12 = 59905
+    /// System registers for MRS
+    case afsr0El12 = 60040
+    /// System registers for MRS
+    case afsr1El12 = 60041
+    /// System registers for MRS
+    case esrEl12 = 60048
+    /// System registers for MRS
+    case tfsrEl12 = 60080
+    /// System registers for MRS
+    case farEl12 = 60160
+    /// System registers for MRS
+    case pmscrEl12 = 60616
+    /// System registers for MRS
+    case mairEl12 = 60688
+    /// System registers for MRS
+    case amairEl12 = 60696
+    /// System registers for MRS
+    case mpam1El12 = 60712
+    /// System registers for MRS
+    case vbarEl12 = 60928
+    /// System registers for MRS
+    case contextidrEl12 = 61057
+    /// System registers for MRS
+    case scxtnumEl12 = 61063
+    /// System registers for MRS
+    case cntkctlEl12 = 61192
+    /// System registers for MRS
+    case cntpTvalEl02 = 61200
+    /// System registers for MRS
+    case cntpCtlEl02 = 61201
+    /// System registers for MRS
+    case cntpCvalEl02 = 61202
+    /// System registers for MRS
+    case cntvTvalEl02 = 61208
+    /// System registers for MRS
+    case cntvCtlEl02 = 61209
+    /// System registers for MRS
+    case cntvCvalEl02 = 61210
+    /// System registers for MRS
+    case sctlrEl3 = 61568
+    /// System registers for MRS
+    case actlrEl3 = 61569
+    /// System registers for MRS
+    case scrEl3 = 61576
+    /// System registers for MRS
+    case sder32El3 = 61577
+    /// System registers for MRS
+    case cptrEl3 = 61578
+    /// System registers for MRS
+    case zcrEl3 = 61584
+    /// System registers for MRS
+    case smcrEl3 = 61590
+    /// System registers for MRS
+    case mdcrEl3 = 61593
+    /// System registers for MRS
+    case ttbr0El3 = 61696
+    /// System registers for MRS
+    case tcrEl3 = 61698
+    /// System registers for MRS
+    case gptbrEl3 = 61708
+    /// System registers for MRS
+    case gpccrEl3 = 61710
+    /// System registers for MRS
+    case spsrEl3 = 61952
+    /// System registers for MRS
+    case elrEl3 = 61953
+    /// System registers for MRS
+    case spEl2 = 61960
+    /// System registers for MRS
+    case afsr0El3 = 62088
+    /// System registers for MRS
+    case afsr1El3 = 62089
+    /// System registers for MRS
+    case esrEl3 = 62096
+    /// System registers for MRS
+    case tfsrEl3 = 62128
+    /// System registers for MRS
+    case farEl3 = 62208
+    /// System registers for MRS
+    case mfarEl3 = 62213
+    /// System registers for MRS
+    case mairEl3 = 62736
+    /// System registers for MRS
+    case amairEl3 = 62744
+    /// System registers for MRS
+    case mpam3El3 = 62760
+    /// System registers for MRS
+    case vbarEl3 = 62976
+    /// System registers for MRS
+    case rvbarEl3 = 62977
+    /// System registers for MRS
+    case rmrEl3 = 62978
+    /// System registers for MRS
+    case iccCtlrEl3 = 63076
+    /// System registers for MRS
+    case iccSreEl3 = 63077
+    /// System registers for MRS
+    case iccIgrpen1El3 = 63079
+    /// System registers for MRS
+    case tpidrEl3 = 63106
+    /// System registers for MRS
+    case scxtnumEl3 = 63111
+    /// System registers for MRS
+    case cntpsTvalEl1 = 65296
+    /// System registers for MRS
+    case cntpsCtlEl1 = 65297
+    /// System registers for MRS
+    case cntpsCvalEl1 = 65298
+    /// System registers for MRS
+    case cpmIoaccCtlEl3 = 65424
+}
+
+/// SYS operands (IC/DC/AC/TLBI)
 public enum Arm64Tlbi: UInt32 {
-    case invalid = 0
-    case ipas2e1is = 1
-    case ipas2le1is = 2
-    case vmalle1is = 3
-    case alle2is = 4
-    case alle3is = 5
-    case vae1is = 6
-    case vae2is = 7
-    case vae3is = 8
-    case aside1is = 9
-    case vaae1is = 10
-    case alle1is = 11
-    case vale1is = 12
-    case vale2is = 13
-    case vale3is = 14
-    case vmalls12e1is = 15
-    case vaale1is = 16
-    case ipas2e1 = 17
-    case ipas2le1 = 18
-    case vmalle1 = 19
-    case alle2 = 20
-    case alle3 = 21
-    case vae1 = 22
-    case vae2 = 23
-    case vae3 = 24
-    case aside1 = 25
-    case vaae1 = 26
-    case alle1 = 27
-    case vale1 = 28
-    case vale2 = 29
-    case vale3 = 30
-    case vmalls12e1 = 31
-    case vaale1 = 32
-    case vmalle1os = 33
-    case vae1os = 34
-    case aside1os = 35
-    case vaae1os = 36
-    case vale1os = 37
-    case vaale1os = 38
-    case ipas2e1os = 39
-    case ipas2le1os = 40
-    case vae2os = 41
-    case vale2os = 42
-    case vmalls12e1os = 43
-    case vae3os = 44
-    case vale3os = 45
-    case alle2os = 46
-    case alle1os = 47
-    case alle3os = 48
-    case rvae1 = 49
-    case rvaae1 = 50
-    case rvale1 = 51
-    case rvaale1 = 52
-    case rvae1is = 53
-    case rvaae1is = 54
-    case rvale1is = 55
-    case rvaale1is = 56
-    case rvae1os = 57
-    case rvaae1os = 58
-    case rvale1os = 59
-    case rvaale1os = 60
-    case ripas2e1is = 61
-    case ripas2le1is = 62
-    case ripas2e1 = 63
-    case ripas2le1 = 64
-    case ripas2e1os = 65
-    case ripas2le1os = 66
-    case rvae2 = 67
-    case rvale2 = 68
-    case rvae2is = 69
-    case rvale2is = 70
-    case rvae2os = 71
-    case rvale2os = 72
-    case rvae3 = 73
-    case rvale3 = 74
-    case rvae3is = 75
-    case rvale3is = 76
-    case rvae3os = 77
-    case rvale3os = 78
+    /// TLBI operations
+    case alle1 = 1
+    /// TLBI operations
+    case alle1is = 2
+    /// TLBI operations
+    case alle1isnxs = 3
+    /// TLBI operations
+    case alle1nxs = 4
+    /// TLBI operations
+    case alle1os = 5
+    /// TLBI operations
+    case alle1osnxs = 6
+    /// TLBI operations
+    case alle2 = 7
+    /// TLBI operations
+    case alle2is = 8
+    /// TLBI operations
+    case alle2isnxs = 9
+    /// TLBI operations
+    case alle2nxs = 10
+    /// TLBI operations
+    case alle2os = 11
+    /// TLBI operations
+    case alle2osnxs = 12
+    /// TLBI operations
+    case alle3 = 13
+    /// TLBI operations
+    case alle3is = 14
+    /// TLBI operations
+    case alle3isnxs = 15
+    /// TLBI operations
+    case alle3nxs = 16
+    /// TLBI operations
+    case alle3os = 17
+    /// TLBI operations
+    case alle3osnxs = 18
+    /// TLBI operations
+    case aside1 = 19
+    /// TLBI operations
+    case aside1is = 20
+    /// TLBI operations
+    case aside1isnxs = 21
+    /// TLBI operations
+    case aside1nxs = 22
+    /// TLBI operations
+    case aside1os = 23
+    /// TLBI operations
+    case aside1osnxs = 24
+    /// TLBI operations
+    case ipas2e1 = 25
+    /// TLBI operations
+    case ipas2e1is = 26
+    /// TLBI operations
+    case ipas2e1isnxs = 27
+    /// TLBI operations
+    case ipas2e1nxs = 28
+    /// TLBI operations
+    case ipas2e1os = 29
+    /// TLBI operations
+    case ipas2e1osnxs = 30
+    /// TLBI operations
+    case ipas2le1 = 31
+    /// TLBI operations
+    case ipas2le1is = 32
+    /// TLBI operations
+    case ipas2le1isnxs = 33
+    /// TLBI operations
+    case ipas2le1nxs = 34
+    /// TLBI operations
+    case ipas2le1os = 35
+    /// TLBI operations
+    case ipas2le1osnxs = 36
+    /// TLBI operations
+    case paall = 37
+    /// TLBI operations
+    case paallnxs = 38
+    /// TLBI operations
+    case paallos = 39
+    /// TLBI operations
+    case paallosnxs = 40
+    /// TLBI operations
+    case ripas2e1 = 41
+    /// TLBI operations
+    case ripas2e1is = 42
+    /// TLBI operations
+    case ripas2e1isnxs = 43
+    /// TLBI operations
+    case ripas2e1nxs = 44
+    /// TLBI operations
+    case ripas2e1os = 45
+    /// TLBI operations
+    case ripas2e1osnxs = 46
+    /// TLBI operations
+    case ripas2le1 = 47
+    /// TLBI operations
+    case ripas2le1is = 48
+    /// TLBI operations
+    case ripas2le1isnxs = 49
+    /// TLBI operations
+    case ripas2le1nxs = 50
+    /// TLBI operations
+    case ripas2le1os = 51
+    /// TLBI operations
+    case ripas2le1osnxs = 52
+    /// TLBI operations
+    case rpalos = 53
+    /// TLBI operations
+    case rpalosnxs = 54
+    /// TLBI operations
+    case rpaos = 55
+    /// TLBI operations
+    case rpaosnxs = 56
+    /// TLBI operations
+    case rvaae1 = 57
+    /// TLBI operations
+    case rvaae1is = 58
+    /// TLBI operations
+    case rvaae1isnxs = 59
+    /// TLBI operations
+    case rvaae1nxs = 60
+    /// TLBI operations
+    case rvaae1os = 61
+    /// TLBI operations
+    case rvaae1osnxs = 62
+    /// TLBI operations
+    case rvaale1 = 63
+    /// TLBI operations
+    case rvaale1is = 64
+    /// TLBI operations
+    case rvaale1isnxs = 65
+    /// TLBI operations
+    case rvaale1nxs = 66
+    /// TLBI operations
+    case rvaale1os = 67
+    /// TLBI operations
+    case rvaale1osnxs = 68
+    /// TLBI operations
+    case rvae1 = 69
+    /// TLBI operations
+    case rvae1is = 70
+    /// TLBI operations
+    case rvae1isnxs = 71
+    /// TLBI operations
+    case rvae1nxs = 72
+    /// TLBI operations
+    case rvae1os = 73
+    /// TLBI operations
+    case rvae1osnxs = 74
+    /// TLBI operations
+    case rvae2 = 75
+    /// TLBI operations
+    case rvae2is = 76
+    /// TLBI operations
+    case rvae2isnxs = 77
+    /// TLBI operations
+    case rvae2nxs = 78
+    /// TLBI operations
+    case rvae2os = 79
+    /// TLBI operations
+    case rvae2osnxs = 80
+    /// TLBI operations
+    case rvae3 = 81
+    /// TLBI operations
+    case rvae3is = 82
+    /// TLBI operations
+    case rvae3isnxs = 83
+    /// TLBI operations
+    case rvae3nxs = 84
+    /// TLBI operations
+    case rvae3os = 85
+    /// TLBI operations
+    case rvae3osnxs = 86
+    /// TLBI operations
+    case rvale1 = 87
+    /// TLBI operations
+    case rvale1is = 88
+    /// TLBI operations
+    case rvale1isnxs = 89
+    /// TLBI operations
+    case rvale1nxs = 90
+    /// TLBI operations
+    case rvale1os = 91
+    /// TLBI operations
+    case rvale1osnxs = 92
+    /// TLBI operations
+    case rvale2 = 93
+    /// TLBI operations
+    case rvale2is = 94
+    /// TLBI operations
+    case rvale2isnxs = 95
+    /// TLBI operations
+    case rvale2nxs = 96
+    /// TLBI operations
+    case rvale2os = 97
+    /// TLBI operations
+    case rvale2osnxs = 98
+    /// TLBI operations
+    case rvale3 = 99
+    /// TLBI operations
+    case rvale3is = 100
+    /// TLBI operations
+    case rvale3isnxs = 101
+    /// TLBI operations
+    case rvale3nxs = 102
+    /// TLBI operations
+    case rvale3os = 103
+    /// TLBI operations
+    case rvale3osnxs = 104
+    /// TLBI operations
+    case vaae1 = 105
+    /// TLBI operations
+    case vaae1is = 106
+    /// TLBI operations
+    case vaae1isnxs = 107
+    /// TLBI operations
+    case vaae1nxs = 108
+    /// TLBI operations
+    case vaae1os = 109
+    /// TLBI operations
+    case vaae1osnxs = 110
+    /// TLBI operations
+    case vaale1 = 111
+    /// TLBI operations
+    case vaale1is = 112
+    /// TLBI operations
+    case vaale1isnxs = 113
+    /// TLBI operations
+    case vaale1nxs = 114
+    /// TLBI operations
+    case vaale1os = 115
+    /// TLBI operations
+    case vaale1osnxs = 116
+    /// TLBI operations
+    case vae1 = 117
+    /// TLBI operations
+    case vae1is = 118
+    /// TLBI operations
+    case vae1isnxs = 119
+    /// TLBI operations
+    case vae1nxs = 120
+    /// TLBI operations
+    case vae1os = 121
+    /// TLBI operations
+    case vae1osnxs = 122
+    /// TLBI operations
+    case vae2 = 123
+    /// TLBI operations
+    case vae2is = 124
+    /// TLBI operations
+    case vae2isnxs = 125
+    /// TLBI operations
+    case vae2nxs = 126
+    /// TLBI operations
+    case vae2os = 127
+    /// TLBI operations
+    case vae2osnxs = 128
+    /// TLBI operations
+    case vae3 = 129
+    /// TLBI operations
+    case vae3is = 130
+    /// TLBI operations
+    case vae3isnxs = 131
+    /// TLBI operations
+    case vae3nxs = 132
+    /// TLBI operations
+    case vae3os = 133
+    /// TLBI operations
+    case vae3osnxs = 134
+    /// TLBI operations
+    case vale1 = 135
+    /// TLBI operations
+    case vale1is = 136
+    /// TLBI operations
+    case vale1isnxs = 137
+    /// TLBI operations
+    case vale1nxs = 138
+    /// TLBI operations
+    case vale1os = 139
+    /// TLBI operations
+    case vale1osnxs = 140
+    /// TLBI operations
+    case vale2 = 141
+    /// TLBI operations
+    case vale2is = 142
+    /// TLBI operations
+    case vale2isnxs = 143
+    /// TLBI operations
+    case vale2nxs = 144
+    /// TLBI operations
+    case vale2os = 145
+    /// TLBI operations
+    case vale2osnxs = 146
+    /// TLBI operations
+    case vale3 = 147
+    /// TLBI operations
+    case vale3is = 148
+    /// TLBI operations
+    case vale3isnxs = 149
+    /// TLBI operations
+    case vale3nxs = 150
+    /// TLBI operations
+    case vale3os = 151
+    /// TLBI operations
+    case vale3osnxs = 152
+    /// TLBI operations
+    case vmalle1 = 153
+    /// TLBI operations
+    case vmalle1is = 154
+    /// TLBI operations
+    case vmalle1isnxs = 155
+    /// TLBI operations
+    case vmalle1nxs = 156
+    /// TLBI operations
+    case vmalle1os = 157
+    /// TLBI operations
+    case vmalle1osnxs = 158
+    /// TLBI operations
+    case vmalls12e1 = 159
+    /// TLBI operations
+    case vmalls12e1is = 160
+    /// TLBI operations
+    case vmalls12e1isnxs = 161
+    /// TLBI operations
+    case vmalls12e1nxs = 162
+    /// TLBI operations
+    case vmalls12e1os = 163
+    /// TLBI operations
+    case vmalls12e1osnxs = 164
 }
 
-/// AT operations
-public enum Arm64At: UInt32 {
-    case s1e1r = 79
-    case s1e2r = 80
-    case s1e3r = 81
-    case s1e1w = 82
-    case s1e2w = 83
-    case s1e3w = 84
-    case s1e0r = 85
-    case s1e0w = 86
-    case s12e1r = 87
-    case s12e1w = 88
-    case s12e0r = 89
-    case s12e0w = 90
-    case s1e1rp = 91
-    case s1e1wp = 92
-}
-
-/// DC operations
-public enum Arm64Dc: UInt32 {
+/// Vector arrangement specifier (for FloatingPoint/Advanced SIMD insn)
+public enum Arm64Vas: UInt32 {
     case invalid = 0
-    case zva = 1
-    case ivac = 2
-    case isw = 3
-    case cvac = 4
-    case csw = 5
-    case cvau = 6
-    case civac = 7
-    case cisw = 8
-    case cvap = 9
-}
-
-
-/// IC operations
-public enum Arm64Ic: UInt32 {
-    case invalid = 0
-    case ialluis = 1
-    case iallu = 2
-    case ivau = 3
+    case _16b = 1
+    case _8b = 2
+    case _4b = 3
+    case _1b = 4
+    case _8h = 5
+    case _4h = 6
+    case _2h = 7
+    case _1h = 8
+    case _4s = 9
+    case _2s = 10
+    case _1s = 11
+    case _2d = 12
+    case _1d = 13
+    case _1q = 14
 }

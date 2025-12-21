@@ -12,7 +12,7 @@ extension SystemZInstruction: OperandContainer {
     /// Condition code.
     ///
     /// `nil` when detail mode is off, or instruction has no condition code.
-    public var conditionCode: SyszCc! { optionalEnumCast(detail?.sysz.cc, ignoring: SYSZ_CC_INVALID) }
+    public var conditionCode: SyszCc? { optionalEnumCast(detail?.sysz.cc, ignoring: SYSZ_CC_INVALID) }
 
     /// Operand for SystemZ instructions.
     ///
@@ -27,7 +27,7 @@ extension SystemZInstruction: OperandContainer {
         public var type: SyszOp { enumCast(op.type) }
 
         /// Operand value
-        public var value: SyszOperandValue {
+        public var value: SyszOperandValue? {
             switch type {
             case .imm:
                 return immediateValue
@@ -43,17 +43,20 @@ extension SystemZInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: SyszReg! {
+        public var register: SyszReg? {
             guard type == .reg || type == .acreg else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard op.reg != SYSZ_REG_INVALID else {
+                return nil
+            }
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else {
                 return nil
             }
@@ -63,7 +66,7 @@ extension SystemZInstruction: OperandContainer {
         /// Base/index/length/displacement value for memory operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }

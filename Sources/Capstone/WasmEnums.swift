@@ -1,16 +1,16 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Wasm)
 
-
-public enum WasmOp: UInt32 {
+/// Group of WASM instructions
+public enum WasmGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    case none = 1
-    case int7 = 2
-    case varuint32 = 3
-    case varuint64 = 4
-    case uint32 = 5
-    case uint64 = 6
-    case imm = 7
-    case brtable = 8
+    case numberic = 8
+    case parametric = 9
+    case variable = 10
+    case memory = 11
+    case control = 12
+    /// <-- mark the end of the list of groups
+    case ending = 13
 }
 
 /// WASM instruction
@@ -187,19 +187,16 @@ public enum WasmIns: UInt32 {
     case f64ReinterpretI64 = 191
     case invalid = 512
     case ending = 513
-
 }
 
-/// Group of WASM instructions
-public enum WasmGrp: UInt8 {
-    /// = CS_GRP_INVALID
+public enum WasmOp: UInt32 {
     case invalid = 0
-    case numberic = 8
-    case parametric = 9
-    case variable = 10
-    case memory = 11
-    case control = 12
-    /// <-- mark the end of the list of groups
-    case ending = 13
+    case none = 1
+    case int7 = 2
+    case varuint32 = 3
+    case varuint64 = 4
+    case uint32 = 5
+    case uint64 = 6
+    case imm = 7
+    case brtable = 8
 }
-

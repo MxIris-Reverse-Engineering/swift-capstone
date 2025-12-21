@@ -12,7 +12,7 @@ extension M68kInstruction: OperandContainer {
     /// Size the data operand works on in bytes (.b, .w, .l).
     ///
     /// `nil` when detail mode is off.
-    public var operationSize: OperationSize! {
+    public var operationSize: OperationSize? {
         guard let size = detail?.m68k.op_size, size.type != M68K_SIZE_TYPE_INVALID else {
             return nil
         }
@@ -54,7 +54,7 @@ extension M68kInstruction: OperandContainer {
         }
 
         /// Operand value.
-        public var value: M68kOperandValue {
+        public var value: M68kOperandValue? {
             switch type {
             case .reg:
                 return register
@@ -80,7 +80,7 @@ extension M68kInstruction: OperandContainer {
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: UInt64! {
+        public var immediateValue: UInt64? {
             guard type == .imm else {
                 return nil
             }
@@ -90,7 +90,7 @@ extension M68kInstruction: OperandContainer {
         /// Immediate value for `fpDouble` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var doubleValue: Double! {
+        public var doubleValue: Double? {
             guard type == .fpDouble else {
                 return nil
             }
@@ -100,7 +100,7 @@ extension M68kInstruction: OperandContainer {
         /// Immediate value for `fpSingle` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var floatValue: Float! {
+        public var floatValue: Float? {
             guard type == .fpSingle else {
                 return nil
             }
@@ -110,17 +110,20 @@ extension M68kInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: M68kReg! {
+        public var register: M68kReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard op.reg != M68K_REG_INVALID else {
+                return nil
+            }
+            return optionalEnumCast(op.reg)
         }
 
         /// Register pair for `regPair` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var registerPair: [M68kReg]! {
+        public var registerPair: [M68kReg]? {
             guard type == .regPair else {
                 return nil
             }
@@ -130,22 +133,23 @@ extension M68kInstruction: OperandContainer {
         /// Register list for `regBits` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var registerList: [M68kReg]! {
+        public var registerList: [M68kReg]? {
             guard type == .regBits else {
                 return nil
             }
             // register bits for movem etc. (always in d0-d7, a0-a7, fp0 - fp7 order)
             return (1...24)
                 .filter({ (op.register_bits & UInt32(1 << ($0 - 1))) != 0 })
-                .map({ M68kReg(rawValue: $0)! })
+                .compactMap({ M68kReg(rawValue: $0) })
         }
 
         /// Registers for `reg`, `regPair` or `regBits` operand..
         ///
         /// `nil` when not an appropriate operand.
-        public var registers: [M68kReg]! {
+        public var registers: [M68kReg]? {
             switch type {
             case .reg:
+                guard let register else { return nil }
                 return [register]
             case .regPair:
                 return registerPair
@@ -159,7 +163,7 @@ extension M68kInstruction: OperandContainer {
         /// Data when operand is targeting memory.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }
@@ -167,7 +171,7 @@ extension M68kInstruction: OperandContainer {
         }
 
         /// Data when operand is a branch displacement
-        public var branchDisplacement: BranchDisplacement! {
+        public var branchDisplacement: BranchDisplacement? {
             guard type == .brDisp else {
                 return nil
             }

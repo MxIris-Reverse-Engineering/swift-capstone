@@ -1,5 +1,30 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Evm)
 
+/// Group of EVM instructions
+public enum EvmGrp: UInt8 {
+    /// = CS_GRP_INVALID
+    case invalid = 0
+    /// all jump instructions
+    case jump = 1
+    /// math instructions
+    case math = 8
+    /// instructions write to stack
+    case stackWrite = 9
+    /// instructions read from stack
+    case stackRead = 10
+    /// instructions write to memory
+    case memWrite = 11
+    /// instructions read from memory
+    case memRead = 12
+    /// instructions write to storage
+    case storeWrite = 13
+    /// instructions read from storage
+    case storeRead = 14
+    /// instructions halt execution
+    case halt = 15
+    /// <-- mark the end of the list of groups
+    case ending = 16
+}
 
 /// EVM instruction
 public enum EvmIns: UInt32 {
@@ -139,33 +164,6 @@ public enum EvmIns: UInt32 {
     case revert = 253
     case suicide = 255
     case invalid = 512
+    /// <-- mark the end of the list of instructions
     case ending = 513
-
 }
-
-/// Group of EVM instructions
-public enum EvmGrp: UInt8 {
-    /// = CS_GRP_INVALID
-    case invalid = 0
-    /// all jump instructions
-    case jump = 1
-    /// math instructions
-    case math = 8
-    /// instructions write to stack
-    case stackWrite = 9
-    /// instructions read from stack
-    case stackRead = 10
-    /// instructions write to memory
-    case memWrite = 11
-    /// instructions read from memory
-    case memRead = 12
-    /// instructions write to storage
-    case storeWrite = 13
-    /// instructions read from storage
-    case storeRead = 14
-    /// instructions halt execution
-    case halt = 15
-    /// <-- mark the end of the list of groups
-    case ending = 16
-}
-

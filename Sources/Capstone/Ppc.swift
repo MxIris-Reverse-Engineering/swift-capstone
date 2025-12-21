@@ -4,21 +4,21 @@ extension PowerPCInstruction: OperandContainer {
     /// Branch code for branch instructions.
     ///
     /// `nil` when detail mode is off, or not an appropriate instruction.
-    public var branchCode: PpcBc! {
+    public var branchCode: PpcBc? {
         optionalEnumCast(detail?.ppc.bc, ignoring: PPC_BC_INVALID)
     }
 
     /// Hint for branch instructions.
     ///
     /// `nil` when detail mode is off, or not an appropriate instruction.
-    public var branchHint: PpcBh! {
+    public var branchHint: PpcBh? {
         optionalEnumCast(detail?.ppc.bh, ignoring: PPC_BH_INVALID)
     }
 
     /// `true` if this dot instruction updates CR0.
     ///
     /// `nil` when detail mode is off.
-    public var updatesCR0: Bool! { detail?.ppc.update_cr0 }
+    public var updatesCR0: Bool? { detail?.ppc.update_cr0 }
 
     /// Instruction operands.
     ///
@@ -42,7 +42,7 @@ extension PowerPCInstruction: OperandContainer {
         public var type: PpcOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: PpcOperandValue {
+        public var value: PpcOperandValue? {
             switch type {
             case .reg:
                 return register
@@ -60,15 +60,16 @@ extension PowerPCInstruction: OperandContainer {
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: PpcReg! {
+        public var register: PpcReg? {
             guard type == .reg else { return nil }
-            return enumCast(op.reg)
+            guard op.reg != PPC_REG_INVALID else { return nil }
+            return optionalEnumCast(op.reg)
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm else { return nil }
             return op.imm
         }
@@ -76,7 +77,7 @@ extension PowerPCInstruction: OperandContainer {
         /// Base/displacement for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else { return nil }
             return Memory(op.mem)
         }
@@ -84,7 +85,7 @@ extension PowerPCInstruction: OperandContainer {
         /// Condition for `crx` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var condition: Condition! {
+        public var condition: Condition? {
             guard type == .crx else { return nil }
             return Condition(op.crx)
         }

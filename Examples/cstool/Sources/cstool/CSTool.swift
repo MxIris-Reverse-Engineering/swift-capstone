@@ -95,8 +95,12 @@ struct ArchMode {
     static var helpString: String {
         values
             .sorted(by: { $0.value.arch == $1.value.arch ? $0.key < $1.key : $0.value.arch.rawValue < $1.value.arch.rawValue })
-            .filter({ $0.value.description != nil })
-            .map({ "\($0.key.padding(toLength: 18, withPad: " ", startingAt: 0))\($0.value.description!)" })
+            .compactMap({ entry in
+                guard let description = entry.value.description else {
+                    return nil
+                }
+                return "\(entry.key.padding(toLength: 18, withPad: \" \", startingAt: 0))\(description)"
+            })
             .joined(separator: "\n")
     }
 

@@ -1,405 +1,17 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (X86)
 
-
-/// X86 registers
-public enum X86Reg: UInt16 {
-    case invalid = 0
-    case ah = 1
-    case al = 2
-    case ax = 3
-    case bh = 4
-    case bl = 5
-    case bp = 6
-    case bpl = 7
-    case bx = 8
-    case ch = 9
-    case cl = 10
-    case cs = 11
-    case cx = 12
-    case dh = 13
-    case di = 14
-    case dil = 15
-    case dl = 16
-    case ds = 17
-    case dx = 18
-    case eax = 19
-    case ebp = 20
-    case ebx = 21
-    case ecx = 22
-    case edi = 23
-    case edx = 24
-    case eflags = 25
-    case eip = 26
-    case eiz = 27
-    case es = 28
-    case esi = 29
-    case esp = 30
-    case fpsw = 31
-    case fs = 32
-    case gs = 33
-    case ip = 34
-    case rax = 35
-    case rbp = 36
-    case rbx = 37
-    case rcx = 38
-    case rdi = 39
-    case rdx = 40
-    case rip = 41
-    case riz = 42
-    case rsi = 43
-    case rsp = 44
-    case si = 45
-    case sil = 46
-    case sp = 47
-    case spl = 48
-    case ss = 49
-    case cr0 = 50
-    case cr1 = 51
-    case cr2 = 52
-    case cr3 = 53
-    case cr4 = 54
-    case cr5 = 55
-    case cr6 = 56
-    case cr7 = 57
-    case cr8 = 58
-    case cr9 = 59
-    case cr10 = 60
-    case cr11 = 61
-    case cr12 = 62
-    case cr13 = 63
-    case cr14 = 64
-    case cr15 = 65
-    case dr0 = 66
-    case dr1 = 67
-    case dr2 = 68
-    case dr3 = 69
-    case dr4 = 70
-    case dr5 = 71
-    case dr6 = 72
-    case dr7 = 73
-    case dr8 = 74
-    case dr9 = 75
-    case dr10 = 76
-    case dr11 = 77
-    case dr12 = 78
-    case dr13 = 79
-    case dr14 = 80
-    case dr15 = 81
-    case fp0 = 82
-    case fp1 = 83
-    case fp2 = 84
-    case fp3 = 85
-    case fp4 = 86
-    case fp5 = 87
-    case fp6 = 88
-    case fp7 = 89
-    case k0 = 90
-    case k1 = 91
-    case k2 = 92
-    case k3 = 93
-    case k4 = 94
-    case k5 = 95
-    case k6 = 96
-    case k7 = 97
-    case mm0 = 98
-    case mm1 = 99
-    case mm2 = 100
-    case mm3 = 101
-    case mm4 = 102
-    case mm5 = 103
-    case mm6 = 104
-    case mm7 = 105
-    case r8 = 106
-    case r9 = 107
-    case r10 = 108
-    case r11 = 109
-    case r12 = 110
-    case r13 = 111
-    case r14 = 112
-    case r15 = 113
-    case st0 = 114
-    case st1 = 115
-    case st2 = 116
-    case st3 = 117
-    case st4 = 118
-    case st5 = 119
-    case st6 = 120
-    case st7 = 121
-    case xmm0 = 122
-    case xmm1 = 123
-    case xmm2 = 124
-    case xmm3 = 125
-    case xmm4 = 126
-    case xmm5 = 127
-    case xmm6 = 128
-    case xmm7 = 129
-    case xmm8 = 130
-    case xmm9 = 131
-    case xmm10 = 132
-    case xmm11 = 133
-    case xmm12 = 134
-    case xmm13 = 135
-    case xmm14 = 136
-    case xmm15 = 137
-    case xmm16 = 138
-    case xmm17 = 139
-    case xmm18 = 140
-    case xmm19 = 141
-    case xmm20 = 142
-    case xmm21 = 143
-    case xmm22 = 144
-    case xmm23 = 145
-    case xmm24 = 146
-    case xmm25 = 147
-    case xmm26 = 148
-    case xmm27 = 149
-    case xmm28 = 150
-    case xmm29 = 151
-    case xmm30 = 152
-    case xmm31 = 153
-    case ymm0 = 154
-    case ymm1 = 155
-    case ymm2 = 156
-    case ymm3 = 157
-    case ymm4 = 158
-    case ymm5 = 159
-    case ymm6 = 160
-    case ymm7 = 161
-    case ymm8 = 162
-    case ymm9 = 163
-    case ymm10 = 164
-    case ymm11 = 165
-    case ymm12 = 166
-    case ymm13 = 167
-    case ymm14 = 168
-    case ymm15 = 169
-    case ymm16 = 170
-    case ymm17 = 171
-    case ymm18 = 172
-    case ymm19 = 173
-    case ymm20 = 174
-    case ymm21 = 175
-    case ymm22 = 176
-    case ymm23 = 177
-    case ymm24 = 178
-    case ymm25 = 179
-    case ymm26 = 180
-    case ymm27 = 181
-    case ymm28 = 182
-    case ymm29 = 183
-    case ymm30 = 184
-    case ymm31 = 185
-    case zmm0 = 186
-    case zmm1 = 187
-    case zmm2 = 188
-    case zmm3 = 189
-    case zmm4 = 190
-    case zmm5 = 191
-    case zmm6 = 192
-    case zmm7 = 193
-    case zmm8 = 194
-    case zmm9 = 195
-    case zmm10 = 196
-    case zmm11 = 197
-    case zmm12 = 198
-    case zmm13 = 199
-    case zmm14 = 200
-    case zmm15 = 201
-    case zmm16 = 202
-    case zmm17 = 203
-    case zmm18 = 204
-    case zmm19 = 205
-    case zmm20 = 206
-    case zmm21 = 207
-    case zmm22 = 208
-    case zmm23 = 209
-    case zmm24 = 210
-    case zmm25 = 211
-    case zmm26 = 212
-    case zmm27 = 213
-    case zmm28 = 214
-    case zmm29 = 215
-    case zmm30 = 216
-    case zmm31 = 217
-    case r8b = 218
-    case r9b = 219
-    case r10b = 220
-    case r11b = 221
-    case r12b = 222
-    case r13b = 223
-    case r14b = 224
-    case r15b = 225
-    case r8d = 226
-    case r9d = 227
-    case r10d = 228
-    case r11d = 229
-    case r12d = 230
-    case r13d = 231
-    case r14d = 232
-    case r15d = 233
-    case r8w = 234
-    case r9w = 235
-    case r10w = 236
-    case r11w = 237
-    case r12w = 238
-    case r13w = 239
-    case r14w = 240
-    case r15w = 241
-    case bnd0 = 242
-    case bnd1 = 243
-    case bnd2 = 244
-    case bnd3 = 245
-    case ending = 246
-}
-
-public struct X86Eflags: OptionSet {
-    public typealias RawValue = UInt64
-    public let rawValue: RawValue
-    public init(rawValue: RawValue) { self.rawValue = rawValue }
-    public static let modifyAf = X86Eflags(rawValue: 1<<0)
-    public static let modifyCf = X86Eflags(rawValue: 1<<1)
-    public static let modifySf = X86Eflags(rawValue: 1<<2)
-    public static let modifyZf = X86Eflags(rawValue: 1<<3)
-    public static let modifyPf = X86Eflags(rawValue: 1<<4)
-    public static let modifyOf = X86Eflags(rawValue: 1<<5)
-    public static let modifyTf = X86Eflags(rawValue: 1<<6)
-    public static let modifyIf = X86Eflags(rawValue: 1<<7)
-    public static let modifyDf = X86Eflags(rawValue: 1<<8)
-    public static let modifyNt = X86Eflags(rawValue: 1<<9)
-    public static let modifyRf = X86Eflags(rawValue: 1<<10)
-    public static let priorOf = X86Eflags(rawValue: 1<<11)
-    public static let priorSf = X86Eflags(rawValue: 1<<12)
-    public static let priorZf = X86Eflags(rawValue: 1<<13)
-    public static let priorAf = X86Eflags(rawValue: 1<<14)
-    public static let priorPf = X86Eflags(rawValue: 1<<15)
-    public static let priorCf = X86Eflags(rawValue: 1<<16)
-    public static let priorTf = X86Eflags(rawValue: 1<<17)
-    public static let priorIf = X86Eflags(rawValue: 1<<18)
-    public static let priorDf = X86Eflags(rawValue: 1<<19)
-    public static let priorNt = X86Eflags(rawValue: 1<<20)
-    public static let resetOf = X86Eflags(rawValue: 1<<21)
-    public static let resetCf = X86Eflags(rawValue: 1<<22)
-    public static let resetDf = X86Eflags(rawValue: 1<<23)
-    public static let resetIf = X86Eflags(rawValue: 1<<24)
-    public static let resetSf = X86Eflags(rawValue: 1<<25)
-    public static let resetAf = X86Eflags(rawValue: 1<<26)
-    public static let resetTf = X86Eflags(rawValue: 1<<27)
-    public static let resetNt = X86Eflags(rawValue: 1<<28)
-    public static let resetPf = X86Eflags(rawValue: 1<<29)
-    public static let setCf = X86Eflags(rawValue: 1<<30)
-    public static let setDf = X86Eflags(rawValue: 1<<31)
-    public static let setIf = X86Eflags(rawValue: 1<<32)
-    public static let testOf = X86Eflags(rawValue: 1<<33)
-    public static let testSf = X86Eflags(rawValue: 1<<34)
-    public static let testZf = X86Eflags(rawValue: 1<<35)
-    public static let testPf = X86Eflags(rawValue: 1<<36)
-    public static let testCf = X86Eflags(rawValue: 1<<37)
-    public static let testNt = X86Eflags(rawValue: 1<<38)
-    public static let testDf = X86Eflags(rawValue: 1<<39)
-    public static let undefinedOf = X86Eflags(rawValue: 1<<40)
-    public static let undefinedSf = X86Eflags(rawValue: 1<<41)
-    public static let undefinedZf = X86Eflags(rawValue: 1<<42)
-    public static let undefinedPf = X86Eflags(rawValue: 1<<43)
-    public static let undefinedAf = X86Eflags(rawValue: 1<<44)
-    public static let undefinedCf = X86Eflags(rawValue: 1<<45)
-    public static let resetRf = X86Eflags(rawValue: 1<<46)
-    public static let testRf = X86Eflags(rawValue: 1<<47)
-    public static let testIf = X86Eflags(rawValue: 1<<48)
-    public static let testTf = X86Eflags(rawValue: 1<<49)
-    public static let testAf = X86Eflags(rawValue: 1<<50)
-    public static let resetZf = X86Eflags(rawValue: 1<<51)
-    public static let setOf = X86Eflags(rawValue: 1<<52)
-    public static let setSf = X86Eflags(rawValue: 1<<53)
-    public static let setZf = X86Eflags(rawValue: 1<<54)
-    public static let setAf = X86Eflags(rawValue: 1<<55)
-    public static let setPf = X86Eflags(rawValue: 1<<56)
-    public static let reset0f = X86Eflags(rawValue: 1<<57)
-    public static let resetAc = X86Eflags(rawValue: 1<<58)
-}
-
-public struct X86FpuFlags: OptionSet {
-    public typealias RawValue = UInt64
-    public let rawValue: RawValue
-    public init(rawValue: RawValue) { self.rawValue = rawValue }
-    public static let modifyC0 = X86FpuFlags(rawValue: 1<<0)
-    public static let modifyC1 = X86FpuFlags(rawValue: 1<<1)
-    public static let modifyC2 = X86FpuFlags(rawValue: 1<<2)
-    public static let modifyC3 = X86FpuFlags(rawValue: 1<<3)
-    public static let resetC0 = X86FpuFlags(rawValue: 1<<4)
-    public static let resetC1 = X86FpuFlags(rawValue: 1<<5)
-    public static let resetC2 = X86FpuFlags(rawValue: 1<<6)
-    public static let resetC3 = X86FpuFlags(rawValue: 1<<7)
-    public static let setC0 = X86FpuFlags(rawValue: 1<<8)
-    public static let setC1 = X86FpuFlags(rawValue: 1<<9)
-    public static let setC2 = X86FpuFlags(rawValue: 1<<10)
-    public static let setC3 = X86FpuFlags(rawValue: 1<<11)
-    public static let undefinedC0 = X86FpuFlags(rawValue: 1<<12)
-    public static let undefinedC1 = X86FpuFlags(rawValue: 1<<13)
-    public static let undefinedC2 = X86FpuFlags(rawValue: 1<<14)
-    public static let undefinedC3 = X86FpuFlags(rawValue: 1<<15)
-    public static let testC0 = X86FpuFlags(rawValue: 1<<16)
-    public static let testC1 = X86FpuFlags(rawValue: 1<<17)
-    public static let testC2 = X86FpuFlags(rawValue: 1<<18)
-    public static let testC3 = X86FpuFlags(rawValue: 1<<19)
-
-}
-
-/// Operand type for instruction's operands
-public enum X86Op: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-
-}
-
-/// XOP Code Condition type
-public enum X86XopCc: UInt32 {
-    /// Uninitialized.
-    case invalid = 0
-    case lt = 1
-    case le = 2
-    case gt = 3
-    case ge = 4
-    case eq = 5
-    case neq = 6
-    case `false` = 7
-    case `true` = 8
-
-}
-
 /// AVX broadcast type
 public enum X86AvxBcast: UInt32 {
     /// Uninitialized.
     case invalid = 0
     /// AVX512 broadcast type {1to2}
-    case bcast2 = 1
+    case _2 = 1
     /// AVX512 broadcast type {1to4}
-    case bcast4 = 2
+    case _4 = 2
     /// AVX512 broadcast type {1to8}
-    case bcast8 = 3
+    case _8 = 3
     /// AVX512 broadcast type {1to16}
-    case bcast16 = 4
-
-}
-
-/// SSE Code Condition type
-public enum X86SseCc: UInt32 {
-    /// Uninitialized.
-    case invalid = 0
-    case eq = 1
-    case lt = 2
-    case le = 3
-    case unord = 4
-    case neq = 5
-    case nlt = 6
-    case nle = 7
-    case ord = 8
-
+    case _16 = 4
 }
 
 /// AVX Code Condition type
@@ -438,7 +50,6 @@ public enum X86AvxCc: UInt32 {
     case geOq = 30
     case gtOq = 31
     case trueUs = 32
-
 }
 
 /// AVX static rounding mode type
@@ -455,33 +66,157 @@ public enum X86AvxRm: UInt32 {
     case rz = 4
 }
 
-/// Instruction prefixes - to be used in cs_x86.prefix[]
-public enum X86Prefix: UInt32 {
-    /// lock (cs_x86.prefix[0]
-    case lock = 240
-    /// rep (cs_x86.prefix[0]
-    case rep = 243
-    /// repe/repz (cs_x86.prefix[0]
-    public static let repe = 243
-    /// repne/repnz (cs_x86.prefix[0]
-    case repne = 242
-    /// segment override CS (cs_x86.prefix[1]
-    case cs = 46
-    /// segment override SS (cs_x86.prefix[1]
-    case ss = 54
-    /// segment override DS (cs_x86.prefix[1]
-    case ds = 62
-    /// segment override ES (cs_x86.prefix[1]
-    case es = 38
-    /// segment override FS (cs_x86.prefix[1]
-    case fs = 100
-    /// segment override GS (cs_x86.prefix[1]
-    case gs = 101
-    /// operand-size override (cs_x86.prefix[2]
-    case opsize = 102
-    /// address-size override (cs_x86.prefix[3]
-    case addrsize = 103
+public struct X86Eflags: OptionSet {
+    public let rawValue: UInt64
+    public init(rawValue: UInt64) { self.rawValue = rawValue }
+    public static let modifyAf = X86Eflags(rawValue: 1)
+    public static let modifyCf = X86Eflags(rawValue: 2)
+    public static let modifySf = X86Eflags(rawValue: 4)
+    public static let modifyZf = X86Eflags(rawValue: 8)
+    public static let modifyPf = X86Eflags(rawValue: 16)
+    public static let modifyOf = X86Eflags(rawValue: 32)
+    public static let modifyTf = X86Eflags(rawValue: 64)
+    public static let modifyIf = X86Eflags(rawValue: 128)
+    public static let modifyDf = X86Eflags(rawValue: 256)
+    public static let modifyNt = X86Eflags(rawValue: 512)
+    public static let modifyRf = X86Eflags(rawValue: 1024)
+    public static let priorOf = X86Eflags(rawValue: 2048)
+    public static let priorSf = X86Eflags(rawValue: 4096)
+    public static let priorZf = X86Eflags(rawValue: 8192)
+    public static let priorAf = X86Eflags(rawValue: 16384)
+    public static let priorPf = X86Eflags(rawValue: 32768)
+    public static let priorCf = X86Eflags(rawValue: 65536)
+    public static let priorTf = X86Eflags(rawValue: 131072)
+    public static let priorIf = X86Eflags(rawValue: 262144)
+    public static let priorDf = X86Eflags(rawValue: 524288)
+    public static let priorNt = X86Eflags(rawValue: 1048576)
+    public static let resetOf = X86Eflags(rawValue: 2097152)
+    public static let resetCf = X86Eflags(rawValue: 4194304)
+    public static let resetDf = X86Eflags(rawValue: 8388608)
+    public static let resetIf = X86Eflags(rawValue: 16777216)
+    public static let resetSf = X86Eflags(rawValue: 33554432)
+    public static let resetAf = X86Eflags(rawValue: 67108864)
+    public static let resetTf = X86Eflags(rawValue: 134217728)
+    public static let resetNt = X86Eflags(rawValue: 268435456)
+    public static let resetPf = X86Eflags(rawValue: 536870912)
+    public static let setCf = X86Eflags(rawValue: 1073741824)
+    public static let setDf = X86Eflags(rawValue: 2147483648)
+    public static let setIf = X86Eflags(rawValue: 4294967296)
+    public static let testOf = X86Eflags(rawValue: 8589934592)
+    public static let testSf = X86Eflags(rawValue: 17179869184)
+    public static let testZf = X86Eflags(rawValue: 34359738368)
+    public static let testPf = X86Eflags(rawValue: 68719476736)
+    public static let testCf = X86Eflags(rawValue: 137438953472)
+    public static let testNt = X86Eflags(rawValue: 274877906944)
+    public static let testDf = X86Eflags(rawValue: 549755813888)
+    public static let undefinedOf = X86Eflags(rawValue: 1099511627776)
+    public static let undefinedSf = X86Eflags(rawValue: 2199023255552)
+    public static let undefinedZf = X86Eflags(rawValue: 4398046511104)
+    public static let undefinedPf = X86Eflags(rawValue: 8796093022208)
+    public static let undefinedAf = X86Eflags(rawValue: 17592186044416)
+    public static let undefinedCf = X86Eflags(rawValue: 35184372088832)
+    public static let resetRf = X86Eflags(rawValue: 70368744177664)
+    public static let testRf = X86Eflags(rawValue: 140737488355328)
+    public static let testIf = X86Eflags(rawValue: 281474976710656)
+    public static let testTf = X86Eflags(rawValue: 562949953421312)
+    public static let testAf = X86Eflags(rawValue: 1125899906842624)
+    public static let resetZf = X86Eflags(rawValue: 2251799813685248)
+    public static let setOf = X86Eflags(rawValue: 4503599627370496)
+    public static let setSf = X86Eflags(rawValue: 9007199254740992)
+    public static let setZf = X86Eflags(rawValue: 18014398509481984)
+    public static let setAf = X86Eflags(rawValue: 36028797018963968)
+    public static let setPf = X86Eflags(rawValue: 72057594037927936)
+    public static let reset0F = X86Eflags(rawValue: 144115188075855872)
+    public static let resetAc = X86Eflags(rawValue: 288230376151711744)
+}
 
+public struct X86FpuFlags: OptionSet {
+    public let rawValue: UInt64
+    public init(rawValue: UInt64) { self.rawValue = rawValue }
+    public static let modifyC0 = X86FpuFlags(rawValue: 1)
+    public static let modifyC1 = X86FpuFlags(rawValue: 2)
+    public static let modifyC2 = X86FpuFlags(rawValue: 4)
+    public static let modifyC3 = X86FpuFlags(rawValue: 8)
+    public static let resetC0 = X86FpuFlags(rawValue: 16)
+    public static let resetC1 = X86FpuFlags(rawValue: 32)
+    public static let resetC2 = X86FpuFlags(rawValue: 64)
+    public static let resetC3 = X86FpuFlags(rawValue: 128)
+    public static let setC0 = X86FpuFlags(rawValue: 256)
+    public static let setC1 = X86FpuFlags(rawValue: 512)
+    public static let setC2 = X86FpuFlags(rawValue: 1024)
+    public static let setC3 = X86FpuFlags(rawValue: 2048)
+    public static let undefinedC0 = X86FpuFlags(rawValue: 4096)
+    public static let undefinedC1 = X86FpuFlags(rawValue: 8192)
+    public static let undefinedC2 = X86FpuFlags(rawValue: 16384)
+    public static let undefinedC3 = X86FpuFlags(rawValue: 32768)
+    public static let testC0 = X86FpuFlags(rawValue: 65536)
+    public static let testC1 = X86FpuFlags(rawValue: 131072)
+    public static let testC2 = X86FpuFlags(rawValue: 262144)
+    public static let testC3 = X86FpuFlags(rawValue: 524288)
+}
+
+/// Group of X86 instructions
+public enum X86Grp: UInt8 {
+    /// = CS_GRP_INVALID
+    case invalid = 0
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_CALL
+    case call = 2
+    /// = CS_GRP_RET
+    case ret = 3
+    /// = CS_GRP_INT
+    case int = 4
+    /// = CS_GRP_IRET
+    case iret = 5
+    /// = CS_GRP_PRIVILEGE
+    case privilege = 6
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    /// all virtualization instructions (VT-x + AMD-V)
+    case vm = 128
+    case _3dnow = 129
+    case aes = 130
+    case adx = 131
+    case avx = 132
+    case avx2 = 133
+    case avx512 = 134
+    case bmi = 135
+    case bmi2 = 136
+    case cmov = 137
+    case f16c = 138
+    case fma = 139
+    case fma4 = 140
+    case fsgsbase = 141
+    case hle = 142
+    case mmx = 143
+    case mode32 = 144
+    case mode64 = 145
+    case rtm = 146
+    case sha = 147
+    case sse1 = 148
+    case sse2 = 149
+    case sse3 = 150
+    case sse41 = 151
+    case sse42 = 152
+    case sse4a = 153
+    case ssse3 = 154
+    case pclmul = 155
+    case xop = 156
+    case cdi = 157
+    case eri = 158
+    case tbm = 159
+    case _16bitmode = 160
+    case not64bitmode = 161
+    case sgx = 162
+    case dqi = 163
+    case bwi = 164
+    case pfi = 165
+    case vlx = 166
+    case smap = 167
+    case novlx = 168
+    case fpu = 169
+    case ending = 170
 }
 
 /// X86 instructions
@@ -2010,71 +1745,326 @@ public enum X86Ins: UInt32 {
     case xsha256 = 1521
     case xstore = 1522
     case xtest = 1523
+    /// mark the end of the list of insn
     case ending = 1524
-
 }
 
-/// Group of X86 instructions
-public enum X86Grp: UInt8 {
-    /// = CS_GRP_INVALID
+/// Operand type for instruction's operands
+public enum X86Op: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    /// = CS_GRP_CALL
-    case call = 2
-    /// = CS_GRP_RET
-    case ret = 3
-    /// = CS_GRP_INT
-    case int = 4
-    /// = CS_GRP_IRET
-    case iret = 5
-    /// = CS_GRP_PRIVILEGE
-    case privilege = 6
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 7
-    /// all virtualization instructions (VT-x + AMD-V)
-    case vm = 128
-    case grp3dnow = 129
-    case aes = 130
-    case adx = 131
-    case avx = 132
-    case avx2 = 133
-    case avx512 = 134
-    case bmi = 135
-    case bmi2 = 136
-    case cmov = 137
-    case f16c = 138
-    case fma = 139
-    case fma4 = 140
-    case fsgsbase = 141
-    case hle = 142
-    case mmx = 143
-    case mode32 = 144
-    case mode64 = 145
-    case rtm = 146
-    case sha = 147
-    case sse1 = 148
-    case sse2 = 149
-    case sse3 = 150
-    case sse41 = 151
-    case sse42 = 152
-    case sse4a = 153
-    case ssse3 = 154
-    case pclmul = 155
-    case xop = 156
-    case cdi = 157
-    case eri = 158
-    case tbm = 159
-    case grp16bitmode = 160
-    case not64bitmode = 161
-    case sgx = 162
-    case dqi = 163
-    case bwi = 164
-    case pfi = 165
-    case vlx = 166
-    case smap = 167
-    case novlx = 168
-    case fpu = 169
-    case ending = 170
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
 }
 
+/// Instruction prefixes - to be used in cs_x86.prefix[]
+public enum X86Prefix: UInt32 {
+    /// segment override ES (cs_x86.prefix[1]
+    case es = 38
+    /// segment override CS (cs_x86.prefix[1]
+    case cs = 46
+    /// segment override SS (cs_x86.prefix[1]
+    case ss = 54
+    /// segment override DS (cs_x86.prefix[1]
+    case ds = 62
+    /// segment override FS (cs_x86.prefix[1]
+    case fs = 100
+    /// segment override GS (cs_x86.prefix[1]
+    case gs = 101
+    /// operand-size override (cs_x86.prefix[2]
+    case opsize = 102
+    /// address-size override (cs_x86.prefix[3]
+    case addrsize = 103
+    /// lock (cs_x86.prefix[0]
+    case lock = 240
+    /// repne/repnz (cs_x86.prefix[0]
+    case repne = 242
+    /// rep (cs_x86.prefix[0]
+    case rep = 243
+    /// repe/repz (cs_x86.prefix[0]
+    public static let repe = 243
+}
+
+/// X86 registers
+public enum X86Reg: UInt16 {
+    case invalid = 0
+    case ah = 1
+    case al = 2
+    case ax = 3
+    case bh = 4
+    case bl = 5
+    case bp = 6
+    case bpl = 7
+    case bx = 8
+    case ch = 9
+    case cl = 10
+    case cs = 11
+    case cx = 12
+    case dh = 13
+    case di = 14
+    case dil = 15
+    case dl = 16
+    case ds = 17
+    case dx = 18
+    case eax = 19
+    case ebp = 20
+    case ebx = 21
+    case ecx = 22
+    case edi = 23
+    case edx = 24
+    case eflags = 25
+    case eip = 26
+    case eiz = 27
+    case es = 28
+    case esi = 29
+    case esp = 30
+    case fpsw = 31
+    case fs = 32
+    case gs = 33
+    case ip = 34
+    case rax = 35
+    case rbp = 36
+    case rbx = 37
+    case rcx = 38
+    case rdi = 39
+    case rdx = 40
+    case rip = 41
+    case riz = 42
+    case rsi = 43
+    case rsp = 44
+    case si = 45
+    case sil = 46
+    case sp = 47
+    case spl = 48
+    case ss = 49
+    case cr0 = 50
+    case cr1 = 51
+    case cr2 = 52
+    case cr3 = 53
+    case cr4 = 54
+    case cr5 = 55
+    case cr6 = 56
+    case cr7 = 57
+    case cr8 = 58
+    case cr9 = 59
+    case cr10 = 60
+    case cr11 = 61
+    case cr12 = 62
+    case cr13 = 63
+    case cr14 = 64
+    case cr15 = 65
+    case dr0 = 66
+    case dr1 = 67
+    case dr2 = 68
+    case dr3 = 69
+    case dr4 = 70
+    case dr5 = 71
+    case dr6 = 72
+    case dr7 = 73
+    case dr8 = 74
+    case dr9 = 75
+    case dr10 = 76
+    case dr11 = 77
+    case dr12 = 78
+    case dr13 = 79
+    case dr14 = 80
+    case dr15 = 81
+    case fp0 = 82
+    case fp1 = 83
+    case fp2 = 84
+    case fp3 = 85
+    case fp4 = 86
+    case fp5 = 87
+    case fp6 = 88
+    case fp7 = 89
+    case k0 = 90
+    case k1 = 91
+    case k2 = 92
+    case k3 = 93
+    case k4 = 94
+    case k5 = 95
+    case k6 = 96
+    case k7 = 97
+    case mm0 = 98
+    case mm1 = 99
+    case mm2 = 100
+    case mm3 = 101
+    case mm4 = 102
+    case mm5 = 103
+    case mm6 = 104
+    case mm7 = 105
+    case r8 = 106
+    case r9 = 107
+    case r10 = 108
+    case r11 = 109
+    case r12 = 110
+    case r13 = 111
+    case r14 = 112
+    case r15 = 113
+    case st0 = 114
+    case st1 = 115
+    case st2 = 116
+    case st3 = 117
+    case st4 = 118
+    case st5 = 119
+    case st6 = 120
+    case st7 = 121
+    case xmm0 = 122
+    case xmm1 = 123
+    case xmm2 = 124
+    case xmm3 = 125
+    case xmm4 = 126
+    case xmm5 = 127
+    case xmm6 = 128
+    case xmm7 = 129
+    case xmm8 = 130
+    case xmm9 = 131
+    case xmm10 = 132
+    case xmm11 = 133
+    case xmm12 = 134
+    case xmm13 = 135
+    case xmm14 = 136
+    case xmm15 = 137
+    case xmm16 = 138
+    case xmm17 = 139
+    case xmm18 = 140
+    case xmm19 = 141
+    case xmm20 = 142
+    case xmm21 = 143
+    case xmm22 = 144
+    case xmm23 = 145
+    case xmm24 = 146
+    case xmm25 = 147
+    case xmm26 = 148
+    case xmm27 = 149
+    case xmm28 = 150
+    case xmm29 = 151
+    case xmm30 = 152
+    case xmm31 = 153
+    case ymm0 = 154
+    case ymm1 = 155
+    case ymm2 = 156
+    case ymm3 = 157
+    case ymm4 = 158
+    case ymm5 = 159
+    case ymm6 = 160
+    case ymm7 = 161
+    case ymm8 = 162
+    case ymm9 = 163
+    case ymm10 = 164
+    case ymm11 = 165
+    case ymm12 = 166
+    case ymm13 = 167
+    case ymm14 = 168
+    case ymm15 = 169
+    case ymm16 = 170
+    case ymm17 = 171
+    case ymm18 = 172
+    case ymm19 = 173
+    case ymm20 = 174
+    case ymm21 = 175
+    case ymm22 = 176
+    case ymm23 = 177
+    case ymm24 = 178
+    case ymm25 = 179
+    case ymm26 = 180
+    case ymm27 = 181
+    case ymm28 = 182
+    case ymm29 = 183
+    case ymm30 = 184
+    case ymm31 = 185
+    case zmm0 = 186
+    case zmm1 = 187
+    case zmm2 = 188
+    case zmm3 = 189
+    case zmm4 = 190
+    case zmm5 = 191
+    case zmm6 = 192
+    case zmm7 = 193
+    case zmm8 = 194
+    case zmm9 = 195
+    case zmm10 = 196
+    case zmm11 = 197
+    case zmm12 = 198
+    case zmm13 = 199
+    case zmm14 = 200
+    case zmm15 = 201
+    case zmm16 = 202
+    case zmm17 = 203
+    case zmm18 = 204
+    case zmm19 = 205
+    case zmm20 = 206
+    case zmm21 = 207
+    case zmm22 = 208
+    case zmm23 = 209
+    case zmm24 = 210
+    case zmm25 = 211
+    case zmm26 = 212
+    case zmm27 = 213
+    case zmm28 = 214
+    case zmm29 = 215
+    case zmm30 = 216
+    case zmm31 = 217
+    case r8b = 218
+    case r9b = 219
+    case r10b = 220
+    case r11b = 221
+    case r12b = 222
+    case r13b = 223
+    case r14b = 224
+    case r15b = 225
+    case r8d = 226
+    case r9d = 227
+    case r10d = 228
+    case r11d = 229
+    case r12d = 230
+    case r13d = 231
+    case r14d = 232
+    case r15d = 233
+    case r8w = 234
+    case r9w = 235
+    case r10w = 236
+    case r11w = 237
+    case r12w = 238
+    case r13w = 239
+    case r14w = 240
+    case r15w = 241
+    case bnd0 = 242
+    case bnd1 = 243
+    case bnd2 = 244
+    case bnd3 = 245
+    /// <-- mark the end of the list of registers
+    case ending = 246
+}
+
+/// SSE Code Condition type
+public enum X86SseCc: UInt32 {
+    /// Uninitialized.
+    case invalid = 0
+    case eq = 1
+    case lt = 2
+    case le = 3
+    case unord = 4
+    case neq = 5
+    case nlt = 6
+    case nle = 7
+    case ord = 8
+}
+
+/// XOP Code Condition type
+public enum X86XopCc: UInt32 {
+    /// Uninitialized.
+    case invalid = 0
+    case lt = 1
+    case le = 2
+    case gt = 3
+    case ge = 4
+    case eq = 5
+    case neq = 6
+    case `false` = 7
+    case `true` = 8
+}

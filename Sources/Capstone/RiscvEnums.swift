@@ -1,159 +1,42 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Riscv)
 
-
-	// Operand type for instruction's operands
-
-public enum RiscvOp: UInt32 {
+/// > Group of RISCV instructions
+public enum RiscvGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    case reg = 1
-    case imm = 2
-    case mem = 3
-
-	// RISCV registers
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_CALL
+    case call = 2
+    /// = CS_GRP_RET
+    case ret = 3
+    /// = CS_GRP_INT
+    case int = 4
+    /// = CS_GRP_IRET
+    case iret = 5
+    /// = CS_GRP_PRIVILEGE
+    case privilege = 6
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    /// Architecture-specific groups
+    case isrv32 = 128
+    /// Architecture-specific groups
+    case isrv64 = 129
+    /// Architecture-specific groups
+    case hasstdexta = 130
+    /// Architecture-specific groups
+    case hasstdextc = 131
+    /// Architecture-specific groups
+    case hasstdextd = 132
+    /// Architecture-specific groups
+    case hasstdextf = 133
+    /// Architecture-specific groups
+    case hasstdextm = 134
+    /// RISCV_GRP_ISRVA, RISCV_GRP_ISRVC, RISCV_GRP_ISRVD, RISCV_GRP_ISRVCD, RISCV_GRP_ISRVF, RISCV_GRP_ISRV32C, RISCV_GRP_ISRV32CF, RISCV_GRP_ISRVM, RISCV_GRP_ISRV64A, RISCV_GRP_ISRV64C, RISCV_GRP_ISRV64D, RISCV_GRP_ISRV64F, RISCV_GRP_ISRV64M,
+    case ending = 135
 }
 
-public enum RiscvReg: UInt16 {
-    case invalid = 0
-
-	// General purpose registers
-    case x0 = 1
-    public static let zero = 1
-    case x1 = 2
-    public static let ra = 2
-    case x2 = 3
-    public static let sp = 3
-    case x3 = 4
-    public static let gp = 4
-    case x4 = 5
-    public static let tp = 5
-    case x5 = 6
-    public static let t0 = 6
-    case x6 = 7
-    public static let t1 = 7
-    case x7 = 8
-    public static let t2 = 8
-    case x8 = 9
-    public static let s0 = 9
-    public static let fp = 9
-    case x9 = 10
-    public static let s1 = 10
-    case x10 = 11
-    public static let a0 = 11
-    case x11 = 12
-    public static let a1 = 12
-    case x12 = 13
-    public static let a2 = 13
-    case x13 = 14
-    public static let a3 = 14
-    case x14 = 15
-    public static let a4 = 15
-    case x15 = 16
-    public static let a5 = 16
-    case x16 = 17
-    public static let a6 = 17
-    case x17 = 18
-    public static let a7 = 18
-    case x18 = 19
-    public static let s2 = 19
-    case x19 = 20
-    public static let s3 = 20
-    case x20 = 21
-    public static let s4 = 21
-    case x21 = 22
-    public static let s5 = 22
-    case x22 = 23
-    public static let s6 = 23
-    case x23 = 24
-    public static let s7 = 24
-    case x24 = 25
-    public static let s8 = 25
-    case x25 = 26
-    public static let s9 = 26
-    case x26 = 27
-    public static let s10 = 27
-    case x27 = 28
-    public static let s11 = 28
-    case x28 = 29
-    public static let t3 = 29
-    case x29 = 30
-    public static let t4 = 30
-    case x30 = 31
-    public static let t5 = 31
-    case x31 = 32
-    public static let t6 = 32
-
-	// Floating-point registers
-    case f032 = 33
-    case f064 = 34
-    case f132 = 35
-    case f164 = 36
-    case f232 = 37
-    case f264 = 38
-    case f332 = 39
-    case f364 = 40
-    case f432 = 41
-    case f464 = 42
-    case f532 = 43
-    case f564 = 44
-    case f632 = 45
-    case f664 = 46
-    case f732 = 47
-    case f764 = 48
-    case f832 = 49
-    case f864 = 50
-    case f932 = 51
-    case f964 = 52
-    case f1032 = 53
-    case f1064 = 54
-    case f1132 = 55
-    case f1164 = 56
-    case f1232 = 57
-    case f1264 = 58
-    case f1332 = 59
-    case f1364 = 60
-    case f1432 = 61
-    case f1464 = 62
-    case f1532 = 63
-    case f1564 = 64
-    case f1632 = 65
-    case f1664 = 66
-    case f1732 = 67
-    case f1764 = 68
-    case f1832 = 69
-    case f1864 = 70
-    case f1932 = 71
-    case f1964 = 72
-    case f2032 = 73
-    case f2064 = 74
-    case f2132 = 75
-    case f2164 = 76
-    case f2232 = 77
-    case f2264 = 78
-    case f2332 = 79
-    case f2364 = 80
-    case f2432 = 81
-    case f2464 = 82
-    case f2532 = 83
-    case f2564 = 84
-    case f2632 = 85
-    case f2664 = 86
-    case f2732 = 87
-    case f2764 = 88
-    case f2832 = 89
-    case f2864 = 90
-    case f2932 = 91
-    case f2964 = 92
-    case f3032 = 93
-    case f3064 = 94
-    case f3132 = 95
-    case f3164 = 96
-    case ending = 97
-
-	// RISCV instruction
-
-}
-
+/// > RISCV instruction
 public enum RiscvIns: UInt32 {
     case invalid = 0
     case add = 1
@@ -249,8 +132,8 @@ public enum RiscvIns: UInt32 {
     case csrrwi = 91
     case cAdd = 92
     case cAddi = 93
-    case cAddi16sp = 94
-    case cAddi4spn = 95
+    case cAddi16Sp = 94
+    case cAddi4Spn = 95
     case cAddiw = 96
     case cAddw = 97
     case cAnd = 98
@@ -429,34 +312,281 @@ public enum RiscvIns: UInt32 {
     case xor = 271
     case xori = 272
     case ending = 273
-
-	// Group of RISCV instructions
-
 }
 
-public enum RiscvGrp: UInt8 {
+/// > Operand type for instruction's operands
+public enum RiscvOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    case jump = 1
-    case isrv32 = 128
-    case isrv64 = 129
-    case hasstdexta = 130
-    case hasstdextc = 131
-    case hasstdextd = 132
-    case hasstdextf = 133
-    case hasstdextm = 134
-    case isrva = 135
-    case isrvc = 136
-    case isrvd = 137
-    case isrvcd = 138
-    case isrvf = 139
-    case isrv32c = 140
-    case isrv32cf = 141
-    case isrvm = 142
-    case isrv64a = 143
-    case isrv64c = 144
-    case isrv64d = 145
-    case isrv64f = 146
-    case isrv64m = 147
-    case ending = 148
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
 }
 
+/// > RISCV registers
+public enum RiscvReg: UInt16 {
+    case invalid = 0
+    /// "zero"
+    case x0 = 1
+    /// "zero"
+    public static let zero = 1
+    /// "ra"
+    case x1 = 2
+    /// "ra"
+    public static let ra = 2
+    /// "sp"
+    case x2 = 3
+    /// "sp"
+    public static let sp = 3
+    /// "gp"
+    case x3 = 4
+    /// "gp"
+    public static let gp = 4
+    /// "tp"
+    case x4 = 5
+    /// "tp"
+    public static let tp = 5
+    /// "t0"
+    case x5 = 6
+    /// "t0"
+    public static let t0 = 6
+    /// "t1"
+    case x6 = 7
+    /// "t1"
+    public static let t1 = 7
+    /// "t2"
+    case x7 = 8
+    /// "t2"
+    public static let t2 = 8
+    /// "s0/fp"
+    case x8 = 9
+    /// "s0"
+    public static let s0 = 9
+    /// "fp"
+    public static let fp = 9
+    /// "s1"
+    case x9 = 10
+    /// "s1"
+    public static let s1 = 10
+    /// "a0"
+    case x10 = 11
+    /// "a0"
+    public static let a0 = 11
+    /// "a1"
+    case x11 = 12
+    /// "a1"
+    public static let a1 = 12
+    /// "a2"
+    case x12 = 13
+    /// "a2"
+    public static let a2 = 13
+    /// "a3"
+    case x13 = 14
+    /// "a3"
+    public static let a3 = 14
+    /// "a4"
+    case x14 = 15
+    /// "a4"
+    public static let a4 = 15
+    /// "a5"
+    case x15 = 16
+    /// "a5"
+    public static let a5 = 16
+    /// "a6"
+    case x16 = 17
+    /// "a6"
+    public static let a6 = 17
+    /// "a7"
+    case x17 = 18
+    /// "a7"
+    public static let a7 = 18
+    /// "s2"
+    case x18 = 19
+    /// "s2"
+    public static let s2 = 19
+    /// "s3"
+    case x19 = 20
+    /// "s3"
+    public static let s3 = 20
+    /// "s4"
+    case x20 = 21
+    /// "s4"
+    public static let s4 = 21
+    /// "s5"
+    case x21 = 22
+    /// "s5"
+    public static let s5 = 22
+    /// "s6"
+    case x22 = 23
+    /// "s6"
+    public static let s6 = 23
+    /// "s7"
+    case x23 = 24
+    /// "s7"
+    public static let s7 = 24
+    /// "s8"
+    case x24 = 25
+    /// "s8"
+    public static let s8 = 25
+    /// "s9"
+    case x25 = 26
+    /// "s9"
+    public static let s9 = 26
+    /// "s10"
+    case x26 = 27
+    /// "s10"
+    public static let s10 = 27
+    /// "s11"
+    case x27 = 28
+    /// "s11"
+    public static let s11 = 28
+    /// "t3"
+    case x28 = 29
+    /// "t3"
+    public static let t3 = 29
+    /// "t4"
+    case x29 = 30
+    /// "t4"
+    public static let t4 = 30
+    /// "t5"
+    case x30 = 31
+    /// "t5"
+    public static let t5 = 31
+    /// "t6"
+    case x31 = 32
+    /// "t6"
+    public static let t6 = 32
+    /// "ft0"
+    case f032 = 33
+    /// "ft0"
+    case f064 = 34
+    /// "ft1"
+    case f132 = 35
+    /// "ft1"
+    case f164 = 36
+    /// "ft2"
+    case f232 = 37
+    /// "ft2"
+    case f264 = 38
+    /// "ft3"
+    case f332 = 39
+    /// "ft3"
+    case f364 = 40
+    /// "ft4"
+    case f432 = 41
+    /// "ft4"
+    case f464 = 42
+    /// "ft5"
+    case f532 = 43
+    /// "ft5"
+    case f564 = 44
+    /// "ft6"
+    case f632 = 45
+    /// "ft6"
+    case f664 = 46
+    /// "ft7"
+    case f732 = 47
+    /// "ft7"
+    case f764 = 48
+    /// "fs0"
+    case f832 = 49
+    /// "fs0"
+    case f864 = 50
+    /// "fs1"
+    case f932 = 51
+    /// "fs1"
+    case f964 = 52
+    /// "fa0"
+    case f1032 = 53
+    /// "fa0"
+    case f1064 = 54
+    /// "fa1"
+    case f1132 = 55
+    /// "fa1"
+    case f1164 = 56
+    /// "fa2"
+    case f1232 = 57
+    /// "fa2"
+    case f1264 = 58
+    /// "fa3"
+    case f1332 = 59
+    /// "fa3"
+    case f1364 = 60
+    /// "fa4"
+    case f1432 = 61
+    /// "fa4"
+    case f1464 = 62
+    /// "fa5"
+    case f1532 = 63
+    /// "fa5"
+    case f1564 = 64
+    /// "fa6"
+    case f1632 = 65
+    /// "fa6"
+    case f1664 = 66
+    /// "fa7"
+    case f1732 = 67
+    /// "fa7"
+    case f1764 = 68
+    /// "fs2"
+    case f1832 = 69
+    /// "fs2"
+    case f1864 = 70
+    /// "fs3"
+    case f1932 = 71
+    /// "fs3"
+    case f1964 = 72
+    /// "fs4"
+    case f2032 = 73
+    /// "fs4"
+    case f2064 = 74
+    /// "fs5"
+    case f2132 = 75
+    /// "fs5"
+    case f2164 = 76
+    /// "fs6"
+    case f2232 = 77
+    /// "fs6"
+    case f2264 = 78
+    /// "fs7"
+    case f2332 = 79
+    /// "fs7"
+    case f2364 = 80
+    /// "fs8"
+    case f2432 = 81
+    /// "fs8"
+    case f2464 = 82
+    /// "fs9"
+    case f2532 = 83
+    /// "fs9"
+    case f2564 = 84
+    /// "fs10"
+    case f2632 = 85
+    /// "fs10"
+    case f2664 = 86
+    /// "fs11"
+    case f2732 = 87
+    /// "fs11"
+    case f2764 = 88
+    /// "ft8"
+    case f2832 = 89
+    /// "ft8"
+    case f2864 = 90
+    /// "ft9"
+    case f2932 = 91
+    /// "ft9"
+    case f2964 = 92
+    /// "ft10"
+    case f3032 = 93
+    /// "ft10"
+    case f3064 = 94
+    /// "ft11"
+    case f3132 = 95
+    /// "ft11"
+    case f3164 = 96
+    /// <-- mark the end of the list or registers
+    case ending = 97
+}

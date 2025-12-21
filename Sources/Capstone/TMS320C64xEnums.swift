@@ -1,137 +1,26 @@
-// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (TMS320C64x)
+// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Tms320c64x)
 
-
-public enum Tms320c64xOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
+public enum Tms320c64xFunit: UInt32 {
     case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-    /// Register pair for double word ops
-    case regpair = 64
-
+    case d = 1
+    case l = 2
+    case m = 3
+    case s = 4
+    case no = 5
 }
 
-public enum Tms320c64xMemDisp: UInt32 {
+public enum Tms320c64xGrp: UInt8 {
+    /// = CS_GRP_INVALID
     case invalid = 0
-    case constant = 1
-    case register = 2
-
-}
-
-public enum Tms320c64xMemDir: UInt32 {
-    case invalid = 0
-    case fw = 1
-    case bw = 2
-
-}
-
-public enum Tms320c64xMemMod: UInt32 {
-    case invalid = 0
-    case no = 1
-    case pre = 2
-    case post = 3
-
-}
-
-public enum Tms320c64xReg: UInt16 {
-    case invalid = 0
-    case amr = 1
-    case csr = 2
-    case dier = 3
-    case dnum = 4
-    case ecr = 5
-    case gfpgfr = 6
-    case gplya = 7
-    case gplyb = 8
-    case icr = 9
-    case ier = 10
-    case ierr = 11
-    case ilc = 12
-    case irp = 13
-    case isr = 14
-    case istp = 15
-    case itsr = 16
-    case nrp = 17
-    case ntsr = 18
-    case rep = 19
-    case rilc = 20
-    case ssr = 21
-    case tsch = 22
-    case tscl = 23
-    case tsr = 24
-    case a0 = 25
-    case a1 = 26
-    case a2 = 27
-    case a3 = 28
-    case a4 = 29
-    case a5 = 30
-    case a6 = 31
-    case a7 = 32
-    case a8 = 33
-    case a9 = 34
-    case a10 = 35
-    case a11 = 36
-    case a12 = 37
-    case a13 = 38
-    case a14 = 39
-    case a15 = 40
-    case a16 = 41
-    case a17 = 42
-    case a18 = 43
-    case a19 = 44
-    case a20 = 45
-    case a21 = 46
-    case a22 = 47
-    case a23 = 48
-    case a24 = 49
-    case a25 = 50
-    case a26 = 51
-    case a27 = 52
-    case a28 = 53
-    case a29 = 54
-    case a30 = 55
-    case a31 = 56
-    case b0 = 57
-    case b1 = 58
-    case b2 = 59
-    case b3 = 60
-    case b4 = 61
-    case b5 = 62
-    case b6 = 63
-    case b7 = 64
-    case b8 = 65
-    case b9 = 66
-    case b10 = 67
-    case b11 = 68
-    case b12 = 69
-    case b13 = 70
-    case b14 = 71
-    case b15 = 72
-    case b16 = 73
-    case b17 = 74
-    case b18 = 75
-    case b19 = 76
-    case b20 = 77
-    case b21 = 78
-    case b22 = 79
-    case b23 = 80
-    case b24 = 81
-    case b25 = 82
-    case b26 = 83
-    case b27 = 84
-    case b28 = 85
-    case b29 = 86
-    case b30 = 87
-    case b31 = 88
-    case pce1 = 89
-    case ending = 90
-    public static let efr = 5
-    public static let ifr = 14
-
+    /// = CS_GRP_JUMP
+    case jump = 1
+    case funitD = 128
+    case funitL = 129
+    case funitM = 130
+    case funitS = 131
+    case funitNo = 132
+    /// <-- mark the end of the list of groups
+    case ending = 133
 }
 
 public enum Tms320c64xIns: UInt32 {
@@ -274,36 +163,149 @@ public enum Tms320c64xIns: UInt32 {
     case xor = 136
     case xpnd2 = 137
     case xpnd4 = 138
+    /// Aliases
     case idle = 139
+    /// Aliases
     case mv = 140
+    /// Aliases
     case neg = 141
+    /// Aliases
     case not = 142
+    /// Aliases
     case swap2 = 143
+    /// Aliases
     case zero = 144
+    /// <-- mark the end of the list of instructions
     case ending = 145
-
 }
 
-public enum Tms320c64xGrp: UInt8 {
-    /// = CS_GRP_INVALID
+public enum Tms320c64xMemDir: UInt32 {
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    case funitD = 128
-    case funitL = 129
-    case funitM = 130
-    case funitS = 131
-    case funitNo = 132
-    case ending = 133
-
+    case fw = 1
+    case bw = 2
 }
 
-public enum Tms320c64xFunit: UInt32 {
+public enum Tms320c64xMemDisp: UInt32 {
     case invalid = 0
-    case d = 1
-    case l = 2
-    case m = 3
-    case s = 4
-    case no = 5
+    case constant = 1
+    case register = 2
 }
 
+public enum Tms320c64xMemMod: UInt32 {
+    case invalid = 0
+    case no = 1
+    case pre = 2
+    case post = 3
+}
+
+public enum Tms320c64xOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
+    case invalid = 0
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
+    /// Register pair for double word ops
+    case regpair = 64
+}
+
+public enum Tms320c64xReg: UInt16 {
+    case invalid = 0
+    case amr = 1
+    case csr = 2
+    case dier = 3
+    case dnum = 4
+    case ecr = 5
+    /// Alias registers
+    public static let efr = 5
+    case gfpgfr = 6
+    case gplya = 7
+    case gplyb = 8
+    case icr = 9
+    case ier = 10
+    case ierr = 11
+    case ilc = 12
+    case irp = 13
+    case isr = 14
+    /// Alias registers
+    public static let ifr = 14
+    case istp = 15
+    case itsr = 16
+    case nrp = 17
+    case ntsr = 18
+    case rep = 19
+    case rilc = 20
+    case ssr = 21
+    case tsch = 22
+    case tscl = 23
+    case tsr = 24
+    case a0 = 25
+    case a1 = 26
+    case a2 = 27
+    case a3 = 28
+    case a4 = 29
+    case a5 = 30
+    case a6 = 31
+    case a7 = 32
+    case a8 = 33
+    case a9 = 34
+    case a10 = 35
+    case a11 = 36
+    case a12 = 37
+    case a13 = 38
+    case a14 = 39
+    case a15 = 40
+    case a16 = 41
+    case a17 = 42
+    case a18 = 43
+    case a19 = 44
+    case a20 = 45
+    case a21 = 46
+    case a22 = 47
+    case a23 = 48
+    case a24 = 49
+    case a25 = 50
+    case a26 = 51
+    case a27 = 52
+    case a28 = 53
+    case a29 = 54
+    case a30 = 55
+    case a31 = 56
+    case b0 = 57
+    case b1 = 58
+    case b2 = 59
+    case b3 = 60
+    case b4 = 61
+    case b5 = 62
+    case b6 = 63
+    case b7 = 64
+    case b8 = 65
+    case b9 = 66
+    case b10 = 67
+    case b11 = 68
+    case b12 = 69
+    case b13 = 70
+    case b14 = 71
+    case b15 = 72
+    case b16 = 73
+    case b17 = 74
+    case b18 = 75
+    case b19 = 76
+    case b20 = 77
+    case b21 = 78
+    case b22 = 79
+    case b23 = 80
+    case b24 = 81
+    case b25 = 82
+    case b26 = 83
+    case b27 = 84
+    case b28 = 85
+    case b29 = 86
+    case b30 = 87
+    case b31 = 88
+    case pce1 = 89
+    /// <-- mark the end of the list of registers
+    case ending = 90
+}

@@ -8,7 +8,11 @@
 }
 
 @inlinable internal func enumCast<T, U: RawRepresentable>(_ x: T) -> U where T: BinaryInteger, U.RawValue: BinaryInteger {
-    return U(rawValue: numericCast(x))!
+    return optionalEnumCast(x)!
+}
+
+@inlinable internal func optionalEnumCast<T, U: RawRepresentable>(_ x: T) -> U? where T: BinaryInteger, U.RawValue: BinaryInteger {
+    return U(rawValue: numericCast(x))
 }
 
 @inlinable internal func enumCast<T: RawRepresentable, U: RawRepresentable>(_ x: T) -> U where T.RawValue: BinaryInteger, U.RawValue: BinaryInteger {

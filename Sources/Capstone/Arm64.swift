@@ -4,26 +4,26 @@ extension Arm64Instruction: OperandContainer {
     /// Condition code.
     ///
     /// `nil` when detail mode is off, or instruction has no condition code.
-    public var conditionCode: Arm64Cc! {
+    public var conditionCode: Arm64Cc? {
         optionalEnumCast(detail?.arm64.cc, ignoring: ARM64_CC_INVALID)
     }
 
     /// Does this instruction update flags?
     ///
     /// `nil` when detail mode is off.
-    public var updatesFlags: Bool! { detail?.arm64.update_flags }
+    public var updatesFlags: Bool? { detail?.arm64.update_flags }
 
     /// Does this instruction write-back?
     ///
     /// `nil` when detail mode is off.
-    public var writeBack: Bool! { detail?.arm64.writeback }
+    public var writeBack: Bool? { detail?.arm64.writeback }
 
     /// Instruction operands.
     ///
     /// Empty when detail mode is off.
     public var operands: [Operand] {
         let operands: [cs_arm64_op] = readDetailsArray(array: detail?.arm64.operands, size: detail?.arm64.op_count)
-        return operands.map({ Operand(op: $0, ins: instruction) })
+        return operands.map({ Operand(op: $0, ins: instruction ?? .invalid) })
     }
 
     /// Operand for Arm64 instructions.
@@ -51,7 +51,7 @@ extension Arm64Instruction: OperandContainer {
         /// Vector Index for some vector operands.
         ///
         /// `nil` if not applicable.
-        public var vectorIndex: Int! {
+        public var vectorIndex: Int? {
             guard op.vector_index != -1 else {
                 return nil
             }
@@ -61,14 +61,14 @@ extension Arm64Instruction: OperandContainer {
         /// Vector Arrangement Specifier.
         ///
         /// `nil` if not applicable.
-        public var vectorArrangementSpecifier: Arm64Vas! {
+        public var vectorArrangementSpecifier: Arm64Vas? {
             optionalEnumCast(op.vas, ignoring: ARM64_VAS_INVALID)
         }
 
         /// Shift for this operand.
         ///
         /// `nil` if not applicable.
-        public var shift: (type: Arm64Sft, value: UInt)! {
+        public var shift: (type: Arm64Sft, value: UInt)? {
             guard op.shift.type != ARM64_SFT_INVALID else {
                 return nil
             }
@@ -78,12 +78,12 @@ extension Arm64Instruction: OperandContainer {
         /// Extender type of this operand.
         ///
         /// `nil` if not applicable.
-        public var extender: Arm64Ext! {
+        public var extender: Arm64Ext? {
             optionalEnumCast(op.ext, ignoring: ARM64_EXT_INVALID)
         }
 
         /// Operand value.
-        public var value: Arm64OperandValue {
+        public var value: Arm64OperandValue? {
             switch type {
             case .reg:
                 return register
@@ -110,7 +110,8 @@ extension Arm64Instruction: OperandContainer {
                 case .mrs, .msr:
                     return systemRegister
                 default:
-                    fatalError("Invalid arm64 instruction for type sys: \(ins)(\(ins.rawValue))")
+                    print("Invalid arm64 instruction for type sys: \(ins)(\(ins.rawValue))")
+                    return nil
                 }
             case .prefetch:
                 return prefetch
@@ -118,28 +119,29 @@ extension Arm64Instruction: OperandContainer {
                 return barrier
             default:
                 // this shouldn't happen
-                fatalError("Invalid arm64 operand type \(type.rawValue)")
+                print("Invalid arm64 operand type \(type.rawValue)")
+                return nil
             }
         }
 
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: Arm64Reg! {
+        public var register: Arm64Reg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            return optionalEnumCast(op.reg)
         }
 
         /// System register value for `regMrs`, `regMsr` and some `sys` operands.
         ///
         /// `nil` when not an appropriate operand.
-        public var systemRegister: Arm64Sysreg! {
+        public var systemRegister: Arm64Sysreg? {
             if type == .regMrs || type == .regMsr {
-                return enumCast(op.reg)
+                return optionalEnumCast(op.reg)
             } else if type == .sys {
-                return enumCast(op.sys)
+                return optionalEnumCast(op.sys)
             }
             return nil
         }
@@ -147,7 +149,7 @@ extension Arm64Instruction: OperandContainer {
         /// Immediate register value for `imm` or `cimm` operands.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int64! {
+        public var immediateValue: Int64? {
             guard type == .imm || type == .cimm else {
                 return nil
             }
@@ -157,7 +159,7 @@ extension Arm64Instruction: OperandContainer {
         /// Floating point value for `fp` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var doubleValue: Double! {
+        public var doubleValue: Double? {
             guard type == .fp else {
                 return nil
             }
@@ -167,7 +169,7 @@ extension Arm64Instruction: OperandContainer {
         /// Base/index/displacement value for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }
@@ -181,71 +183,71 @@ extension Arm64Instruction: OperandContainer {
         /// PState field of MSR instruction (`pstate` operand).
         ///
         /// `nil` when not an appropriate operand.
-        public var pState: Arm64Pstate! {
+        public var pState: Arm64Pstate? {
             guard type == .pstate else {
                 return nil
             }
-            return enumCast(op.pstate)
+            return optionalEnumCast(op.pstate)
         }
 
         /// PRFM operation (`prefetch` operand).
         ///
         /// `nil` when not an appropriate operand.
-        public var prefetch: Arm64Prfm! {
+        public var prefetch: Arm64Prfm? {
             guard type == .prefetch else {
                 return nil
             }
-            return enumCast(op.prefetch)
+            return optionalEnumCast(op.prefetch)
         }
 
         /// Memory barrier operation (`barrier` operand of ISB/DMB/DSB instructions).
         ///
         /// `nil` when not an appropriate operand.
-        public var barrier: Arm64Barrier! {
+        public var barrier: Arm64Barrier? {
             guard type == .barrier else {
                 return nil
             }
-            return enumCast(op.barrier)
+            return optionalEnumCast(op.barrier)
         }
 
         /// Operand for IC operation.
         ///
         /// `nil` when not an appropriate operand.
-        public var ic: Arm64Ic! {
+        public var ic: Arm64Ic? {
             guard type == .sys && ins == .ic else {
                 return nil
             }
-            return enumCast(op.sys)
+            return optionalEnumCast(op.sys)
         }
 
         /// Operand for DC operation.
         ///
         /// `nil` when not an appropriate operand.
-        public var dc: Arm64Dc! {
+        public var dc: Arm64Dc? {
             guard type == .sys && ins == .dc else {
                 return nil
             }
-            return enumCast(op.sys)
+            return optionalEnumCast(op.sys)
         }
 
         /// Operand for AT operation.
         ///
         /// `nil` when not an appropriate operand.
-        public var at: Arm64At! {
+        public var at: Arm64At? {
             guard type == .sys && ins == .at else {
                 return nil
             }
-            return enumCast(op.sys)
+            return optionalEnumCast(op.sys)
         }
 
         /// Operand for TLBI operation.
         ///
         /// `nil` when not an appropriate operand.
-        public var tlbi: Arm64Tlbi! {
+        public var tlbi: Arm64Tlbi? {
             guard type == .sys && ins == .tlbi else {
                 return nil
             }
-            return enumCast(op.sys)
+            return optionalEnumCast(op.sys)
         }
 
         /// Operand value referring to memory.

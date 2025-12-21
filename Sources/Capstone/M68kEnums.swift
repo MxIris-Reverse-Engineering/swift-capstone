@@ -1,63 +1,5 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M68k)
 
-public enum M68kOperand: UInt32 {
-    case count = 4
-
-}
-
-/// M68K registers and special registers
-public enum M68kReg: UInt16 {
-    case invalid = 0
-    case d0 = 1
-    case d1 = 2
-    case d2 = 3
-    case d3 = 4
-    case d4 = 5
-    case d5 = 6
-    case d6 = 7
-    case d7 = 8
-    case a0 = 9
-    case a1 = 10
-    case a2 = 11
-    case a3 = 12
-    case a4 = 13
-    case a5 = 14
-    case a6 = 15
-    case a7 = 16
-    case fp0 = 17
-    case fp1 = 18
-    case fp2 = 19
-    case fp3 = 20
-    case fp4 = 21
-    case fp5 = 22
-    case fp6 = 23
-    case fp7 = 24
-    case pc = 25
-    case sr = 26
-    case ccr = 27
-    case sfc = 28
-    case dfc = 29
-    case usp = 30
-    case vbr = 31
-    case cacr = 32
-    case caar = 33
-    case msp = 34
-    case isp = 35
-    case tc = 36
-    case itt0 = 37
-    case itt1 = 38
-    case dtt0 = 39
-    case dtt1 = 40
-    case mmusr = 41
-    case urp = 42
-    case srp = 43
-    case fpcr = 44
-    case fpsr = 45
-    case fpiar = 46
-    case ending = 47
-
-}
-
 /// M68K Addressing Modes
 public enum M68kAm: UInt32 {
     /// No address mode.
@@ -92,64 +34,28 @@ public enum M68kAm: UInt32 {
     case pcMemiPostIndex = 14
     /// Program Counter Memory Indirect - Preindexed
     case pcMemiPreIndex = 15
-    /// Absolute Data Addressing  - Short
+    /// Absolute Data Addressing - Short
     case absoluteDataShort = 16
-    /// Absolute Data Addressing  - Long
+    /// Absolute Data Addressing - Long
     case absoluteDataLong = 17
     /// Immediate value
     case immediate = 18
     /// Address as displacement from (PC+2) used by branches
     case branchDisplacement = 19
-
-}
-
-/// Operand type for instruction's operands
-public enum M68kOp: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// = CS_OP_REG (Register operand).
-    case reg = 1
-    /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
-    /// single precision Floating-Point operand
-    case fpSingle = 4
-    /// double precision Floating-Point operand
-    case fpDouble = 5
-    /// Register bits move
-    case regBits = 6
-    /// Register pair in the same op (upper 4 bits for first reg, lower for second)
-    case regPair = 7
-    /// Branch displacement
-    case brDisp = 8
-
-}
-
-/// Operand type for instruction's operands
-public enum M68kOpBrDispSize: UInt32 {
-    /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
-    /// signed 8-bit displacement
-    case byte = 1
-    /// signed 16-bit displacement
-    case word = 2
-    /// signed 32-bit displacement
-    case long = 4
-
 }
 
 /// Operation size of the CPU instructions
-public enum M68kCpuSize: UInt32 {
+public struct M68kCpuSize: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// unsized or unspecified
-    case none = 0
+    public static let none: M68kCpuSize = []
     /// 1 byte in size
-    case byte = 1
+    public static let byte = M68kCpuSize(rawValue: 1)
     /// 2 bytes in size
-    case word = 2
+    public static let word = M68kCpuSize(rawValue: 2)
     /// 4 bytes in size
-    case long = 4
-
+    public static let long = M68kCpuSize(rawValue: 4)
 }
 
 /// Operation size of the FPU instructions (Notice that FPU instruction can also use CPU sizes if needed)
@@ -162,15 +68,22 @@ public enum M68kFpuSize: UInt32 {
     case double = 8
     /// 12 byte in size (extended real format)
     case extended = 12
-
 }
 
-/// Type of size that is being used for the current instruction
-public enum M68kSize: UInt32 {
-    case typeInvalid = 0
-    case typeCpu = 1
-    case typeFpu = 2
-
+/// Group of M68K instructions
+public enum M68kGrp: UInt8 {
+    /// CS_GRUP_INVALID
+    case invalid = 0
+    /// = CS_GRP_JUMP
+    case jump = 1
+    /// = CS_GRP_RET
+    case ret = 3
+    /// = CS_GRP_IRET
+    case iret = 5
+    /// = CS_GRP_BRANCH_RELATIVE
+    case branchRelative = 7
+    /// <-- mark the end of the list of groups
+    case ending = 8
 }
 
 /// M68K instruction
@@ -550,22 +463,102 @@ public enum M68kIns: UInt32 {
     case tst = 372
     case unlk = 373
     case unpk = 374
+    /// <-- mark the end of the list of instructions
     case ending = 375
-
 }
 
-/// Group of M68K instructions
-public enum M68kGrp: UInt8 {
-    /// CS_GRUP_INVALID
+/// Operand type for instruction's operands
+public enum M68kOp: UInt32 {
+    /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
-    /// = CS_GRP_JUMP
-    case jump = 1
-    /// = CS_GRP_RET
-    case ret = 3
-    /// = CS_GRP_IRET
-    case iret = 5
-    /// = CS_GRP_BRANCH_RELATIVE
-    case branchRelative = 7
-    case ending = 8
+    /// = CS_OP_REG (Register operand).
+    case reg = 1
+    /// = CS_OP_IMM (Immediate operand).
+    case imm = 2
+    /// = CS_OP_MEM (Memory operand).
+    case mem = 3
+    /// single precision Floating-Point operand
+    case fpSingle = 4
+    /// double precision Floating-Point operand
+    case fpDouble = 5
+    /// Register bits move
+    case regBits = 6
+    /// Register pair in the same op (upper 4 bits for first reg, lower for second)
+    case regPair = 7
+    /// Branch displacement
+    case brDisp = 8
 }
 
+/// Operand type for instruction's operands
+public struct M68kOpBrDispSize: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
+    /// = CS_OP_INVALID (Uninitialized).
+    public static let invalid: M68kOpBrDispSize = []
+    /// signed 8-bit displacement
+    public static let byte = M68kOpBrDispSize(rawValue: 1)
+    /// signed 16-bit displacement
+    public static let word = M68kOpBrDispSize(rawValue: 2)
+    /// signed 32-bit displacement
+    public static let long = M68kOpBrDispSize(rawValue: 4)
+}
+
+/// M68K registers and special registers
+public enum M68kReg: UInt16 {
+    case invalid = 0
+    case d0 = 1
+    case d1 = 2
+    case d2 = 3
+    case d3 = 4
+    case d4 = 5
+    case d5 = 6
+    case d6 = 7
+    case d7 = 8
+    case a0 = 9
+    case a1 = 10
+    case a2 = 11
+    case a3 = 12
+    case a4 = 13
+    case a5 = 14
+    case a6 = 15
+    case a7 = 16
+    case fp0 = 17
+    case fp1 = 18
+    case fp2 = 19
+    case fp3 = 20
+    case fp4 = 21
+    case fp5 = 22
+    case fp6 = 23
+    case fp7 = 24
+    case pc = 25
+    case sr = 26
+    case ccr = 27
+    case sfc = 28
+    case dfc = 29
+    case usp = 30
+    case vbr = 31
+    case cacr = 32
+    case caar = 33
+    case msp = 34
+    case isp = 35
+    case tc = 36
+    case itt0 = 37
+    case itt1 = 38
+    case dtt0 = 39
+    case dtt1 = 40
+    case mmusr = 41
+    case urp = 42
+    case srp = 43
+    case fpcr = 44
+    case fpsr = 45
+    case fpiar = 46
+    /// <-- mark the end of the list of registers
+    case ending = 47
+}
+
+/// Type of size that is being used for the current instruction
+public enum M68kSizeType: UInt32 {
+    case invalid = 0
+    case cpu = 1
+    case fpu = 2
+}

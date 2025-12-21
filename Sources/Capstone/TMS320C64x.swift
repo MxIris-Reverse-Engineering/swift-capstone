@@ -12,27 +12,33 @@ extension TMS320C64xInstruction: OperandContainer {
     /// Condition.
     ///
     /// `nil` when detail mode is off.
-    public var condition: (register: Tms320c64xReg, zero: Bool)! {
+    public var condition: (register: Tms320c64xReg, zero: Bool)? {
         guard let cc = detail?.tms320c64x.condition, cc.reg != 0 else {
             return nil
         }
-        return (register: enumCast(cc.reg), zero: cc.zero != 0)
+        guard let reg: Tms320c64xReg = optionalEnumCast(UInt32(cc.reg), ignoring: UInt32(0)) else {
+            return nil
+        }
+        return (register: reg, zero: cc.zero != 0)
     }
 
     /// Functional Unit.
     ///
     /// `nil` when detail mode is off.
-    public var functionalUnit: FunctionalUnit! {
+    public var functionalUnit: FunctionalUnit? {
         guard let funit = detail?.tms320c64x.funit, funit.unit != 0 else {
             return nil
         }
-        return FunctionalUnit(unit: enumCast(funit.unit), side: funit.side)
+        guard let unit = optionalEnumCast(UInt32(funit.unit), ignoring: UInt32(0)) as Tms320c64xFunit? else {
+            return nil
+        }
+        return FunctionalUnit(unit: unit, side: funit.side)
     }
 
     /// Cross path.
     ///
     /// `nil` when detail mode is off.
-    public var crossPath: Bool! {
+    public var crossPath: Bool? {
         guard let value = detail?.tms320c64x.funit.crosspath else {
             return nil
         }
@@ -42,7 +48,7 @@ extension TMS320C64xInstruction: OperandContainer {
     /// Parallel.
     ///
     /// `nil` when detail mode is off.
-    public var parallel: Bool! {
+    public var parallel: Bool? {
         guard let value = detail?.tms320c64x.parallel else {
             return nil
         }
@@ -68,7 +74,7 @@ extension TMS320C64xInstruction: OperandContainer {
         public var type: Tms320c64xOp { enumCast(op.type) }
 
         /// Operand value.
-        public var value: Tms320c64xOperandValue {
+        public var value: Tms320c64xOperandValue? {
             switch type {
             case .imm:
                 return immediateValue
@@ -79,34 +85,41 @@ extension TMS320C64xInstruction: OperandContainer {
             case .regpair:
                 return registerPair
             default:
-                fatalError("Invalid tms320c64x operand type \(type.rawValue)")
+                return nil
             }
         }
 
         /// Register value for `reg` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var register: Tms320c64xReg! {
+        public var register: Tms320c64xReg? {
             guard type == .reg else {
                 return nil
             }
-            return enumCast(op.reg)
+            guard let reg: Tms320c64xReg = optionalEnumCast(UInt32(op.reg), ignoring: UInt32(0)) else {
+                return nil
+            }
+            return reg
         }
 
         /// Register values for `regpair` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var registerPair: [Tms320c64xReg]! {
+        public var registerPair: [Tms320c64xReg]? {
             guard type == .regpair else {
                 return nil
             }
-            return [enumCast(op.reg+1), enumCast(op.reg)]
+            guard let low: Tms320c64xReg = optionalEnumCast(UInt32(op.reg), ignoring: UInt32(0)),
+                  let high: Tms320c64xReg = optionalEnumCast(UInt32(op.reg + 1), ignoring: UInt32(0)) else {
+                return nil
+            }
+            return [high, low]
         }
 
         /// Immediate value for `imm` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var immediateValue: Int32! {
+        public var immediateValue: Int32? {
             guard type == .imm else {
                 return nil
             }
@@ -116,7 +129,7 @@ extension TMS320C64xInstruction: OperandContainer {
         /// Memory  for `mem` operand.
         ///
         /// `nil` when not an appropriate operand.
-        public var memory: Memory! {
+        public var memory: Memory? {
             guard type == .mem else {
                 return nil
             }
@@ -141,19 +154,19 @@ extension TMS320C64xInstruction: OperandContainer {
             }
 
             init(_ mem: tms320c64x_op_mem) {
-                base = enumCast(mem.base)
+                base = optionalEnumCast(UInt32(mem.base), ignoring: UInt32(0)) ?? .invalid
                 switch mem.disptype {
                 case TMS320C64X_MEM_DISP_CONSTANT.rawValue:
                     displacement = .constant(value: mem.disp)
                 case TMS320C64X_MEM_DISP_REGISTER.rawValue:
-                    displacement = .register(register: enumCast(mem.disp))
+                    displacement = .register(register: optionalEnumCast(UInt32(mem.disp), ignoring: UInt32(0)) ?? .invalid)
                 default:
                     fatalError("Invalid tms320c64x displacement type: \(mem.disptype)")
                 }
                 unit = mem.unit
                 scaled = mem.scaled
-                direction = enumCast(mem.direction)
-                modification = enumCast(mem.modify)
+                direction = optionalEnumCast(UInt32(mem.direction), ignoring: UInt32(0)) ?? .invalid
+                modification = optionalEnumCast(UInt32(mem.modify), ignoring: UInt32(0)) ?? .invalid
             }
         }
     }
