@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_SH
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sh)
 
 public enum ShDspCc: UInt32 {
@@ -382,3 +383,5 @@ public enum ShReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 122
 }
+
+#endif

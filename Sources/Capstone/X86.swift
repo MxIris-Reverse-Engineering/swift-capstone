@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_X86
 import Ccapstone
 
 extension X86Instruction: OperandContainer {
@@ -379,3 +380,5 @@ extension X86FpuFlags: CustomStringConvertible {
 }
 
 extension X86Ins: InstructionType {}
+
+#endif

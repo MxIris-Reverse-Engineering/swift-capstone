@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_RISCV
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Riscv)
 
 /// > Group of RISCV instructions
@@ -590,3 +591,5 @@ public enum RiscvReg: UInt16 {
     /// <-- mark the end of the list or registers
     case ending = 97
 }
+
+#endif

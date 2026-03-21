@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_POWERPC
 import Ccapstone
 
 extension PowerPCInstruction: OperandContainer {
@@ -125,3 +126,5 @@ extension PowerPCInstruction.Operand.Memory: PpcOperandValue {}
 extension PowerPCInstruction.Operand.Condition: PpcOperandValue {}
 
 extension PpcIns: InstructionType {}
+
+#endif

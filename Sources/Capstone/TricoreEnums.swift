@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_TRICORE
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Tricore)
 
 public enum TricoreFeature: UInt32 {
@@ -962,3 +963,5 @@ public enum TricoreReg: UInt16 {
     /// 61
     case ending = 61
 }
+
+#endif

@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_ARM64
 import Ccapstone
 
 extension Arm64Instruction: OperandContainer {
@@ -277,3 +278,5 @@ extension Arm64Tlbi: Arm64OperandValue {}
 extension Arm64Prfm: Arm64OperandValue {}
 
 extension Arm64Ins: InstructionType {}
+
+#endif

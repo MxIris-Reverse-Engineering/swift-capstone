@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_SPARC
 import Ccapstone
 
 extension SparcInstruction: OperandContainer {
@@ -100,3 +101,5 @@ extension Int64: SparcOperandValue {}
 extension SparcInstruction.Operand.Memory: SparcOperandValue {}
 
 extension SparcIns: InstructionType {}
+
+#endif

@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_M680X
 import Ccapstone
 
 extension M680xInstruction: OperandContainer {
@@ -216,3 +217,5 @@ extension UInt16: M680xOperandValue {}
 extension UInt8: M680xOperandValue {}
 
 extension M680xIns: InstructionType {}
+
+#endif

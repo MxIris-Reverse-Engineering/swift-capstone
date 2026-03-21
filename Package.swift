@@ -4,24 +4,58 @@
 import PackageDescription
 import Foundation
 
+let architectures: [(trait: String, define: String)] = [
+    ("ARM", "CAPSTONE_HAS_ARM"),
+    ("ARM64", "CAPSTONE_HAS_ARM64"),
+    ("MIPS", "CAPSTONE_HAS_MIPS"),
+    ("X86", "CAPSTONE_HAS_X86"),
+    ("POWERPC", "CAPSTONE_HAS_POWERPC"),
+    ("SPARC", "CAPSTONE_HAS_SPARC"),
+    ("SYSZ", "CAPSTONE_HAS_SYSZ"),
+    ("XCORE", "CAPSTONE_HAS_XCORE"),
+    ("M68K", "CAPSTONE_HAS_M68K"),
+    ("TMS320C64X", "CAPSTONE_HAS_TMS320C64X"),
+    ("M680X", "CAPSTONE_HAS_M680X"),
+    ("EVM", "CAPSTONE_HAS_EVM"),
+    ("MOS65XX", "CAPSTONE_HAS_MOS65XX"),
+    ("WASM", "CAPSTONE_HAS_WASM"),
+    ("BPF", "CAPSTONE_HAS_BPF"),
+    ("RISCV", "CAPSTONE_HAS_RISCV"),
+    ("SH", "CAPSTONE_HAS_SH"),
+    ("TRICORE", "CAPSTONE_HAS_TRICORE"),
+]
+
+// Conditionally forward each trait to capstone C dependency
+let capstoneTraits: Set<Package.Dependency.Trait> = Set(
+    architectures.map { .trait(name: $0.trait, condition: .when(traits: [$0.trait])) }
+)
+
 extension Package.Dependency {
     enum LocalSearchPath {
-        case package(path: String, isRelative: Bool, isEnabled: Bool)
+        case package(path: String, isRelative: Bool, isEnabled: Bool, traits: Set<PackageDescription.Package.Dependency.Trait> = [.defaults])
     }
 
     static func package(local localSearchPaths: LocalSearchPath..., remote: Package.Dependency) -> Package.Dependency {
+        let currentFilePath = #filePath
+        let isClonedDependency = currentFilePath.contains("/checkouts/") ||
+            currentFilePath.contains("/SourcePackages/") ||
+            currentFilePath.contains("/.build/")
+
+        if isClonedDependency {
+            return remote
+        }
         for local in localSearchPaths {
             switch local {
-            case .package(let path, let isRelative, let isEnabled):
+            case .package(let path, let isRelative, let isEnabled, let traits):
                 guard isEnabled else { continue }
-                let url = if isRelative, let resolvedURL = URL(string: path, relativeTo: URL(fileURLWithPath: #filePath)) {
-                    resolvedURL
+                let url = if isRelative {
+                    URL(fileURLWithPath: path, relativeTo: URL(fileURLWithPath: #filePath))
                 } else {
                     URL(fileURLWithPath: path)
                 }
 
                 if FileManager.default.fileExists(atPath: url.path) {
-                    return .package(path: url.path)
+                    return .package(path: url.path, traits: traits)
                 }
             }
         }
@@ -37,27 +71,46 @@ let package = Package(
             targets: ["Capstone"]
         )
     ],
+    traits: Set(architectures.map { Trait(name: $0.trait) }),
     dependencies: [
         .package(
             local: .package(
                 path: "../capstone",
                 isRelative: true,
-                isEnabled: true
+                isEnabled: true,
+                traits: capstoneTraits
             ),
             remote: .package(
                 url: "https://github.com/MxIris-Reverse-Engineering/capstone",
-                branch: "v5"
+                branch: "v5",
+                traits: capstoneTraits
             )
         ),
-        .package(url: "https://github.com/MxIris-DeveloperTool/swift-clang", branch: "main"),
-        .package(url: "https://github.com/brightdigit/SyntaxKit", branch: "main"),
+        .package(
+            local: .package(
+                path: "/Volumes/Repositories/Private/Personal/Library/macOS/swift-clang",
+                isRelative: false,
+                isEnabled: true
+            ),
+            remote: .package(
+                url: "https://github.com/MxIris-DeveloperTool/swift-clang",
+                branch: "main"
+            ),
+        ),
+
     ],
     targets: [
         .target(
             name: "Capstone",
             dependencies: [
                 .product(name: "Ccapstone", package: "capstone"),
-            ]
+            ],
+            cSettings: architectures.map {
+                .define($0.define, .when(traits: [$0.trait]))
+            },
+            swiftSettings: architectures.map {
+                .define($0.define, .when(traits: [$0.trait]))
+            }
         ),
         .plugin(
             name: "CapstoneEnumsGeneratePlugin",
@@ -83,7 +136,7 @@ let package = Package(
                 "CapstoneEnumsGenerator"
             ]
         ),
-        
+
         .testTarget(
             name: "CapstoneTests",
             dependencies: ["Capstone"]

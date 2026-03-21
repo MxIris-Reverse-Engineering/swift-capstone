@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_M68K
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M68k)
 
 /// M68K Addressing Modes
@@ -562,3 +563,5 @@ public enum M68kSizeType: UInt32 {
     case cpu = 1
     case fpu = 2
 }
+
+#endif

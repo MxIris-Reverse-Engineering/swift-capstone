@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_SPARC
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sparc)
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
@@ -507,3 +508,5 @@ public enum SparcReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 88
 }
+
+#endif

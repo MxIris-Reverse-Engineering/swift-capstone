@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_POWERPC
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Ppc)
 
 /// PPC branch codes for some branch instructions
@@ -2061,3 +2062,5 @@ public enum PpcReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 344
 }
+
+#endif

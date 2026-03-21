@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_ARM64
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arm64)
 
 /// SYS operands (IC/DC/AC/TLBI)
@@ -4355,3 +4356,5 @@ public enum Arm64Vas: UInt32 {
     case _1d = 13
     case _1q = 14
 }
+
+#endif

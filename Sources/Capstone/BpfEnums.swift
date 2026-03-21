@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_BPF
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Bpf)
 
 public enum BpfExt: UInt32 {
@@ -164,3 +165,5 @@ public enum BpfReg: UInt16 {
     case r10 = 13
     case ending = 14
 }
+
+#endif

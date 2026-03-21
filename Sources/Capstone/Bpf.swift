@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_BPF
 import Ccapstone
 
 extension BpfInstruction: OperandContainer {
@@ -130,3 +131,5 @@ extension UInt64: BpfOperandValue {}
 extension BpfExt: BpfOperandValue {}
 
 extension BpfIns: InstructionType {}
+
+#endif

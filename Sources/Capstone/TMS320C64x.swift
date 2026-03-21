@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_TMS320C64X
 import Ccapstone
 
 extension TMS320C64xInstruction: OperandContainer {
@@ -220,3 +221,5 @@ extension Tms320c64xMemMod: CustomStringConvertible {
 }
 
 extension Tms320c64xIns: InstructionType {}
+
+#endif

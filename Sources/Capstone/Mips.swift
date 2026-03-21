@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_MIPS
 import Ccapstone
 
 extension MipsInstruction: OperandContainer {
@@ -89,3 +90,5 @@ extension Int64: MipsOperandValue {}
 extension MipsInstruction.Operand.Memory: MipsOperandValue {}
 
 extension MipsIns: InstructionType {}
+
+#endif

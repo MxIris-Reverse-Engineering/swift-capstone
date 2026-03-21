@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_XCORE
 import Ccapstone
 
 extension XCoreInstruction: OperandContainer {
@@ -87,3 +88,5 @@ extension Int32: XcoreOperandValue {}
 extension XCoreInstruction.Operand.Memory: XcoreOperandValue {}
 
 extension XcoreIns: InstructionType {}
+
+#endif

@@ -1,4 +1,3 @@
-import CclangWrapper
 import Clang
 import Foundation
 
@@ -43,36 +42,37 @@ private extension CapstoneEnumsGenerator {
         let swiftPrefix: String
         let header: String
         let cPrefix: String
+        let swiftDefine: String
         let macroOptionSets: [MacroOptionSetConfig]
         let macroEnums: [MacroEnumConfig]
 
         static let all: [ArchitectureConfig] = [
-            .init(swiftPrefix: "Arm", header: "arm.h", cPrefix: "ARM", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Arm64", header: "arm64.h", cPrefix: "ARM64", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Mips", header: "mips.h", cPrefix: "MIPS", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "X86", header: "x86.h", cPrefix: "X86", macroOptionSets: [
+            .init(swiftPrefix: "Arm", header: "arm.h", cPrefix: "ARM", swiftDefine: "CAPSTONE_HAS_ARM", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Arm64", header: "arm64.h", cPrefix: "ARM64", swiftDefine: "CAPSTONE_HAS_ARM64", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Mips", header: "mips.h", cPrefix: "MIPS", swiftDefine: "CAPSTONE_HAS_MIPS", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "X86", header: "x86.h", cPrefix: "X86", swiftDefine: "CAPSTONE_HAS_X86", macroOptionSets: [
                 .init(swiftName: "X86Eflags", prefixes: ["X86_EFLAGS_"], rawType: "UInt64", allowedNames: nil),
                 .init(swiftName: "X86FpuFlags", prefixes: ["X86_FPU_FLAGS_"], rawType: "UInt64", allowedNames: nil)
             ], macroEnums: []),
-            .init(swiftPrefix: "Ppc", header: "ppc.h", cPrefix: "PPC", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Sparc", header: "sparc.h", cPrefix: "SPARC", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Sysz", header: "systemz.h", cPrefix: "SYSZ", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Xcore", header: "xcore.h", cPrefix: "XCORE", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "M68k", header: "m68k.h", cPrefix: "M68K", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Tms320c64x", header: "tms320c64x.h", cPrefix: "TMS320C64X", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "M680x", header: "m680x.h", cPrefix: "M680X", macroOptionSets: [
+            .init(swiftPrefix: "Ppc", header: "ppc.h", cPrefix: "PPC", swiftDefine: "CAPSTONE_HAS_POWERPC", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Sparc", header: "sparc.h", cPrefix: "SPARC", swiftDefine: "CAPSTONE_HAS_SPARC", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Sysz", header: "systemz.h", cPrefix: "SYSZ", swiftDefine: "CAPSTONE_HAS_SYSZ", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Xcore", header: "xcore.h", cPrefix: "XCORE", swiftDefine: "CAPSTONE_HAS_XCORE", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "M68k", header: "m68k.h", cPrefix: "M68K", swiftDefine: "CAPSTONE_HAS_M68K", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Tms320c64x", header: "tms320c64x.h", cPrefix: "TMS320C64X", swiftDefine: "CAPSTONE_HAS_TMS320C64X", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "M680x", header: "m680x.h", cPrefix: "M680X", swiftDefine: "CAPSTONE_HAS_M680X", macroOptionSets: [
                 .init(swiftName: "M680xIdx", prefixes: ["M680X_IDX_"], rawType: "UInt8", allowedNames: nil),
                 .init(swiftName: "M680xOpFlags", prefixes: ["M680X_"], rawType: "UInt8", allowedNames: ["M680X_FIRST_OP_IN_MNEM", "M680X_SECOND_OP_IN_MNEM"])
             ], macroEnums: [
                 .init(swiftName: "M680xOffset", prefixes: ["M680X_OFFSET_"], rawType: "UInt8")
             ]),
-            .init(swiftPrefix: "Evm", header: "evm.h", cPrefix: "EVM", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Mos65xx", header: "mos65xx.h", cPrefix: "MOS65XX", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Wasm", header: "wasm.h", cPrefix: "WASM", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Bpf", header: "bpf.h", cPrefix: "BPF", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Riscv", header: "riscv.h", cPrefix: "RISCV", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Sh", header: "sh.h", cPrefix: "SH", macroOptionSets: [], macroEnums: []),
-            .init(swiftPrefix: "Tricore", header: "tricore.h", cPrefix: "TRICORE", macroOptionSets: [], macroEnums: [])
+            .init(swiftPrefix: "Evm", header: "evm.h", cPrefix: "EVM", swiftDefine: "CAPSTONE_HAS_EVM", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Mos65xx", header: "mos65xx.h", cPrefix: "MOS65XX", swiftDefine: "CAPSTONE_HAS_MOS65XX", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Wasm", header: "wasm.h", cPrefix: "WASM", swiftDefine: "CAPSTONE_HAS_WASM", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Bpf", header: "bpf.h", cPrefix: "BPF", swiftDefine: "CAPSTONE_HAS_BPF", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Riscv", header: "riscv.h", cPrefix: "RISCV", swiftDefine: "CAPSTONE_HAS_RISCV", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Sh", header: "sh.h", cPrefix: "SH", swiftDefine: "CAPSTONE_HAS_SH", macroOptionSets: [], macroEnums: []),
+            .init(swiftPrefix: "Tricore", header: "tricore.h", cPrefix: "TRICORE", swiftDefine: "CAPSTONE_HAS_TRICORE", macroOptionSets: [], macroEnums: [])
         ]
     }
 
@@ -284,7 +284,7 @@ private extension CapstoneEnumsGenerator {
             let cases = groupedCases[prefix]!.0.sorted(by: { $0.rawValue < $1.rawValue })
             let typeBase = swiftTypeName(from: prefix, configuration: configuration)
             let fullSwiftName = configuration.swiftPrefix + typeBase
-            var rawType = swiftRawType(from: enumDecl.integerType)
+            var rawType = (try? swiftRawType(from: enumDecl.integerType)) ?? "UInt32"
             if fullSwiftName.hasSuffix("Grp") {
                 rawType = "UInt8"
             } else if fullSwiftName.hasSuffix("Reg") {
@@ -336,34 +336,24 @@ private extension CapstoneEnumsGenerator {
     }
 
     func swiftRawType(from type: CType) -> String {
-        let clangType = type.asClang()
         let size = (try? type.sizeOf()) ?? 4
-        let isSigned = isSignedInteger(kind: clangType.kind)
+        let isUnsigned = type.isUnsignedIntegerType
 
-        switch (size, isSigned) {
-        case (1, true):
-            return "Int8"
+        switch (size, isUnsigned) {
         case (1, false):
+            return "Int8"
+        case (1, true):
             return "UInt8"
-        case (2, true):
-            return "Int16"
         case (2, false):
+            return "Int16"
+        case (2, true):
             return "UInt16"
-        case (8, true):
-            return "Int64"
         case (8, false):
+            return "Int64"
+        case (8, true):
             return "UInt64"
         default:
-            return isSigned ? "Int32" : "UInt32"
-        }
-    }
-
-    func isSignedInteger(kind: CXTypeKind) -> Bool {
-        switch kind {
-        case CXType_Char_U, CXType_UChar, CXType_UShort, CXType_UInt, CXType_ULong, CXType_ULongLong, CXType_UInt128:
-            return false
-        default:
-            return true
+            return isUnsigned ? "UInt32" : "Int32"
         }
     }
 
@@ -447,6 +437,7 @@ private extension CapstoneEnumsGenerator {
 
     func render(architecture: ArchitectureConfig, enums: [ParsedEnum]) -> String {
         var lines = [String]()
+        lines.append("#if \(architecture.swiftDefine)")
         lines.append("// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (\(architecture.swiftPrefix))")
         lines.append("")
 
@@ -455,6 +446,8 @@ private extension CapstoneEnumsGenerator {
             lines.append("")
         }
 
+        lines.append("#endif")
+        lines.append("")
         return lines.joined(separator: "\n")
     }
 

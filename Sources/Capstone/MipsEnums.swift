@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_MIPS
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mips)
 
 /// Group of MIPS instructions
@@ -1095,3 +1096,5 @@ public enum MipsReg: UInt16 {
     /// <-- mark the end of the list or registers
     case ending = 137
 }
+
+#endif

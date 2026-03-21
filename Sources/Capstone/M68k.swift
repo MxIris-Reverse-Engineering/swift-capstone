@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_M68K
 import Ccapstone
 
 extension M68kInstruction: OperandContainer {
@@ -296,3 +297,5 @@ extension M68kAm: CustomStringConvertible {
 }
 
 extension M68kIns: InstructionType {}
+
+#endif

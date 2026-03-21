@@ -34,6 +34,7 @@ public struct Mode: OptionSet {
         public static let b64 = Mode(CS_MODE_64)
     }
 
+    #if CAPSTONE_HAS_ARM
     /// ARM modes
     public enum arm {
         /// 32-bit ARM
@@ -45,7 +46,9 @@ public struct Mode: OptionSet {
         /// ARMv8 A32 encodings for ARM
         public static let v8 = Mode(CS_MODE_V8)
     }
+    #endif
 
+    #if CAPSTONE_HAS_MIPS
     /// MIPS modes
     public enum mips {
         /// MicroMips mode (MIPS)
@@ -57,13 +60,17 @@ public struct Mode: OptionSet {
         /// Mips32r6 ISA
         public static let mips32r6 = Mode(CS_MODE_MIPS32R6)
     }
+    #endif
 
+    #if CAPSTONE_HAS_SPARC
     /// SPARC modes
     public enum sparc {
         /// SparcV9 mode
         public static let v9 = Mode(CS_MODE_V9)
     }
+    #endif
 
+    #if CAPSTONE_HAS_POWERPC
     /// PowerPC modes
     public enum ppc {
         /// Quad Processing eXtensions mode
@@ -73,7 +80,9 @@ public struct Mode: OptionSet {
         /// Book-E mode
         public static let bookE = Mode(CS_MODE_BOOKE)
     }
+    #endif
 
+    #if CAPSTONE_HAS_M68K
     /// M68K modes
     public enum m68k {
         /// M68K 68000 mode
@@ -89,7 +98,9 @@ public struct Mode: OptionSet {
         /// M68K 68060 mode
         public static let mc68060 = Mode(CS_MODE_M68K_060)
     }
+    #endif
 
+    #if CAPSTONE_HAS_M680X
     /// M680X modes
     public enum m680x {
         /// M680X Hitachi 6301,6303 mode
@@ -113,7 +124,9 @@ public struct Mode: OptionSet {
         /// M680X Freescale/NXP HCS08 mode
         public static let hcs08 = Mode(CS_MODE_M680X_HCS08)
     }
+    #endif
 
+    #if CAPSTONE_HAS_MOS65XX
     // MOS65xx modes
     public struct mos65xx {
         /// MOS65XXX MOS 6502
@@ -131,7 +144,9 @@ public struct Mode: OptionSet {
         /// MOS65XXX WDC 65816, 16-bit m, 16-bit x
         public static let wdc65816longMX = Mode(CS_MODE_MOS65XX_65816_LONG_MX)
     }
+    #endif
 
+    #if CAPSTONE_HAS_BPF
     // BPF modes
     public struct bpf {
         /// Classic BPF mode (default)
@@ -139,7 +154,9 @@ public struct Mode: OptionSet {
         /// Extended BPF mode
         public static let extended = Mode(CS_MODE_BPF_EXTENDED)
     }
+    #endif
 
+    #if CAPSTONE_HAS_RISCV
     /// RISCV modes
     public struct riscv {
         /// RISCV RV32G
@@ -149,4 +166,5 @@ public struct Mode: OptionSet {
         /// RISCV Compressed Instruction Mode
         public static let compressed = Mode(CS_MODE_RISCVC)
     }
+    #endif
 }

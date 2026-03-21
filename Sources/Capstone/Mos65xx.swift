@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_MOS65XX
 import Ccapstone
 
 extension Mos65xxInstruction: OperandContainer {
@@ -142,3 +143,5 @@ extension Mos65xxAm: CustomStringConvertible {
 }
 
 extension Mos65xxIns: InstructionType {}
+
+#endif

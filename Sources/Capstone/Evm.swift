@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_EVM
 import Ccapstone
 
 extension EthereumInstruction {
@@ -12,3 +13,5 @@ extension EthereumInstruction {
 }
 
 extension EvmIns: InstructionType {}
+
+#endif

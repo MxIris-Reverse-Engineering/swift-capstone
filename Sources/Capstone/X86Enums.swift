@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_X86
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (X86)
 
 /// AVX broadcast type
@@ -2068,3 +2069,5 @@ public enum X86XopCc: UInt32 {
     case `false` = 7
     case `true` = 8
 }
+
+#endif

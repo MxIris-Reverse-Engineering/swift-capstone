@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_RISCV
 import Ccapstone
 
 extension RiscvInstruction: OperandContainer {
@@ -89,3 +90,5 @@ extension RiscvReg: RiscvOperandValue {}
 extension Int64: RiscvOperandValue {}
 
 extension RiscvIns: InstructionType {}
+
+#endif

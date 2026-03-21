@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_M680X
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M680x)
 
 /// Group of M680X instructions
@@ -512,3 +513,5 @@ public enum M680xReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 22
 }
+
+#endif

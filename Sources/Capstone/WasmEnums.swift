@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_WASM
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Wasm)
 
 /// Group of WASM instructions
@@ -200,3 +201,5 @@ public enum WasmOp: UInt32 {
     case imm = 7
     case brtable = 8
 }
+
+#endif

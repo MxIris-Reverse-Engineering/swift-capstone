@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_MOS65XX
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mos65xx)
 
 /// MOS65XX Addressing Modes
@@ -213,3 +214,5 @@ public enum Mos65xxReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 9
 }
+
+#endif

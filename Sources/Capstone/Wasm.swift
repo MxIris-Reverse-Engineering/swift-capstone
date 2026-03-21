@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_WASM
 import Ccapstone
 
 extension WasmInstruction: OperandContainer {
@@ -114,3 +115,5 @@ extension UInt64: WasmOperandValue {}
 extension Array: WasmOperandValue where Element == UInt32 {}
 
 extension WasmIns: InstructionType {}
+
+#endif

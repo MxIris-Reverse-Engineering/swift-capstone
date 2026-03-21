@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_EVM
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Evm)
 
 /// Group of EVM instructions
@@ -167,3 +168,5 @@ public enum EvmIns: UInt32 {
     /// <-- mark the end of the list of instructions
     case ending = 513
 }
+
+#endif

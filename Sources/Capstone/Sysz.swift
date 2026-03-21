@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_SYSZ
 import Ccapstone
 
 extension SystemZInstruction: OperandContainer {
@@ -95,3 +96,5 @@ extension Int64: SyszOperandValue {}
 extension SystemZInstruction.Operand.Memory: SyszOperandValue {}
 
 extension SyszIns: InstructionType {}
+
+#endif

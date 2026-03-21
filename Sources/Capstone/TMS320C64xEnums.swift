@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_TMS320C64X
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Tms320c64x)
 
 public enum Tms320c64xFunit: UInt32 {
@@ -309,3 +310,5 @@ public enum Tms320c64xReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 90
 }
+
+#endif

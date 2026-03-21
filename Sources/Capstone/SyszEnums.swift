@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_SYSZ
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sysz)
 
 /// Enums corresponding to SystemZ condition codes
@@ -2575,3 +2576,5 @@ public enum SyszReg: UInt16 {
     case f4q = 116
     case ending = 117
 }
+
+#endif

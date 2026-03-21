@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_XCORE
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Xcore)
 
 /// Group of XCore instructions
@@ -189,3 +190,5 @@ public enum XcoreReg: UInt16 {
     /// <-- mark the end of the list of registers
     case ending = 26
 }
+
+#endif

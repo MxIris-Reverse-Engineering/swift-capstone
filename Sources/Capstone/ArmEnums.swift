@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_ARM
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arm)
 
 /// ARM condition code
@@ -1071,3 +1072,5 @@ public enum ArmVectordata: UInt32 {
     /// u32.f16
     case u32f16 = 42
 }
+
+#endif

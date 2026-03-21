@@ -1,3 +1,4 @@
+#if CAPSTONE_HAS_ARM
 import Ccapstone
 
 extension ArmInstruction: OperandContainer {
@@ -254,3 +255,5 @@ extension ArmOp {
 }
 
 extension ArmIns: InstructionType {}
+
+#endif
