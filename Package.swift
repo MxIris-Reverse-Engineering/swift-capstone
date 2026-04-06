@@ -90,11 +90,11 @@ let package = Package(
             local: .package(
                 path: "/Volumes/Repositories/Private/Personal/Library/macOS/swift-clang",
                 isRelative: false,
-                isEnabled: true
+                isEnabled: false
             ),
             remote: .package(
                 url: "https://github.com/MxIris-DeveloperTool/swift-clang",
-                branch: "main"
+                from: "0.2.0"
             ),
         ),
 
