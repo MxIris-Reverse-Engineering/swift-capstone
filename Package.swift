@@ -43,9 +43,11 @@ func envEnable(_ key: String, default defaultValue: Bool = false) -> Bool {
     }
 }
 
+let usingLocalDependencies = envEnable("USING_LOCAL_DEPENDENCIES")
+
 extension Package.Dependency {
     enum LocalSearchPath {
-        case package(path: String, isRelative: Bool, isEnabled: Bool, traits: Set<PackageDescription.Package.Dependency.Trait> = [.defaults])
+        case package(path: String, isRelative: Bool, isEnabled: Bool = usingLocalDependencies, traits: Set<PackageDescription.Package.Dependency.Trait> = [.defaults])
     }
 
     static func package(local localSearchPaths: LocalSearchPath..., remote: Package.Dependency) -> Package.Dependency {
@@ -102,8 +104,6 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
     architectures.map { .trait(name: $0.trait, condition: .when(traits: [$0.trait])) },
 )
 
-let usingLocalDependencies = envEnable("USING_LOCAL_DEPENDENCIES")
-
 let package = Package(
     name: "Capstone",
     products: [
@@ -118,7 +118,6 @@ let package = Package(
             local: .package(
                 path: "../capstone",
                 isRelative: true,
-                isEnabled: usingLocalDependencies,
                 traits: capstoneTraits,
             ),
             remote: .package(
@@ -131,7 +130,7 @@ let package = Package(
             local: .package(
                 path: "/Volumes/Repositories/Private/Personal/Library/macOS/swift-clang",
                 isRelative: false,
-                isEnabled: usingLocalDependencies,
+                isEnabled: false,
             ),
             remote: .package(
                 url: "https://github.com/MxIris-DeveloperTool/swift-clang",
