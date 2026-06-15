@@ -105,7 +105,7 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
 )
 
 let package = Package(
-    name: "Capstone",
+    name: "swift-capstone",
     products: [
         .library(
             name: "Capstone",
