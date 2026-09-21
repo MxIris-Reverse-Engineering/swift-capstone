@@ -1,39 +1,84 @@
 # Capstone
 
-Swift bindings for [Capstone Engine](https://www.capstone-engine.org).
+Swift bindings for the [Capstone Engine](https://www.capstone-engine.org), built
+on capstone **v6**.
 
-Provides a complete swift-native wrapper for Capstone, without exposing the C API.
+Provides a Swift-native wrapper over capstone without exposing the C API. No
+system installation is needed: capstone is pulled in as a Swift package and
+built from source.
 
-You need to have the capstone library and headers installed on your system.
+## Status
 
-* Swift 5.3
-* Use the branch corresponding to your version of Capstone:
-    * Version 4.x: `v4` branch:
-    
-    `.package(name:"Capstone", url: "https://github.com/zydeco/capstone-swift", .branch("v4"))`
-    * `next` branch: `next` branch:
-    
-    `.package(name:"Capstone", url: "https://github.com/zydeco/capstone-swift", .branch("next"))`
-* Include "Capstone" as a dependency for your executable target:
-    ```swift
-    let package = Package(
-        // name, platforms, products, etc.
-        dependencies: [
-            .package(name: "Capstone", url: "https://github.com/zydeco/capstone-swift", .branch("v4")),
-            // other dependencies
-        ],
-        targets: [
-            .target(name: "<command-line-tool>", dependencies: [
-                "Capstone",
-            ]),
-            // other targets
-        ]
-    )
-    ```
-* On macOS, you can install capstone with Homebrew:
-    * `brew install capstone` for stable version (currently 4.0.2)
-    * `brew install capstone --head` for `next` branch
-* On Linux, build [Capstone 4.0.2](https://github.com/aquynh/capstone/releases/tag/4.0.2) or [next](https://github.com/aquynh/capstone/tree/next) branch from source.
+The v6 adaptation is in progress and lands one architecture at a time. **AArch64
+is adapted; the other architectures are not yet.** Their traits are still
+declared, but enabling one gets you a wrapper still written against capstone v5,
+which will not compile. See
+[the adaptation proposal](Documentations/Evolutions/draft-adapt-capstone-v6.md).
+
+capstone v6 renames things this wrapper follows: `Arm64*` is now `AArch64*`,
+`Sysz*` is now `SystemZ*`, and `Architecture.arm64` is `Architecture.aarch64`.
+No compatibility aliases are provided — v6 reordered `cs_arch` and reshaped the
+AArch64 operand model, so an alias would be misleading rather than helpful.
+
+## Adding the dependency
+
+```swift
+let package = Package(
+    dependencies: [
+        .package(url: "https://github.com/MxIris-Reverse-Engineering/swift-capstone", from: "6.0.0"),
+    ],
+    targets: [
+        .target(name: "YourTarget", dependencies: [
+            .product(name: "Capstone", package: "swift-capstone"),
+        ]),
+    ]
+)
+```
+
+Requires Swift 6.2 or later.
+
+### Choosing architectures
+
+Each architecture is a package trait. Only the adapted ones are enabled by
+default; naming traits explicitly replaces that default rather than adding to
+it:
+
+```swift
+.package(
+    url: "https://github.com/MxIris-Reverse-Engineering/swift-capstone",
+    from: "6.0.0",
+    traits: ["AARCH64"]
+)
+```
+
+Trait names match capstone's `CAPSTONE_HAS_<ARCH>` macros: `ARM`, `AARCH64`,
+`MIPS`, `X86`, `POWERPC`, `SPARC`, `SYSTEMZ`, `XCORE`, `M68K`, `TMS320C64X`,
+`M680X`, `EVM`, `MOS65XX`, `WASM`, `BPF`, `RISCV`, `SH`, `TRICORE`, `ALPHA`,
+`HPPA`, `LOONGARCH`, `XTENSA`, `ARC`.
+
+## Generated sources
+
+The architecture table, the architecture enums and the operand accessors are
+generated from capstone's headers. Files carrying an `AUTO-GENERATED` header —
+`*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift` — are not
+edited by hand; change the configuration in `Sources/CapstoneEnumsGenerator`
+and regenerate:
+
+```sh
+swift package plugin generate-enums
+```
+
+To verify the checked-in output still matches the headers, without writing
+anything:
+
+```sh
+swift run capstone-enums-generator \
+    --include <path-to>/capstone/include/capstone --output Sources/Capstone --check
+```
+
+It exits non-zero when a generated file is out of date, which is what a CI job
+should run — a stale generated file is indistinguishable from a hand-written one
+by inspection.
 
 ## API Usage
 1. Create an instance of `Capstone`, with the desired `Architecture` and `Mode`:

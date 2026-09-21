@@ -7,4 +7,4 @@
 
 | # | 标题 | 状态 |
 |---|------|------|
-| draft | [适配 capstone v6：AArch64 优先，扩大代码生成覆盖面](draft-adapt-capstone-v6.md) | Accepted |
+| draft | [适配 capstone v6：AArch64 优先，扩大代码生成覆盖面](draft-adapt-capstone-v6.md) | In Progress |

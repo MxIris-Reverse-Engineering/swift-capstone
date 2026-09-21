@@ -5,12 +5,15 @@
 - Tests live in `Tests/CapstoneTests` (XCTest) with fixtures in `TestFixtures.swift`; `Tests/LinuxMain.swift` provides Linux entry points.
 - Examples such as `Examples/cstool` show end-to-end usage; keep them building with the main package.
 - Static docs under `docs/` are generated via swift-doc; avoid hand-editing them.
+- Generated sources carry an `AUTO-GENERATED` header — `*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift`. Change `Sources/CapstoneEnumsGenerator` and regenerate instead of editing them.
+- Project documentation lives in `Documentations/`; evolution proposals in `Documentations/Evolutions/`.
 
 ## Build, Test, and Development Commands
-- Prerequisite: install the native Capstone library/headers (e.g., `brew install capstone` on macOS) matching the branch you target.
+- No prerequisite install: capstone is a Swift package dependency built from source. Set `USING_LOCAL_DEPENDENCIES=1` to resolve it from a sibling checkout instead of the remote.
 - `swift build` – compile the package.
-- `swift test` – run the XCTest suite; use `swift test --filter CapstoneTests/testName` to scope failures.
-- `swift package plugin generate-enums` – regenerates the Swift enums from the Capstone headers; run after upgrading upstream Capstone and commit the resulting file.
+- `swift test` – run the suite (swift-testing); use `swift test --filter <name>` to scope failures. Trust the raw exit code, never a formatter's summary.
+- `swift package plugin generate-enums` – regenerates the enums, the architecture table and the operand accessors from the capstone headers; run after upgrading capstone and commit the result.
+- `swift run capstone-enums-generator --include <capstone>/include/capstone --output Sources/Capstone --check` – verifies the checked-in generated files still match the headers, writing nothing. Exits non-zero when stale.
 - `swift run cstool -- --help` (from `Examples/cstool`) – sanity-check the example tool.
 
 ## Coding Style & Naming Conventions
@@ -20,8 +23,9 @@
 - Keep generated enum files under `Sources/Capstone/*Enums.swift` excluded from lint but still readable.
 
 ## Testing Guidelines
-- Tests use XCTest; place new suites in `Tests/CapstoneTests` and name classes `*Tests` with methods starting `test...`.
-- Prefer fixture-driven cases (see `TestFixtures.swift`) to cover architecture-specific decoding and detail rendering.
+- Tests use swift-testing (`@Suite` / `@Test` / `#expect`); place new suites in `Tests/CapstoneTests`.
+- Expected values must come from the instruction encoding or the capstone headers, never from re-running the wrapper — a test that recomputes the implementation's answer can never disagree with it.
+- `Tests/CapstoneTests/Legacy/` holds the v5-era suite, excluded from the target because it covers twelve architectures at once. Move files back out as each architecture is adapted to v6.
 - For coverage checks, run `swift test --enable-code-coverage` and inspect the `.build` artifacts; aim to touch new instruction paths and error cases.
 
 ## Commit & Pull Request Guidelines
@@ -30,5 +34,5 @@
 - Include screenshots or sample output only when behavior changes are user-visible (e.g., example tool output); otherwise keep PRs text-focused.
 
 ## Security & Configuration Tips
-- Ensure the system Capstone version matches the Swift wrapper branch to avoid runtime mismatches.
+- This wrapper targets capstone v6. The v6 adaptation is in progress: only AArch64 is adapted, tracked by the default trait set in `Package.swift`.
 - The enum-generation plugin writes to the package root; run it intentionally and commit deterministic outputs. Do not commit build products from `.build/` or `Examples/*/.build/`.

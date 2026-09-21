@@ -21,6 +21,9 @@ public enum GenerationError: Error, CustomStringConvertible {
     /// Almost always an operand kind added upstream: left alone it would read as
     /// `nil` from every accessor, indistinguishable from "no value".
     case uncoveredOperandTypes(architecture: String, types: [String])
+    /// --check found generated files that do not match what the headers and the
+    /// configuration produce now.
+    case staleGeneratedFiles([String])
 
     public var description: String {
         switch self {
@@ -44,6 +47,11 @@ public enum GenerationError: Error, CustomStringConvertible {
             \(types.joined(separator: ", ")). Add an accessor, or record in unexposedTypes \
             why the type carries no value.
             """
+        case .staleGeneratedFiles(let names):
+            return """
+            generated files are out of date: \(names.joined(separator: ", ")). \
+            Run `swift package plugin generate-enums` and commit the result.
+            """
         }
     }
 }
@@ -51,7 +59,26 @@ public enum GenerationError: Error, CustomStringConvertible {
 public struct CapstoneEnumsGenerator {
     public init() {}
 
-    public func generate(input inputFileURL: URL, output outputFileURL: URL) async throws {
+    /// Writes the generated sources, or with `checkOnly` compares them against what
+    /// is already on disk and throws if anything differs.
+    ///
+    /// The check exists because a generated file that has drifted from its inputs
+    /// looks exactly like a hand-written one — nothing about the file says it is out
+    /// of date.
+    public func generate(input inputFileURL: URL, output outputFileURL: URL, checkOnly: Bool = false) async throws {
+        var staleFiles = [String]()
+
+        func emit(_ contents: String, to url: URL) throws {
+            guard checkOnly else {
+                try contents.write(to: url, atomically: true, encoding: .utf8)
+                return
+            }
+            let existing = try? String(contentsOf: url, encoding: .utf8)
+            if existing != contents {
+                staleFiles.append(url.lastPathComponent)
+            }
+        }
+
         let includeDirectory = inputFileURL
         let outputDirectory = outputFileURL
         let moduleCache = outputDirectory.appendingPathComponent(".clang-module-cache")
@@ -75,11 +102,7 @@ public struct CapstoneEnumsGenerator {
             architectures: parsedArchitectures,
             configurations: architectures
         )
-        try architectureTable.write(
-            to: outputDirectory.appendingPathComponent("Architecture+Generated.swift"),
-            atomically: true,
-            encoding: .utf8
-        )
+        try emit(architectureTable, to: outputDirectory.appendingPathComponent("Architecture+Generated.swift"))
 
         for architecture in architectures {
             let headerURL = includeDirectory.appendingPathComponent(architecture.header)
@@ -100,7 +123,7 @@ public struct CapstoneEnumsGenerator {
 
             let rendered = render(architecture: architecture, enums: unique.values.sorted(by: { $0.swiftName < $1.swiftName }))
             let outputFile = outputDirectory.appendingPathComponent("\(architecture.swiftPrefix)Enums.swift")
-            try rendered.write(to: outputFile, atomically: true, encoding: .utf8)
+            try emit(rendered, to: outputFile)
 
             guard let operandConfiguration = architecture.operandConfiguration else { continue }
             // The operand-type enum comes from the same parse as everything else,
@@ -113,11 +136,11 @@ public struct CapstoneEnumsGenerator {
                 operandTypeCases: operandTypeCases,
                 headerURL: headerURL
             )
-            try operands.write(
-                to: outputDirectory.appendingPathComponent("\(architecture.swiftPrefix)+Operands.swift"),
-                atomically: true,
-                encoding: .utf8
-            )
+            try emit(operands, to: outputDirectory.appendingPathComponent("\(architecture.swiftPrefix)+Operands.swift"))
+        }
+
+        if checkOnly, !staleFiles.isEmpty {
+            throw GenerationError.staleGeneratedFiles(staleFiles.sorted())
         }
     }
 }

@@ -179,6 +179,13 @@ let package = Package(
         .testTarget(
             name: "CapstoneTests",
             dependencies: ["Capstone"],
+            // The v5 suite covers twelve architectures at once, so it cannot compile
+            // until their wrappers are adapted. Files move back out of Legacy/ as
+            // each architecture lands. See the v6 adaptation proposal.
+            exclude: ["Legacy"],
+            swiftSettings: architectures.map {
+                .define($0.define, .when(traits: [$0.trait]))
+            },
         ),
         .testTarget(
             name: "CapstoneEnumsGeneratorTests",

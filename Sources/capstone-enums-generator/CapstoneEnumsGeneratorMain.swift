@@ -6,6 +6,7 @@ enum CapstoneEnumsGeneratorMain {
     static func main() async {
         var includePath: String?
         var outputPath: String?
+        var checkOnly = false
 
         var arguments = Array(CommandLine.arguments.dropFirst())
         while !arguments.isEmpty {
@@ -17,6 +18,8 @@ enum CapstoneEnumsGeneratorMain {
             case "--output":
                 guard !arguments.isEmpty else { break }
                 outputPath = arguments.removeFirst()
+            case "--check":
+                checkOnly = true
             case "--help", "-h":
                 printUsage()
                 return
@@ -34,7 +37,8 @@ enum CapstoneEnumsGeneratorMain {
         do {
             try await generator.generate(
                 input: URL(fileURLWithPath: includePath),
-                output: URL(fileURLWithPath: outputPath)
+                output: URL(fileURLWithPath: outputPath),
+                checkOnly: checkOnly
             )
         } catch {
             fputs("capstone-enums-generator failed: \(error)\n", stderr)
@@ -49,6 +53,8 @@ enum CapstoneEnumsGeneratorMain {
 
         --include   Path to the capstone include directory (the folder containing arm.h, x86.h, ...).
         --output    Destination directory for the generated Swift enum files.
+        --check     Report whether the generated files are up to date, without
+                    writing anything. Exits non-zero if any differ.
         """)
     }
 }

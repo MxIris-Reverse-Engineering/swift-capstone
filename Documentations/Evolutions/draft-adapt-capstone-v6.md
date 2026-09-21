@@ -1,6 +1,6 @@
 # Draft - 适配 capstone v6：AArch64 优先，扩大代码生成覆盖面
 
-- **状态**: Accepted
+- **状态**: In Progress
 - **作者**: JH
 - **创建日期**: 2026-09-21
 - **最后更新**: 2026-09-21
@@ -380,4 +380,7 @@ trait 是两种不同的状况，报错文本必须能区分，否则会把使�
 | 2026-09-21 | 修正操作数类型模型（运行时验证发现） | 原设计把 `at` / `db` / `prfm` / `regMrs` 等当作 `cs_aarch64_op.type` 的取值来配置访问器。实测 `mrs x0, nzcv` 后发现：`op.type` 对系统操作数只取 `sysreg` / `sysimm` / `sysalias` 三个值（指明用 sysop 的哪个 union），具体种类在 `sysop.sub_type` 里。已对照 `AArch64Mapping.c` 中 `AArch64_set_detail_op_sys` 的全部调用点确认。这类错误编译期与静态检查都发现不了 —— 访问器会永远返回 `nil`，读起来与「该操作数没有此值」无异 —— 只有端到端反汇编能暴露。配置已改为三个类型，其余 21 个标注为「仅作为 sub_type 出现」并记入 `unexposedTypes`。 |
 | 2026-09-21 | 生成器补两个缺口 | 其一：v6 把 AArch64 条件码改名为 `AArch64CC_*`（对齐 LLVM，而非 capstone 自己的 `AARCH64_` 约定），生成器的前缀匹配落空，**静默跳过**了整个条件码枚举 —— 正是本提案要杜绝的行为。加入 `extraEnumPrefixes` 显式声明此类前缀。其二：生成的枚举访问器原用 `numericCast(op.reg)`，但 union 成员是导入的 C 枚举而非整数，改走既有的 `optionalEnumCast`。 |
 | 2026-09-21 | AArch64 端到端验证通过 | `ldr` / `add` / `cmp` 的寄存器、立即数、内存操作数解析正确；`mrs` / `prfm` / `dmb` / `at` 四条系统操作数指令全部解码为具名值，无一落入 `raw` 兜底。 |
+| 2026-09-21 | 旧测试套件暂置于 `Tests/CapstoneTests/Legacy/` | v5 套件以「一次跑遍十二个架构并打印详情」的形式组织，在只有 AArch64 适配完成时无法编译。整体移入 `Legacy/` 并在 target 中 `exclude`，随每个架构适配逐个迁回。新增的 AArch64 与 Architecture 套件为断言式，期望值取自指令编码与 `cs_arch` 头文件，不从被测代码回算。 |
+| 2026-09-21 | 删除 `CapstoneEnumsGeneratorTests.test()` | 该用例硬编码本机绝对路径 `/Volumes/Repositories/Private/Fork/Library/capstone/...`（已不存在）、向用户 Documents 目录写文件、且无任何断言。此前之所以「通过」，是因为路径不存在时生成器对所有架构静默跳过 —— 本次给生成器加上「找不到 capstone.h 即报错」后它才暴露。已删除。 |
+| 2026-09-21 | 步骤 7–9 完成 | 测试迁至 swift-testing（13 个用例全绿，原始退出码 0）；生成器加 `--check` 并双向验证（干净时退出 0，篡改生成物后退出 1）；README 与 AGENTS.md 同步更新。本仓库尚无 CI workflow，`--check` 的用法写入文档待接入。 |
 

@@ -2,6 +2,23 @@ import CapstoneEnumsGenerator
 import Foundation
 import Testing
 
+/// The smallest capstone.h `generate()` needs: it reads `cs_arch` to emit the
+/// architecture table. `arm` is the only architecture these fixtures exercise.
+private func writeMinimalCapstoneHeader(to includeDirectory: URL) throws {
+    let header = """
+    typedef enum cs_arch {
+        CS_ARCH_ARM = 0,
+        CS_ARCH_MAX,
+        CS_ARCH_ALL = 0xFFFF,
+    } cs_arch;
+    """
+    try header.write(
+        to: includeDirectory.appendingPathComponent("capstone.h"),
+        atomically: true,
+        encoding: .utf8
+    )
+}
+
 @Suite struct CapstoneEnumsGeneratorTests {
     @Test func generatesSwiftEnumFromHeader() async throws {
         let fileManager = FileManager.default
@@ -9,6 +26,7 @@ import Testing
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
         let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
         try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
         try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
 
         let header = """
@@ -40,6 +58,7 @@ import Testing
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
         let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
         try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
         try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
 
         let header = """
@@ -70,6 +89,7 @@ import Testing
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
         let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
         try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
         try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
 
         let header = """
@@ -91,9 +111,5 @@ import Testing
         #expect(contents.contains("public struct X86FpuFlags: OptionSet"))
         #expect(contents.contains("public static let modifyC0 = X86FpuFlags(rawValue: 1)"))
         #expect(contents.contains("public static let testC3 = X86FpuFlags(rawValue: 524288)"))
-    }
-    
-    @Test func test() async throws {
-        try await CapstoneEnumsGenerator().generate(input: .init(filePath: "/Volumes/Repositories/Private/Fork/Library/capstone/include/capstone"), output: .documentsDirectory.appending(component: "CapstoneEnums"))
     }
 }
