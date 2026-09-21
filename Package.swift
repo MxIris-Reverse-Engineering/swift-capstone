@@ -126,7 +126,7 @@ let package = Package(
             ),
             remote: .package(
                 url: "https://github.com/MxIris-Reverse-Engineering/capstone",
-                from: "5.0.100",
+                from: "6.0.100",
                 traits: capstoneTraits,
             ),
         ),
