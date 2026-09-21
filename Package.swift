@@ -79,6 +79,13 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
     architectures.map { .trait(name: $0.trait, condition: .when(traits: [$0.trait])) },
 )
 
+/// SwiftPM treats a package that declares no default traits as having none enabled.
+/// Every architecture wrapper under Sources/Capstone sits behind `#if CAPSTONE_HAS_*`,
+/// and the conditional forwarding above only fires for traits this package has enabled,
+/// so without a default set the build produced a Capstone module containing no
+/// architecture types at all and a capstone dependency with no architecture compiled in.
+let defaultTrait = Trait.default(enabledTraits: Set(architectures.map(\.trait)))
+
 let package = Package(
     name: "swift-capstone",
     products: [
@@ -87,7 +94,7 @@ let package = Package(
             targets: ["Capstone"],
         ),
     ],
-    traits: Set(architectures.map { Trait(name: $0.trait) }),
+    traits: Set(architectures.map { Trait(name: $0.trait) } + [defaultTrait]),
     dependencies: [
         .package(
             local: .package(
