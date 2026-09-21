@@ -13,6 +13,14 @@ public enum GenerationError: Error, CustomStringConvertible {
     /// Not fatal on its own — it only means no wrapper exists yet — but it is
     /// reported so a newly added upstream architecture cannot pass unnoticed.
     case unconfiguredArchitectures([String])
+    case structureNotFound(String, String)
+    /// The configuration names a struct member that the header does not have —
+    /// upstream renamed or removed it.
+    case unknownOperandMembers(architecture: String, structure: String, members: [String])
+    /// An operand type covered by neither an accessor nor `unexposedTypes`.
+    /// Almost always an operand kind added upstream: left alone it would read as
+    /// `nil` from every accessor, indistinguishable from "no value".
+    case uncoveredOperandTypes(architecture: String, types: [String])
 
     public var description: String {
         switch self {
@@ -22,6 +30,20 @@ public enum GenerationError: Error, CustomStringConvertible {
             return "cs_arch enum not found in capstone.h"
         case .unconfiguredArchitectures(let names):
             return "cs_arch members with no ArchitectureConfig entry: \(names.joined(separator: ", "))"
+        case .structureNotFound(let structure, let header):
+            return "struct \(structure) not found in \(header)"
+        case .unknownOperandMembers(let architecture, let structure, let members):
+            return """
+            \(architecture): operand configuration names members that \(structure) does not have: \
+            \(members.joined(separator: ", ")). Upstream probably renamed or removed them; \
+            update the configuration in ArchitectureConfig.all.
+            """
+        case .uncoveredOperandTypes(let architecture, let types):
+            return """
+            \(architecture): operand types with no accessor and no entry in unexposedTypes: \
+            \(types.joined(separator: ", ")). Add an accessor, or record in unexposedTypes \
+            why the type carries no value.
+            """
         }
     }
 }
@@ -79,11 +101,74 @@ public struct CapstoneEnumsGenerator {
             let rendered = render(architecture: architecture, enums: unique.values.sorted(by: { $0.swiftName < $1.swiftName }))
             let outputFile = outputDirectory.appendingPathComponent("\(architecture.swiftPrefix)Enums.swift")
             try rendered.write(to: outputFile, atomically: true, encoding: .utf8)
+
+            guard let operandConfiguration = architecture.operandConfiguration else { continue }
+            // The operand-type enum comes from the same parse as everything else,
+            // so the coverage check runs against what was actually generated rather
+            // than against a second copy of the list.
+            let operandTypeCases = unique["\(architecture.swiftPrefix)Op"]?.cases.map(\.name) ?? []
+            let operands = try renderOperandAccessors(
+                architecture: architecture,
+                configuration: operandConfiguration,
+                operandTypeCases: operandTypeCases,
+                headerURL: headerURL
+            )
+            try operands.write(
+                to: outputDirectory.appendingPathComponent("\(architecture.swiftPrefix)+Operands.swift"),
+                atomically: true,
+                encoding: .utf8
+            )
         }
     }
 }
 
 private extension CapstoneEnumsGenerator {
+    /// Where an operand accessor reads its value from.
+    ///
+    /// C says an operand is a union plus a discriminating `type` field, but which
+    /// union member goes with which `type` value exists only in the header's
+    /// comments. That correspondence is the one thing a parser cannot recover, so
+    /// it is declared here and checked against the parsed struct.
+    enum OperandValueKind {
+        /// A union member holding a generated enum: `op.reg` as `AArch64Reg`.
+        case enumeration(member: String, swiftType: String)
+        /// A union member holding a scalar: `op.imm` as `Int64`.
+        case scalar(member: String, swiftType: String)
+        /// A union member holding a C struct wrapped by a hand-written Swift type.
+        case structure(member: String, swiftType: String)
+        /// The `sysop` field, whose own `sub_type` selects the meaning. Too
+        /// irregular to generate; a hand-written accessor covers it.
+        case handWritten(member: String, swiftType: String)
+
+        var member: String {
+            switch self {
+            case .enumeration(let member, _), .scalar(let member, _),
+                 .structure(let member, _), .handWritten(let member, _):
+                return member
+            }
+        }
+    }
+
+    struct OperandAccessor {
+        /// Swift property name, e.g. `register`.
+        let name: String
+        /// Operand-type enum cases for which this accessor is non-nil, named as the
+        /// generated Swift cases (`reg`, `immRange`), not as the C constants.
+        let operandTypes: [String]
+        let value: OperandValueKind
+        let documentation: String
+    }
+
+    struct OperandConfiguration {
+        /// C struct backing one operand, e.g. `cs_aarch64_op`.
+        let cStructure: String
+        let accessors: [OperandAccessor]
+        /// Operand types that deliberately get no accessor of their own, each with
+        /// the reason. Listing one here is a decision on record; an operand type
+        /// that is neither covered by an accessor nor listed here stops generation.
+        let unexposedTypes: [String: String]
+    }
+
     /// How an architecture surfaces as an `Instruction` subclass.
     ///
     /// Absent for architectures whose enums are generated but which have no wrapper
@@ -116,6 +201,44 @@ private extension CapstoneEnumsGenerator {
         let instructionClass: InstructionClassConfig?
         let macroOptionSets: [MacroOptionSetConfig]
         let macroEnums: [MacroEnumConfig]
+        /// Present once the architecture's operand accessors are generated rather
+        /// than hand-written. Absent means the hand-written wrapper still applies.
+        let operandConfiguration: OperandConfiguration?
+        /// C enum constant prefixes that do not begin with `cPrefix`, mapped to the
+        /// Swift type to generate for them.
+        ///
+        /// v6 spells the AArch64 condition codes `AArch64CC_EQ`, matching LLVM
+        /// rather than capstone's own `AARCH64_` convention, so a prefix test alone
+        /// skips the enum entirely — silently, which is exactly what this generator
+        /// is not supposed to do.
+        let extraEnumPrefixes: [String: String]
+
+        init(
+            swiftPrefix: String,
+            header: String,
+            cPrefix: String,
+            swiftDefine: String,
+            instructionClass: InstructionClassConfig?,
+            macroOptionSets: [MacroOptionSetConfig],
+            macroEnums: [MacroEnumConfig],
+            operandConfiguration: OperandConfiguration? = nil,
+            extraEnumPrefixes: [String: String] = [:]
+        ) {
+            self.swiftPrefix = swiftPrefix
+            self.header = header
+            self.cPrefix = cPrefix
+            self.swiftDefine = swiftDefine
+            self.instructionClass = instructionClass
+            self.macroOptionSets = macroOptionSets
+            self.macroEnums = macroEnums
+            self.operandConfiguration = operandConfiguration
+            self.extraEnumPrefixes = extraEnumPrefixes
+        }
+
+        /// Whether a C enum constant prefix belongs to this architecture.
+        func accepts(enumPrefix prefix: String) -> Bool {
+            prefix.hasPrefix(cPrefix) || extraEnumPrefixes.keys.contains { prefix.hasPrefix($0) }
+        }
 
         static let all: [ArchitectureConfig] = [
             .init(swiftPrefix: "Arm", header: "arm.h", cPrefix: "ARM", swiftDefine: "CAPSTONE_HAS_ARM",
@@ -125,7 +248,76 @@ private extension CapstoneEnumsGenerator {
             // capitals; makeSwiftIdentifier would otherwise flatten it to "Aarch64".
             .init(swiftPrefix: "AArch64", header: "aarch64.h", cPrefix: "AARCH64", swiftDefine: "CAPSTONE_HAS_AARCH64",
                   instructionClass: .init(className: "AArch64Instruction", hasRegisters: true, documentation: "AArch64 Instruction, also known as ARM64"),
-                  macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: [],
+                  operandConfiguration: .init(
+                      cStructure: "cs_aarch64_op",
+                      accessors: [
+                          .init(name: "register", operandTypes: ["reg"],
+                                value: .enumeration(member: "reg", swiftType: "AArch64Reg"),
+                                documentation: "Register value for `reg` operands."),
+                          .init(name: "immediateValue", operandTypes: ["imm", "cimm", "implicitImm0"],
+                                value: .scalar(member: "imm", swiftType: "Int64"),
+                                documentation: "Immediate value for `imm`, `cimm` and `implicitImm0` operands."),
+                          .init(name: "immediateRange", operandTypes: ["immRange"],
+                                value: .structure(member: "imm_range", swiftType: "ImmediateRange"),
+                                documentation: "Immediate range for `immRange` operands."),
+                          .init(name: "doubleValue", operandTypes: ["fp"],
+                                value: .scalar(member: "fp", swiftType: "Double"),
+                                documentation: "Floating point value for `fp` operands."),
+                          .init(name: "memory", operandTypes: ["mem"],
+                                value: .structure(member: "mem", swiftType: "Memory"),
+                                documentation: "Base, index and displacement for `mem` operands."),
+                          .init(name: "matrixOperand", operandTypes: ["sme"],
+                                value: .structure(member: "sme", swiftType: "MatrixOperand"),
+                                documentation: "SME matrix operand, for `sme` operands."),
+                          .init(name: "predicate", operandTypes: ["pred"],
+                                value: .structure(member: "pred", swiftType: "Predicate"),
+                                documentation: "Predicate register operand, for `pred` operands."),
+                          // The operand type only says which of sysop's three unions
+                          // holds the value; sysop.sub_type says what it actually is.
+                          // Verified against the AArch64_set_detail_op_sys call sites
+                          // in arch/AArch64/AArch64Mapping.c, which pass exactly these
+                          // three. Decoding sub_type is hand-written.
+                          .init(name: "systemOperand",
+                                operandTypes: ["sysreg", "sysimm", "sysalias"],
+                                value: .handWritten(member: "sysop", swiftType: "SystemOperand"),
+                                documentation: "System operand. Its `subType` says which kind, and `value` decodes it."),
+                      ],
+                      unexposedTypes: [
+                          "invalid": "Not a real operand: marks an uninitialised slot.",
+                          // capstone never assigns these to an operand's `type` --
+                          // they appear only as sysop.sub_type, reached through
+                          // `systemOperand`. Giving each one an accessor would add a
+                          // property that is nil for every instruction.
+                          "regMrs": "Only ever a sysop sub_type; read via systemOperand.",
+                          "regMsr": "Only ever a sysop sub_type; read via systemOperand.",
+                          "at": "Only ever a sysop sub_type; read via systemOperand.",
+                          "db": "Only ever a sysop sub_type; read via systemOperand.",
+                          "dc": "Only ever a sysop sub_type; read via systemOperand.",
+                          "isb": "Only ever a sysop sub_type; read via systemOperand.",
+                          "tsb": "Only ever a sysop sub_type; read via systemOperand.",
+                          "prfm": "Only ever a sysop sub_type; read via systemOperand.",
+                          "sveprfm": "Only ever a sysop sub_type; read via systemOperand.",
+                          "rprfm": "Only ever a sysop sub_type; read via systemOperand.",
+                          "pstateimm015": "Only ever a sysop sub_type; read via systemOperand.",
+                          "pstateimm01": "Only ever a sysop sub_type; read via systemOperand.",
+                          "psb": "Only ever a sysop sub_type; read via systemOperand.",
+                          "bti": "Only ever a sysop sub_type; read via systemOperand.",
+                          "svepredpat": "Only ever a sysop sub_type; read via systemOperand.",
+                          "sveveclenspecifier": "Only ever a sysop sub_type; read via systemOperand.",
+                          "tlbi": "Only ever a sysop sub_type; read via systemOperand.",
+                          "ic": "Only ever a sysop sub_type; read via systemOperand.",
+                          "dbnxs": "Only ever a sysop sub_type; read via systemOperand.",
+                          "exactfpimm": "Only ever a sysop sub_type; read via systemOperand.",
+                          "svcr": "Only ever a sysop sub_type; read via systemOperand.",
+                          // Declared in cs_operand.h for architectures that split a
+                          // memory operand; AArch64 reports memory as `mem` and never
+                          // sets these. Confirmed: zero references under arch/AArch64.
+                          "memReg": "AArch64 reports memory operands as `mem`; never set.",
+                          "memImm": "AArch64 reports memory operands as `mem`; never set.",
+                      ]
+                  ),
+                  extraEnumPrefixes: ["AArch64CC": "AArch64CondCode"]),
             .init(swiftPrefix: "Mips", header: "mips.h", cPrefix: "MIPS", swiftDefine: "CAPSTONE_HAS_MIPS",
                   instructionClass: .init(className: "MipsInstruction", hasRegisters: true, documentation: "MIPS Instruction"),
                   macroOptionSets: [], macroEnums: []),
@@ -367,7 +559,9 @@ private extension CapstoneEnumsGenerator {
         let constants = enumDecl.constants()
         guard !constants.isEmpty else { return [] }
 
-        guard let basePrefix = enumPrefix(from: constants[0].description), basePrefix.hasPrefix(configuration.cPrefix) else {
+        guard let basePrefix = enumPrefix(from: constants[0].description),
+              configuration.accepts(enumPrefix: basePrefix)
+        else {
             return []
         }
 
@@ -378,7 +572,7 @@ private extension CapstoneEnumsGenerator {
             let chosenPrefix: String
             if constantName.hasPrefix(basePrefix) {
                 chosenPrefix = basePrefix
-            } else if let altPrefix = enumPrefix(from: constantName), altPrefix.hasPrefix(configuration.cPrefix) {
+            } else if let altPrefix = enumPrefix(from: constantName), configuration.accepts(enumPrefix: altPrefix) {
                 chosenPrefix = altPrefix
             } else {
                 continue
@@ -444,6 +638,13 @@ private extension CapstoneEnumsGenerator {
     }
 
     func swiftTypeName(from cPrefix: String, configuration: ArchitectureConfig) -> String {
+        if let explicit = configuration.extraEnumPrefixes[cPrefix] {
+            // Already a full Swift type name; the architecture prefix is added by
+            // the caller, so hand back the part after it.
+            return explicit.hasPrefix(configuration.swiftPrefix)
+                ? String(explicit.dropFirst(configuration.swiftPrefix.count))
+                : explicit
+        }
         let prefixWithoutArch: String
         if cPrefix.hasPrefix(configuration.cPrefix + "_") {
             prefixWithoutArch = String(cPrefix.dropFirst(configuration.cPrefix.count + 1))
@@ -554,6 +755,56 @@ private extension CapstoneEnumsGenerator {
         } catch {
             return nil
         }
+    }
+
+    /// Member names of a C struct, including those of nested anonymous unions,
+    /// which Swift flattens into the parent struct on import.
+    ///
+    /// Only names are collected: the configuration declares the Swift type, and what
+    /// this has to catch is a member that was renamed or removed upstream.
+    func parseStructureMembers(named structureName: String, in headerURL: URL) throws -> Set<String> {
+        let contents = try String(contentsOf: headerURL, encoding: .utf8)
+        let pattern = "typedef\\s+struct\\s+\(structureName)\\s*\\{"
+        guard let opening = contents.range(of: pattern, options: .regularExpression) else {
+            throw GenerationError.structureNotFound(structureName, headerURL.lastPathComponent)
+        }
+
+        // Walk to the matching close brace; the struct contains nested braces.
+        var depth = 0
+        var bodyStart: String.Index?
+        var bodyEnd: String.Index?
+        var index = contents.index(before: opening.upperBound)
+        while index < contents.endIndex {
+            let character = contents[index]
+            if character == "{" {
+                depth += 1
+                if depth == 1 { bodyStart = contents.index(after: index) }
+            } else if character == "}" {
+                depth -= 1
+                if depth == 0 { bodyEnd = index; break }
+            }
+            index = contents.index(after: index)
+        }
+        guard let bodyStart, let bodyEnd else {
+            throw GenerationError.structureNotFound(structureName, headerURL.lastPathComponent)
+        }
+
+        // Strip comments, then take the identifier before each ';' or '[' —
+        // the declared name of every member, at any nesting depth.
+        var body = String(contents[bodyStart ..< bodyEnd])
+        body = body.replacingOccurrences(of: "/\\*.*?\\*/", with: " ", options: [.regularExpression])
+        body = body.replacingOccurrences(of: "//[^\n]*", with: " ", options: [.regularExpression])
+
+        var members = Set<String>()
+        for declaration in body.split(separator: ";") {
+            let trimmed = declaration.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmed.isEmpty else { continue }
+            // Drop an array suffix, then take the trailing identifier.
+            let withoutArray = trimmed.replacingOccurrences(of: "\\[[^\\]]*\\]", with: "", options: [.regularExpression])
+            guard let match = withoutArray.range(of: "[A-Za-z_][A-Za-z0-9_]*$", options: .regularExpression) else { continue }
+            members.insert(String(withoutArray[match]))
+        }
+        return members
     }
 
     struct ParsedArchitecture {
@@ -707,6 +958,103 @@ private extension CapstoneEnumsGenerator {
         lines.append("        [\(wrappedCases.joined(separator: ", "))]")
         lines.append("    }")
         lines.append("}")
+        lines.append("")
+        return lines.joined(separator: "\n")
+    }
+
+    /// Checks the operand configuration against the header, then renders the
+    /// operand accessors.
+    ///
+    /// Both checks exist because the failure they prevent is silent: a stale member
+    /// name or an operand type nobody wired up produces an accessor that returns
+    /// `nil` forever, which reads exactly like "this operand has no such value".
+    func renderOperandAccessors(
+        architecture: ArchitectureConfig,
+        configuration: OperandConfiguration,
+        operandTypeCases: [String],
+        headerURL: URL
+    ) throws -> String {
+        let members = try parseStructureMembers(named: configuration.cStructure, in: headerURL)
+        let referenced = Set(configuration.accessors.map(\.value.member))
+        let unknown = referenced.subtracting(members).sorted()
+        if !unknown.isEmpty {
+            throw GenerationError.unknownOperandMembers(
+                architecture: architecture.swiftPrefix,
+                structure: configuration.cStructure,
+                members: unknown
+            )
+        }
+
+        let covered = Set(configuration.accessors.flatMap(\.operandTypes))
+            .union(configuration.unexposedTypes.keys)
+        let uncovered = operandTypeCases.filter { !covered.contains($0) }.sorted()
+        if !uncovered.isEmpty {
+            throw GenerationError.uncoveredOperandTypes(
+                architecture: architecture.swiftPrefix,
+                types: uncovered
+            )
+        }
+
+        let prefix = architecture.swiftPrefix
+        var lines = [String]()
+        lines.append("// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT.")
+        lines.append("// Regenerate with: swift package plugin generate-enums")
+        lines.append("//")
+        lines.append("// Operand-type to union-member mapping comes from the operand configuration")
+        lines.append("// in CapstoneEnumsGenerator; the C header only carries it in comments.")
+        lines.append("")
+        lines.append("#if \(architecture.swiftDefine)")
+        lines.append("import Ccapstone")
+        lines.append("")
+        lines.append("public extension \(prefix)Instruction.Operand {")
+
+        for accessor in configuration.accessors {
+            let conditions = accessor.operandTypes.map { "type == .\($0)" }.joined(separator: " || ")
+            lines.append("    /// \(accessor.documentation)")
+            lines.append("    ///")
+            lines.append("    /// `nil` when the operand is not of a matching type.")
+
+            switch accessor.value {
+            case .enumeration(let member, let swiftType):
+                lines.append("    var \(accessor.name): \(swiftType)? {")
+                lines.append("        guard \(conditions) else { return nil }")
+                // The member is an imported C enum, not an integer, so it goes
+                // through optionalEnumCast rather than a numericCast.
+                lines.append("        let value: \(swiftType)? = optionalEnumCast(op.\(member))")
+                lines.append("        return value")
+                lines.append("    }")
+            case .scalar(let member, let swiftType):
+                lines.append("    var \(accessor.name): \(swiftType)? {")
+                lines.append("        guard \(conditions) else { return nil }")
+                lines.append("        return op.\(member)")
+                lines.append("    }")
+            case .structure(let member, let swiftType):
+                lines.append("    var \(accessor.name): \(swiftType)? {")
+                lines.append("        guard \(conditions) else { return nil }")
+                lines.append("        return \(swiftType)(op.\(member))")
+                lines.append("    }")
+            case .handWritten(let member, let swiftType):
+                // The guard and the nil case are still generated, so the set of
+                // operand types selecting it stays in one place; only the value
+                // construction is hand-written.
+                lines.append("    var \(accessor.name): \(swiftType)? {")
+                lines.append("        guard \(conditions) else { return nil }")
+                lines.append("        return \(swiftType)(op.\(member))")
+                lines.append("    }")
+            }
+            lines.append("")
+        }
+
+        lines.append("    /// Operand types that carry no value of their own.")
+        for (type, reason) in configuration.unexposedTypes.sorted(by: { $0.key < $1.key }) {
+            lines.append("    /// - `\(type)`: \(reason)")
+        }
+        lines.append("    internal static var unexposedOperandTypes: Set<\(prefix)Op> {")
+        let unexposed = configuration.unexposedTypes.keys.sorted().map { ".\($0)" }
+        lines.append("        [\(unexposed.joined(separator: ", "))]")
+        lines.append("    }")
+        lines.append("}")
+        lines.append("#endif")
         lines.append("")
         return lines.joined(separator: "\n")
     }

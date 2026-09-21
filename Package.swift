@@ -94,12 +94,11 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
 /// but stays out of the default build, so its still-v5 wrapper is excluded by the
 /// `#if CAPSTONE_HAS_*` it already sits behind.
 ///
-/// Empty while the engine core is being brought over: no wrapper has been adapted
-/// yet, so the default build is core-only and stays compilable. AArch64 lands here
-/// first.
+/// AArch64 is adapted; the rest still carry v5 wrappers.
 ///
 /// See Documentations/Evolutions/draft-adapt-capstone-v6.md.
 let adaptedArchitectures: Set<String> = [
+    "AARCH64",
 ]
 
 /// SwiftPM treats a package that declares no default traits as having none enabled.

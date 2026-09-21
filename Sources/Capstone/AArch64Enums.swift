@@ -51,6 +51,52 @@ public enum AArch64Bti: UInt32 {
     case ending = 7
 }
 
+/// Moved from AArch64BaseInfo.h The CondCodes constants map directly to the 4-bit encoding of the condition field for predicated instructions.
+public enum AArch64CondCode: UInt32 {
+    /// Equal Equal
+    case eq = 0
+    /// ( Z)
+    public static let noneActive = 0
+    /// Not equal, or unordered
+    case ne = 1
+    /// (!Z)
+    public static let anyActive = 1
+    /// Unsigned higher or same >, ==, or unordered
+    case hs = 2
+    /// Unsigned lower Less than
+    case lo = 3
+    /// (!C)
+    public static let lastActive = 3
+    /// Minus, negative Less than
+    case mi = 4
+    /// ( N)
+    public static let firstActive = 4
+    /// Plus, positive or zero >, ==, or unordered
+    case pl = 5
+    /// Overflow Unordered
+    case vs = 6
+    /// No overflow Not unordered
+    case vc = 7
+    /// Unsigned higher Greater than, or unordered
+    case hi = 8
+    /// Unsigned lower or same Less than or equal
+    case ls = 9
+    /// Greater than or equal Greater than or equal
+    case ge = 10
+    /// Less than, or unordered
+    case lt = 11
+    /// Greater than Greater than
+    case gt = 12
+    /// Less than or equal <, ==, or unordered
+    case le = 13
+    /// Always (unconditional) Always (unconditional)
+    case al = 14
+    /// Always (unconditional) Always (unconditional)
+    case nv = 15
+    /// Note the NV exists purely to disassemble 0b1111. Execution is "always".
+    case invalid = 16
+}
+
 public enum AArch64Db: UInt32 {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DB> begin clang-format off
     case oshld = 1
