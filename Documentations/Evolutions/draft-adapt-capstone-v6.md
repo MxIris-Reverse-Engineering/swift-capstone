@@ -373,3 +373,5 @@ trait 是两种不同的状况，报错文本必须能区分，否则会把使�
 | 2026-09-21 | 否决：一次性适配全部架构 | 中间没有可编译状态，难以定位问题来源 |
 | 2026-09-21 | 采纳 idax 的三条约束 | 生成器报告而非塞 stub、`--check` 模式、生成物与手写文件命名可区分 |
 | 2026-09-21 | Draft → Accepted | 用户批准，开始实施；实现分支 `feat/capstone-v6-aarch64`，基线取 `v5` 而非 `next`（`next` 是上游时代的陈旧分支，完全落后于 `v5`，缺少枚举生成器与 SPM traits 等全部基建） |
+| 2026-09-21 | 调整落地步骤 2/3 的切法 | 原计划步骤 2 收窄默认 trait 至仅 AArch64，但此时 AArch64 封装仍是 v5 代码，提交下来是编译不过的状态。改为先把 `adaptedArchitectures` 置空（语义上即「尚无架构完成适配」），默认构建只含引擎核心，修完核心即可构建通过；AArch64 适配完成后再加回该集合。每个提交都可构建。 |
+| 2026-09-21 | 记录 capstone v5 的 SwiftPM 缺陷（本提案不修） | 对着 capstone v5 开启全部架构构建时，`TriCoreInstPrinter.c` 报 `'platform.h' file not found`：v5 的 `bindings/swift/Ccapstone/` 缺 `platform.h` 符号链接，且 Package.swift 无 `headerSearchPath`，v6 两者皆有。该缺陷此前从未暴露，正是因为默认 trait 缺失使 TriCore 从未被编译过 —— 一个缺陷掩盖了另一个。仅影响 capstone v5 分支，本提案不涉及。 |

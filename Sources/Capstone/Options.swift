@@ -77,7 +77,7 @@ extension Capstone {
         let err: cs_err
         switch option {
         case .syntax(syntax: let syntax):
-            err = cs_option(handle, CS_OPT_SYNTAX, syntax.rawValue)
+            err = cs_option(handle, CS_OPT_SYNTAX, uintptr_t(syntax.rawValue))
         case .detail(value: let value):
             err = cs_option(handle, CS_OPT_DETAIL, value.csOptValue)
             if err == CS_ERR_OK {
@@ -86,7 +86,7 @@ extension Capstone {
         case .unsigned(value: let value):
             err = cs_option(handle, CS_OPT_UNSIGNED, value.csOptValue)
         case .mode(mode: let mode):
-            err = cs_option(handle, CS_OPT_MODE, Int(mode.rawValue))
+            err = cs_option(handle, CS_OPT_MODE, uintptr_t(mode.rawValue))
         case .skipDataEnabled(let enabled):
             err = cs_option(handle, CS_OPT_SKIPDATA, enabled.csOptValue)
         case .skipData(mnemonic: let mnemonic, callback: let callback):
@@ -97,7 +97,7 @@ extension Capstone {
             }
             err = mnemonic.withCString { mnemonicPtr in
                 withUnsafePointer(to: cs_opt_mnem(id: instruction.rawValue, mnemonic: mnemonicPtr)) {
-                    cs_option(handle, CS_OPT_MNEMONIC, Int(bitPattern: $0))
+                    cs_option(handle, CS_OPT_MNEMONIC, uintptr_t(bitPattern: $0))
                 }
             }
         }
@@ -132,7 +132,7 @@ extension Capstone {
                                                      user_data: Unmanaged.passUnretained(self).toOpaque()
         ), {
             cs_option(handle, CS_OPT_SKIPDATA, true.csOptValue)
-            return cs_option(handle, CS_OPT_SKIPDATA_SETUP, Int(bitPattern: $0))
+            return cs_option(handle, CS_OPT_SKIPDATA_SETUP, uintptr_t(bitPattern: $0))
         })
     }
 
@@ -164,7 +164,8 @@ internal extension UnsafeMutablePointer where Pointee == Int8 {
 }
 
 fileprivate extension Bool {
-    var csOptValue: Int {
-        return Int((self ? CS_OPT_ON : CS_OPT_OFF).rawValue)
+    /// cs_option()'s value parameter is uintptr_t, which Swift imports as UInt.
+    var csOptValue: uintptr_t {
+        return uintptr_t((self ? CS_OPT_ON : CS_OPT_OFF).rawValue)
     }
 }

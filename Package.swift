@@ -79,12 +79,27 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
     architectures.map { .trait(name: $0.trait, condition: .when(traits: [$0.trait])) },
 )
 
+/// Architectures whose wrapper has been adapted to capstone v6.
+///
+/// Grows one entry at a time as each architecture is migrated. An architecture
+/// left out here keeps its trait declared — callers can still enable it explicitly —
+/// but stays out of the default build, so its still-v5 wrapper is excluded by the
+/// `#if CAPSTONE_HAS_*` it already sits behind.
+///
+/// Empty while the engine core is being brought over: no wrapper has been adapted
+/// yet, so the default build is core-only and stays compilable. AArch64 lands here
+/// first.
+///
+/// See Documentations/Evolutions/draft-adapt-capstone-v6.md.
+let adaptedArchitectures: Set<String> = [
+]
+
 /// SwiftPM treats a package that declares no default traits as having none enabled.
 /// Every architecture wrapper under Sources/Capstone sits behind `#if CAPSTONE_HAS_*`,
 /// and the conditional forwarding above only fires for traits this package has enabled,
 /// so without a default set the build produced a Capstone module containing no
 /// architecture types at all and a capstone dependency with no architecture compiled in.
-let defaultTrait = Trait.default(enabledTraits: Set(architectures.map(\.trait)))
+let defaultTrait = Trait.default(enabledTraits: adaptedArchitectures)
 
 let package = Package(
     name: "swift-capstone",
