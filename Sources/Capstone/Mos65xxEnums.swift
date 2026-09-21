@@ -181,15 +181,17 @@ public enum Mos65xxIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum Mos65xxOp: UInt32 {
+public struct Mos65xxOp: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
+    public static let invalid: Mos65xxOp = []
     /// = CS_OP_REG (Register operand).
-    case reg = 1
+    public static let reg = Mos65xxOp(rawValue: 1)
     /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
+    public static let imm = Mos65xxOp(rawValue: 2)
     /// = CS_OP_MEM (Memory operand).
-    case mem = 3
+    public static let mem = Mos65xxOp(rawValue: 128)
 }
 
 /// MOS65XX registers and special registers

@@ -50,384 +50,487 @@ public enum M680xIns: UInt32 {
     case addf = 14
     case addr = 15
     case addw = 16
-    case aim = 17
-    case ais = 18
-    case aix = 19
-    case and = 20
-    case anda = 21
-    case andb = 22
-    case andcc = 23
-    case andd = 24
-    case andr = 25
-    case asl = 26
-    case asla = 27
-    case aslb = 28
+    /// HCS12X
+    case addx = 17
+    /// HCS12X
+    case addy = 18
+    /// HCS12X
+    case aded = 19
+    /// HCS12X
+    case adex = 20
+    /// HCS12X
+    case adey = 21
+    case aim = 22
+    case ais = 23
+    case aix = 24
+    case and = 25
+    case anda = 26
+    case andb = 27
+    /// HCS12X
+    case andx = 28
+    /// HCS12X
+    case andy = 29
+    case andcc = 30
+    case andd = 31
+    case andr = 32
+    case asl = 33
+    case asla = 34
+    case aslb = 35
     /// or LSLD
-    case asld = 29
-    case asr = 30
-    case asra = 31
-    case asrb = 32
-    case asrd = 33
-    case asrx = 34
-    case band = 35
+    case asld = 36
+    /// HCS12X
+    case aslw = 37
+    /// HCS12X
+    case aslx = 38
+    /// HCS12X
+    case asly = 39
+    case asr = 40
+    case asra = 41
+    case asrb = 42
+    case asrd = 43
+    /// HCS12X
+    case asrw = 44
+    case asrx = 45
+    /// HCS12X
+    case asry = 46
+    case band = 47
     /// or BHS
-    case bcc = 36
-    case bclr = 37
+    case bcc = 48
+    case bclr = 49
     /// or BLO
-    case bcs = 38
-    case beor = 39
-    case beq = 40
-    case bge = 41
-    case bgnd = 42
-    case bgt = 43
-    case bhcc = 44
-    case bhcs = 45
-    case bhi = 46
-    case biand = 47
-    case bieor = 48
-    case bih = 49
-    case bil = 50
-    case bior = 51
-    case bit = 52
-    case bita = 53
-    case bitb = 54
-    case bitd = 55
-    case bitmd = 56
-    case ble = 57
-    case bls = 58
-    case blt = 59
-    case bmc = 60
-    case bmi = 61
-    case bms = 62
-    case bne = 63
-    case bor = 64
-    case bpl = 65
-    case brclr = 66
-    case brset = 67
-    case bra = 68
-    case brn = 69
-    case bset = 70
-    case bsr = 71
-    case bvc = 72
-    case bvs = 73
-    case call = 74
+    case bcs = 50
+    case beor = 51
+    case beq = 52
+    case bge = 53
+    case bgnd = 54
+    case bgt = 55
+    case bhcc = 56
+    case bhcs = 57
+    case bhi = 58
+    case biand = 59
+    case bieor = 60
+    case bih = 61
+    case bil = 62
+    case bior = 63
+    case bit = 64
+    case bita = 65
+    case bitb = 66
+    case bitd = 67
+    case bitmd = 68
+    /// HCS12X
+    case bitx = 69
+    /// HCS12X
+    case bity = 70
+    case ble = 71
+    case bls = 72
+    case blt = 73
+    case bmc = 74
+    case bmi = 75
+    case bms = 76
+    case bne = 77
+    case bor = 78
+    case bpl = 79
+    case brclr = 80
+    case brset = 81
+    case bra = 82
+    case brn = 83
+    case bset = 84
+    case bsr = 85
+    /// HCS12X
+    case btas = 86
+    case bvc = 87
+    case bvs = 88
+    case call = 89
     /// M6800/1/2/3
-    case cba = 75
-    case cbeq = 76
-    case cbeqa = 77
-    case cbeqx = 78
+    case cba = 90
+    case cbeq = 91
+    case cbeqa = 92
+    case cbeqx = 93
     /// M6800/1/2/3
-    case clc = 79
+    case clc = 94
     /// M6800/1/2/3
-    case cli = 80
-    case clr = 81
-    case clra = 82
-    case clrb = 83
-    case clrd = 84
-    case clre = 85
-    case clrf = 86
-    case clrh = 87
-    case clrw = 88
-    case clrx = 89
+    case cli = 95
+    case clr = 96
+    case clra = 97
+    case clrb = 98
+    case clrd = 99
+    case clre = 100
+    case clrf = 101
+    case clrh = 102
+    case clrw = 103
+    case clrx = 104
+    case clry = 105
     /// M6800/1/2/3
-    case clv = 90
-    case cmp = 91
-    case cmpa = 92
-    case cmpb = 93
-    case cmpd = 94
-    case cmpe = 95
-    case cmpf = 96
-    case cmpr = 97
-    case cmps = 98
-    case cmpu = 99
-    case cmpw = 100
-    case cmpx = 101
-    case cmpy = 102
-    case com = 103
-    case coma = 104
-    case comb = 105
-    case comd = 106
-    case come = 107
-    case comf = 108
-    case comw = 109
-    case comx = 110
-    case cpd = 111
-    case cphx = 112
-    case cps = 113
+    case clv = 106
+    case cmp = 107
+    case cmpa = 108
+    case cmpb = 109
+    case cmpd = 110
+    case cmpe = 111
+    case cmpf = 112
+    case cmpr = 113
+    case cmps = 114
+    case cmpu = 115
+    case cmpw = 116
+    case cmpx = 117
+    case cmpy = 118
+    case com = 119
+    case coma = 120
+    case comb = 121
+    case comd = 122
+    case come = 123
+    case comf = 124
+    case comw = 125
+    case comx = 126
+    case comy = 127
+    case cpd = 128
+    /// HCS12X
+    case cped = 129
+    /// HCS12X
+    case cpes = 130
+    /// HCS12X
+    case cpex = 131
+    /// HCS12X
+    case cpey = 132
+    case cphx = 133
+    case cps = 134
     /// M6800/1/2/3
-    case cpx = 114
-    case cpy = 115
-    case cwai = 116
-    case daa = 117
-    case dbeq = 118
-    case dbne = 119
-    case dbnz = 120
-    case dbnza = 121
-    case dbnzx = 122
-    case dec = 123
-    case deca = 124
-    case decb = 125
-    case decd = 126
-    case dece = 127
-    case decf = 128
-    case decw = 129
-    case decx = 130
+    case cpx = 135
+    case cpy = 136
+    case cwai = 137
+    case daa = 138
+    case dbeq = 139
+    case dbne = 140
+    case dbnz = 141
+    case dbnza = 142
+    case dbnzx = 143
+    case dec = 144
+    case deca = 145
+    case decb = 146
+    case decd = 147
+    case dece = 148
+    case decf = 149
+    case decw = 150
+    case decx = 151
+    case decy = 152
     /// M6800/1/2/3
-    case des = 131
+    case des = 153
     /// M6800/1/2/3
-    case dex = 132
-    case dey = 133
-    case div = 134
-    case divd = 135
-    case divq = 136
-    case ediv = 137
-    case edivs = 138
-    case eim = 139
-    case emacs = 140
-    case emaxd = 141
-    case emaxm = 142
-    case emind = 143
-    case eminm = 144
-    case emul = 145
-    case emuls = 146
-    case eor = 147
-    case eora = 148
-    case eorb = 149
-    case eord = 150
-    case eorr = 151
-    case etbl = 152
-    case exg = 153
-    case fdiv = 154
-    case ibeq = 155
-    case ibne = 156
-    case idiv = 157
-    case idivs = 158
-    case illgl = 159
-    case inc = 160
-    case inca = 161
-    case incb = 162
-    case incd = 163
-    case ince = 164
-    case incf = 165
-    case incw = 166
-    case incx = 167
+    case dex = 154
+    case dey = 155
+    case div = 156
+    case divd = 157
+    case divq = 158
+    case ediv = 159
+    case edivs = 160
+    case eim = 161
+    case emacs = 162
+    case emaxd = 163
+    case emaxm = 164
+    case emind = 165
+    case eminm = 166
+    case emul = 167
+    case emuls = 168
+    case eor = 169
+    case eora = 170
+    case eorb = 171
+    case eord = 172
+    case eorr = 173
+    /// HCS12X
+    case eorx = 174
+    /// HCS12X
+    case eory = 175
+    case etbl = 176
+    case exg = 177
+    case fdiv = 178
+    /// HCS12X
+    case gldaa = 179
+    /// HCS12X
+    case gldab = 180
+    /// HCS12X
+    case gldd = 181
+    /// HCS12X
+    case glds = 182
+    /// HCS12X
+    case gldx = 183
+    /// HCS12X
+    case gldy = 184
+    /// HCS12X
+    case gstaa = 185
+    /// HCS12X
+    case gstab = 186
+    /// HCS12X
+    case gstd = 187
+    /// HCS12X
+    case gsts = 188
+    /// HCS12X
+    case gstx = 189
+    /// HCS12X
+    case gsty = 190
+    case ibeq = 191
+    case ibne = 192
+    case idiv = 193
+    case idivs = 194
+    case illgl = 195
+    case inc = 196
+    case inca = 197
+    case incb = 198
+    case incd = 199
+    case ince = 200
+    case incf = 201
+    case incw = 202
+    case incx = 203
+    case incy = 204
     /// M6800/1/2/3
-    case ins = 168
+    case ins = 205
     /// M6800/1/2/3
-    case inx = 169
-    case iny = 170
-    case jmp = 171
-    case jsr = 172
+    case inx = 206
+    case iny = 207
+    case jmp = 208
+    case jsr = 209
     /// or LBHS
-    case lbcc = 173
+    case lbcc = 210
     /// or LBLO
-    case lbcs = 174
-    case lbeq = 175
-    case lbge = 176
-    case lbgt = 177
-    case lbhi = 178
-    case lble = 179
-    case lbls = 180
-    case lblt = 181
-    case lbmi = 182
-    case lbne = 183
-    case lbpl = 184
-    case lbra = 185
-    case lbrn = 186
-    case lbsr = 187
-    case lbvc = 188
-    case lbvs = 189
-    case lda = 190
+    case lbcs = 211
+    case lbeq = 212
+    case lbge = 213
+    case lbgt = 214
+    case lbhi = 215
+    case lble = 216
+    case lbls = 217
+    case lblt = 218
+    case lbmi = 219
+    case lbne = 220
+    case lbpl = 221
+    case lbra = 222
+    case lbrn = 223
+    case lbsr = 224
+    case lbvc = 225
+    case lbvs = 226
+    case lda = 227
     /// M6800/1/2/3
-    case ldaa = 191
+    case ldaa = 228
     /// M6800/1/2/3
-    case ldab = 192
-    case ldb = 193
-    case ldbt = 194
-    case ldd = 195
-    case lde = 196
-    case ldf = 197
-    case ldhx = 198
-    case ldmd = 199
-    case ldq = 200
-    case lds = 201
-    case ldu = 202
-    case ldw = 203
-    case ldx = 204
-    case ldy = 205
-    case leas = 206
-    case leau = 207
-    case leax = 208
-    case leay = 209
-    case lsl = 210
-    case lsla = 211
-    case lslb = 212
-    case lsld = 213
-    case lslx = 214
-    case lsr = 215
-    case lsra = 216
-    case lsrb = 217
+    case ldab = 229
+    case ldb = 230
+    case ldbt = 231
+    case ldd = 232
+    case lde = 233
+    case ldf = 234
+    case ldhx = 235
+    case ldmd = 236
+    case ldq = 237
+    case lds = 238
+    case ldu = 239
+    case ldw = 240
+    case ldx = 241
+    case ldy = 242
+    case leas = 243
+    case leau = 244
+    case leax = 245
+    case leay = 246
+    case lsl = 247
+    case lsla = 248
+    case lslb = 249
+    case lsld = 250
+    case lslx = 251
+    case lsr = 252
+    case lsra = 253
+    case lsrb = 254
     /// or ASRD
-    case lsrd = 218
-    case lsrw = 219
-    case lsrx = 220
-    case maxa = 221
-    case maxm = 222
-    case mem = 223
-    case mina = 224
-    case minm = 225
-    case mov = 226
-    case movb = 227
-    case movw = 228
-    case mul = 229
-    case muld = 230
-    case neg = 231
-    case nega = 232
-    case negb = 233
-    case negd = 234
-    case negx = 235
-    case nop = 236
-    case nsa = 237
-    case oim = 238
-    case ora = 239
+    case lsrd = 255
+    case lsrw = 256
+    case lsrx = 257
+    case lsry = 258
+    case maxa = 259
+    case maxm = 260
+    case mem = 261
+    case mina = 262
+    case minm = 263
+    case mov = 264
+    case movb = 265
+    case movw = 266
+    case mul = 267
+    case muld = 268
+    case neg = 269
+    case nega = 270
+    case negb = 271
+    case negd = 272
+    /// HCS12X
+    case negw = 273
+    case negx = 274
+    /// HCS12X
+    case negy = 275
+    case nop = 276
+    case nsa = 277
+    case oim = 278
+    case ora = 279
     /// M6800/1/2/3
-    case oraa = 240
+    case oraa = 280
     /// M6800/1/2/3
-    case orab = 241
-    case orb = 242
-    case orcc = 243
-    case ord = 244
-    case orr = 245
+    case orab = 281
+    case orb = 282
+    case orcc = 283
+    case ord = 284
+    case orr = 285
+    /// HCS12X
+    case orx = 286
+    /// HCS12X
+    case ory = 287
     /// M6800/1/2/3
-    case psha = 246
+    case psha = 288
     /// M6800/1/2/3
-    case pshb = 247
-    case pshc = 248
-    case pshd = 249
-    case pshh = 250
-    case pshs = 251
-    case pshsw = 252
-    case pshu = 253
-    case pshuw = 254
+    case pshb = 289
+    case pshc = 290
+    /// HCS12X
+    case pshcw = 291
+    case pshd = 292
+    case pshh = 293
+    case pshs = 294
+    case pshsw = 295
+    case pshu = 296
+    case pshuw = 297
     /// M6800/1/2/3
-    case pshx = 255
-    case pshy = 256
+    case pshx = 298
+    case pshy = 299
     /// M6800/1/2/3
-    case pula = 257
+    case pula = 300
     /// M6800/1/2/3
-    case pulb = 258
-    case pulc = 259
-    case puld = 260
-    case pulh = 261
-    case puls = 262
-    case pulsw = 263
-    case pulu = 264
-    case puluw = 265
+    case pulb = 301
+    case pulc = 302
+    /// HCS12X
+    case pulcw = 303
+    case puld = 304
+    case pulh = 305
+    case puls = 306
+    case pulsw = 307
+    case pulu = 308
+    case puluw = 309
     /// M6800/1/2/3
-    case pulx = 266
-    case puly = 267
-    case rev = 268
-    case revw = 269
-    case rol = 270
-    case rola = 271
-    case rolb = 272
-    case rold = 273
-    case rolw = 274
-    case rolx = 275
-    case ror = 276
-    case rora = 277
-    case rorb = 278
-    case rord = 279
-    case rorw = 280
-    case rorx = 281
-    case rsp = 282
-    case rtc = 283
-    case rti = 284
-    case rts = 285
+    case pulx = 310
+    case puly = 311
+    case rev = 312
+    case revw = 313
+    case rol = 314
+    case rola = 315
+    case rolb = 316
+    case rold = 317
+    case rolw = 318
+    case rolx = 319
+    case roly = 320
+    case ror = 321
+    case rora = 322
+    case rorb = 323
+    case rord = 324
+    case rorw = 325
+    case rorx = 326
+    case rory = 327
+    case rsp = 328
+    case rtc = 329
+    case rti = 330
+    case rts = 331
     /// M6800/1/2/3
-    case sba = 286
-    case sbc = 287
-    case sbca = 288
-    case sbcb = 289
-    case sbcd = 290
-    case sbcr = 291
-    case sec = 292
-    case sei = 293
-    case sev = 294
-    case sex = 295
-    case sexw = 296
-    case slp = 297
-    case sta = 298
+    case sba = 332
+    case sbc = 333
+    case sbca = 334
+    case sbcb = 335
+    case sbcd = 336
+    case sbcr = 337
+    /// HCS12X
+    case sbed = 338
+    /// HCS12X
+    case sbex = 339
+    /// HCS12X
+    case sbey = 340
+    case sec = 341
+    case sei = 342
+    case sev = 343
+    case sex = 344
+    case sexw = 345
+    /// RS08
+    case sha = 346
+    /// RS08
+    case sla = 347
+    case slp = 348
+    case sta = 349
     /// M6800/1/2/3
-    case staa = 299
+    case staa = 350
     /// M6800/1/2/3
-    case stab = 300
-    case stb = 301
-    case stbt = 302
-    case std = 303
-    case ste = 304
-    case stf = 305
-    case stop = 306
-    case sthx = 307
-    case stq = 308
-    case sts = 309
-    case stu = 310
-    case stw = 311
-    case stx = 312
-    case sty = 313
-    case sub = 314
-    case suba = 315
-    case subb = 316
-    case subd = 317
-    case sube = 318
-    case subf = 319
-    case subr = 320
-    case subw = 321
-    case swi = 322
-    case swi2 = 323
-    case swi3 = 324
-    case sync = 325
+    case stab = 351
+    case stb = 352
+    case stbt = 353
+    case std = 354
+    case ste = 355
+    case stf = 356
+    case stop = 357
+    case sthx = 358
+    case stq = 359
+    case sts = 360
+    case stu = 361
+    case stw = 362
+    case stx = 363
+    case sty = 364
+    case sub = 365
+    case suba = 366
+    case subb = 367
+    case subd = 368
+    case sube = 369
+    case subf = 370
+    case subr = 371
+    case subw = 372
+    /// HCS12X
+    case subx = 373
+    /// HCS12X
+    case suby = 374
+    case swi = 375
+    case swi2 = 376
+    case swi3 = 377
+    case sync = 378
+    /// HCS12X
+    case sys = 379
     /// M6800/1/2/3
-    case tab = 326
+    case tab = 380
     /// M6800/1/2/3
-    case tap = 327
-    case tax = 328
+    case tap = 381
+    case tax = 382
     /// M6800/1/2/3
-    case tba = 329
-    case tbeq = 330
-    case tbl = 331
-    case tbne = 332
-    case test = 333
-    case tfm = 334
-    case tfr = 335
-    case tim = 336
+    case tba = 383
+    case tbeq = 384
+    case tbl = 385
+    case tbne = 386
+    case test = 387
+    case tfm = 388
+    case tfr = 389
+    case tim = 390
     /// M6800/1/2/3
-    case tpa = 337
-    case tst = 338
-    case tsta = 339
-    case tstb = 340
-    case tstd = 341
-    case tste = 342
-    case tstf = 343
-    case tstw = 344
-    case tstx = 345
+    case tpa = 391
+    case trap = 392
+    case tst = 393
+    case tsta = 394
+    case tstb = 395
+    case tstd = 396
+    case tste = 397
+    case tstf = 398
+    case tstw = 399
+    case tstx = 400
+    case tsty = 401
     /// M6800/1/2/3
-    case tsx = 346
-    case tsy = 347
-    case txa = 348
+    case tsx = 402
+    case tsy = 403
+    case txa = 404
     /// M6800/1/2/3
-    case txs = 349
-    case tys = 350
+    case txs = 405
+    case tys = 406
     /// M6800/1/2/3
-    case wai = 351
-    case wait = 352
-    case wav = 353
-    case wavr = 354
+    case wai = 407
+    case wait = 408
+    case wav = 409
+    case wavr = 410
     /// HD6301
-    case xgdx = 355
-    case xgdy = 356
+    case xgdx = 411
+    case xgdy = 412
     /// <-- mark the end of the list of instructions
-    case ending = 357
+    case ending = 413
 }
 
 public enum M680xOffset: UInt8 {
@@ -447,15 +550,15 @@ public enum M680xOp: UInt32 {
     /// = Immediate operand.
     case immediate = 2
     /// = Indexed addressing operand.
-    case indexed = 3
+    case indexed = 16
     /// = Extended addressing operand.
-    case extended = 4
+    case extended = 17
     /// = Direct addressing operand.
-    case direct = 5
+    case direct = 18
     /// = Relative addressing operand.
-    case relative = 6
+    case relative = 19
     /// = constant operand (Displayed as number only). Used e.g. for a bit index or page number.
-    case constant = 7
+    case constant = 20
 }
 
 public struct M680xOpFlags: OptionSet {
@@ -506,12 +609,14 @@ public enum M680xReg: UInt16 {
     case q = 18
     /// M6800/1/2/3/9, M6301/9
     case pc = 19
+    /// RS08
+    case spc = 20
     /// CPU12
-    case tmp2 = 20
+    case tmp2 = 21
     /// CPU12
-    case tmp3 = 21
+    case tmp3 = 22
     /// <-- mark the end of the list of registers
-    case ending = 22
+    case ending = 23
 }
 
 #endif

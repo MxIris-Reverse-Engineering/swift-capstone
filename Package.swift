@@ -55,12 +55,14 @@ extension Package.Dependency {
 
 let architectures: [(trait: String, define: String)] = [
     ("ARM", "CAPSTONE_HAS_ARM"),
-    ("ARM64", "CAPSTONE_HAS_ARM64"),
+    // v6 renamed ARM64 to AArch64 and SYSZ to SYSTEMZ. The capstone package still
+    // accepts the old ARM64 trait as an alias, but new code should use these.
+    ("AARCH64", "CAPSTONE_HAS_AARCH64"),
     ("MIPS", "CAPSTONE_HAS_MIPS"),
     ("X86", "CAPSTONE_HAS_X86"),
     ("POWERPC", "CAPSTONE_HAS_POWERPC"),
     ("SPARC", "CAPSTONE_HAS_SPARC"),
-    ("SYSZ", "CAPSTONE_HAS_SYSZ"),
+    ("SYSTEMZ", "CAPSTONE_HAS_SYSTEMZ"),
     ("XCORE", "CAPSTONE_HAS_XCORE"),
     ("M68K", "CAPSTONE_HAS_M68K"),
     ("TMS320C64X", "CAPSTONE_HAS_TMS320C64X"),
@@ -72,6 +74,12 @@ let architectures: [(trait: String, define: String)] = [
     ("RISCV", "CAPSTONE_HAS_RISCV"),
     ("SH", "CAPSTONE_HAS_SH"),
     ("TRICORE", "CAPSTONE_HAS_TRICORE"),
+    // Added in v6. Generated enums only so far, no wrapper.
+    ("ALPHA", "CAPSTONE_HAS_ALPHA"),
+    ("HPPA", "CAPSTONE_HAS_HPPA"),
+    ("LOONGARCH", "CAPSTONE_HAS_LOONGARCH"),
+    ("XTENSA", "CAPSTONE_HAS_XTENSA"),
+    ("ARC", "CAPSTONE_HAS_ARC"),
 ]
 
 // Conditionally forward each trait to capstone C dependency

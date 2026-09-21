@@ -52,6 +52,9 @@ public enum EvmIns: UInt32 {
     case xor = 24
     case not = 25
     case byte = 26
+    case shl = 27
+    case shr = 28
+    case sar = 29
     case sha3 = 32
     case address = 48
     case balance = 49
@@ -74,6 +77,11 @@ public enum EvmIns: UInt32 {
     case number = 67
     case difficulty = 68
     case gaslimit = 69
+    case chainid = 70
+    case selfbalance = 71
+    case basefee = 72
+    case blobhash = 73
+    case blobbasefee = 74
     case pop = 80
     case mload = 81
     case mstore = 82
@@ -86,6 +94,10 @@ public enum EvmIns: UInt32 {
     case msize = 89
     case gas = 90
     case jumpdest = 91
+    case tload = 92
+    case tstore = 93
+    case mcopy = 94
+    case push0 = 95
     case push1 = 96
     case push2 = 97
     case push3 = 98
@@ -160,13 +172,14 @@ public enum EvmIns: UInt32 {
     case callcode = 242
     case `return` = 243
     case delegatecall = 244
-    case callblackbox = 245
+    case create2 = 245
     case staticcall = 250
     case revert = 253
-    case suicide = 255
-    case invalid = 512
+    case invalid = 254
+    /// originally called SUICIDE
+    case selfdestruct = 255
     /// <-- mark the end of the list of instructions
-    case ending = 513
+    case ending = 256
 }
 
 #endif

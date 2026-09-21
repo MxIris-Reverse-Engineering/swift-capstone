@@ -192,14 +192,14 @@ public enum WasmIns: UInt32 {
 
 public enum WasmOp: UInt32 {
     case invalid = 0
-    case none = 1
-    case int7 = 2
-    case varuint32 = 3
-    case varuint64 = 4
-    case uint32 = 5
-    case uint64 = 6
-    case imm = 7
-    case brtable = 8
+    case imm = 2
+    case none = 16
+    case int7 = 17
+    case varuint32 = 18
+    case varuint64 = 19
+    case uint32 = 20
+    case uint64 = 21
+    case brtable = 22
 }
 
 #endif

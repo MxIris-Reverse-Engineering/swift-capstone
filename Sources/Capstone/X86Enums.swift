@@ -1751,19 +1751,22 @@ public enum X86Ins: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum X86Op: UInt32 {
+public struct X86Op: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
+    public static let invalid: X86Op = []
     /// = CS_OP_REG (Register operand).
-    case reg = 1
+    public static let reg = X86Op(rawValue: 1)
     /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
+    public static let imm = X86Op(rawValue: 2)
     /// = CS_OP_MEM (Memory operand).
-    case mem = 3
+    public static let mem = X86Op(rawValue: 128)
 }
 
 /// Instruction prefixes - to be used in cs_x86.prefix[]
 public enum X86Prefix: UInt32 {
+    case _0 = 0
     /// segment override ES (cs_x86.prefix[1]
     case es = 38
     /// segment override CS (cs_x86.prefix[1]

@@ -205,23 +205,51 @@ public enum ShIns: UInt32 {
     case ending = 159
 }
 
-/// SH-DSP instcutions define
 public enum ShInsDsp: UInt32 {
     case invalid = 0
-    case double = 1
-    case single = 2
-    case parallel = 3
+    case nop = 1
+    case mov = 2
+    case pshl = 3
+    case psha = 4
+    case pmuls = 5
+    case pclrPmuls = 6
+    case psubPmuls = 7
+    case paddPmuls = 8
+    case psubc = 9
+    case paddc = 10
+    case pcmp = 11
+    case pabs = 12
+    case prnd = 13
+    case psub = 14
+    case psubr = 15
+    case padd = 16
+    case pand = 17
+    case pxor = 18
+    case por = 19
+    case pdec = 20
+    case pinc = 21
+    case pclr = 22
+    case pdmsb = 23
+    case pneg = 24
+    case pcopy = 25
+    case psts = 26
+    case plds = 27
+    case pswap = 28
+    case pwad = 29
+    case pwsb = 30
 }
 
-public enum ShOp: UInt32 {
+public struct ShOp: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
+    public static let invalid: ShOp = []
     /// = CS_OP_REG (Register operand).
-    case reg = 1
+    public static let reg = ShOp(rawValue: 1)
     /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
+    public static let imm = ShOp(rawValue: 2)
     /// = CS_OP_MEM (Memory operand).
-    case mem = 3
+    public static let mem = ShOp(rawValue: 128)
 }
 
 public enum ShOpDsp: UInt32 {

@@ -199,17 +199,19 @@ public enum Tms320c64xMemMod: UInt32 {
     case post = 3
 }
 
-public enum Tms320c64xOp: UInt32 {
+public struct Tms320c64xOp: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
+    public static let invalid: Tms320c64xOp = []
     /// = CS_OP_REG (Register operand).
-    case reg = 1
+    public static let reg = Tms320c64xOp(rawValue: 1)
     /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
-    /// = CS_OP_MEM (Memory operand).
-    case mem = 3
+    public static let imm = Tms320c64xOp(rawValue: 2)
     /// Register pair for double word ops
-    case regpair = 64
+    public static let regpair = Tms320c64xOp(rawValue: 16)
+    /// = CS_OP_MEM (Memory operand).
+    public static let mem = Tms320c64xOp(rawValue: 128)
 }
 
 public enum Tms320c64xReg: UInt16 {

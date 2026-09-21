@@ -139,15 +139,17 @@ public enum XcoreIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum XcoreOp: UInt32 {
+public struct XcoreOp: OptionSet {
+    public let rawValue: UInt32
+    public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
-    case invalid = 0
+    public static let invalid: XcoreOp = []
     /// = CS_OP_REG (Register operand).
-    case reg = 1
+    public static let reg = XcoreOp(rawValue: 1)
     /// = CS_OP_IMM (Immediate operand).
-    case imm = 2
+    public static let imm = XcoreOp(rawValue: 2)
     /// = CS_OP_MEM (Memory operand).
-    case mem = 3
+    public static let mem = XcoreOp(rawValue: 128)
 }
 
 /// XCore registers
