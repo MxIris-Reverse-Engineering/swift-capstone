@@ -57,6 +57,7 @@ let architectures: [(trait: String, define: String)] = [
     ("ARM", "CAPSTONE_HAS_ARM"),
     // v6 renamed ARM64 to AArch64 and SYSZ to SYSTEMZ. The capstone package still
     // accepts the old ARM64 trait as an alias, but new code should use these.
+    ("ARM64", "CAPSTONE_HAS_AARCH64"),
     ("AARCH64", "CAPSTONE_HAS_AARCH64"),
     ("MIPS", "CAPSTONE_HAS_MIPS"),
     ("X86", "CAPSTONE_HAS_X86"),
