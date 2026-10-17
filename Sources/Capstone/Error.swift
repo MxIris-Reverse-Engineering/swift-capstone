@@ -1,7 +1,7 @@
 import Ccapstone
 
 /// Errors thrown by Capstone
-public enum CapstoneError: Error {
+public enum CapstoneError: Error, Hashable {
     /// No error: everything was fine (this error is not thrown)
     case ok
     /// Out-Of-Memory error

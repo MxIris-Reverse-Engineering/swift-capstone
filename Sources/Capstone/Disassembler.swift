@@ -19,26 +19,56 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
     private let handle: csh
     /// The buffer capstone decodes into, reused for every instruction.
     private let sharedInstruction: UnsafeMutablePointer<cs_insn>
-    private let state = DecodingState()
+    private let state: DecodingState
 
-    /// Creates an engine.
+    /// Creates an engine. Its options cannot change afterwards; create another
+    /// engine for other options.
     ///
-    /// - Parameter mode: Modes for the architecture, such as `.bigEndian`.
+    /// - Parameters:
+    ///   - mode: Modes for the architecture, such as `.bigEndian`.
+    ///   - syntax: Printing options for the architecture.
+    ///   - details: Whether an alias's details describe the alias or the real
+    ///     instruction.
+    ///   - unsignedImmediates: Print immediates as unsigned numbers, `#0xfff…f`
+    ///     rather than `#-0x1`. Only the printed text changes, not the operands.
+    ///   - skipData: Decode past bytes that are not instructions instead of
+    ///     stopping at them.
+    ///   - mnemonics: Mnemonics to print instead of capstone's, keyed by
+    ///     instruction; capstone keeps at most 31 bytes of each. capstone replaces
+    ///     as many leading characters of the printed mnemonic as the instruction's
+    ///     name has, which also cuts into the instruction's aliases: with
+    ///     `[.orr: "or"]`, `mov x0, x1`, an alias of `orr`, prints as `or x0, x1`.
     /// - Throws: `CapstoneError.unsupportedArchitecture` when capstone was built
-    ///   without the architecture, `.invalidMode` when capstone rejects the mode, and
-    ///   `.outOfMemory`.
-    public init(mode: Architecture.Mode = []) throws {
+    ///   without the architecture, `.invalidMode` when capstone rejects the mode,
+    ///   `.invalidOption` when it rejects an option, and `.outOfMemory`.
+    public init(
+        mode: Architecture.Mode = [],
+        syntax: Architecture.Syntax = [],
+        details: DetailForm = .alias,
+        unsignedImmediates: Bool = false,
+        skipData: SkipData? = nil,
+        mnemonics: [Architecture.InstructionIdentifier: String] = [:]
+    ) throws {
         var handle: csh = 0
         let openError = cs_open(cs_arch(Architecture.architecture.rawValue), cs_mode(mode.rawValue), &handle)
         guard openError == CS_ERR_OK else {
             throw CapstoneError(openError)
         }
+        let state = DecodingState(skipData: skipData)
         do {
-            try Self.check(cs_option(handle, CS_OPT_DETAIL, UInt(CS_OPT_ON.rawValue)))
+            try Self.configure(
+                handle,
+                syntax: syntax,
+                details: details,
+                unsignedImmediates: unsignedImmediates,
+                state: state,
+                mnemonics: mnemonics
+            )
             // Allocated after the options are set: cs_malloc gives the buffer room
             // for details only when they are on by then.
             self.sharedInstruction = try Self.allocateInstruction(handle: handle)
             self.handle = handle
+            self.state = state
         } catch {
             cs_close(&handle)
             throw error
@@ -94,6 +124,11 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
             guard let start = buffer.baseAddress, !buffer.isEmpty else {
                 return 0
             }
+            // The skipdata callback reports offsets into this pass's input; a nested
+            // pass has its own and hands the outer one back when it ends.
+            let outerInput = state.input
+            state.input = buffer
+            defer { state.input = outerInput }
             var position: UnsafePointer<UInt8>? = start.assumingMemoryBound(to: UInt8.self)
             var remaining = buffer.count
             var nextAddress = address
@@ -203,8 +238,108 @@ extension Disassembler {
     }
 }
 
-/// What the borrowing methods of `Disassembler` have to change.
+extension Disassembler {
+    /// Applies the creation-time options. Everything here has to happen before the
+    /// instruction buffer is allocated.
+    private static func configure(
+        _ handle: csh,
+        syntax: Architecture.Syntax,
+        details: DetailForm,
+        unsignedImmediates: Bool,
+        state: DecodingState,
+        mnemonics: [Architecture.InstructionIdentifier: String]
+    ) throws {
+        if !syntax.isEmpty {
+            try check(cs_option(handle, CS_OPT_SYNTAX, UInt(syntax.rawValue)))
+        }
+
+        let detailValue = switch details {
+        case .alias: CS_OPT_ON.rawValue
+        case .realInstruction: CS_OPT_DETAIL_REAL.rawValue | CS_OPT_ON.rawValue
+        }
+        try check(cs_option(handle, CS_OPT_DETAIL, UInt(detailValue)))
+
+        if unsignedImmediates {
+            try check(cs_option(handle, CS_OPT_UNSIGNED, UInt(CS_OPT_ON.rawValue)))
+        }
+
+        if state.skipsData {
+            // capstone keeps the struct's mnemonic pointer, not a copy of the
+            // string; the state owns it for the life of the engine.
+            var setup = cs_opt_skipdata(
+                mnemonic: state.skipDataMnemonic.map { UnsafePointer($0) },
+                callback: state.hasSkipDataCallback ? skipDataCallback : nil,
+                user_data: Unmanaged.passUnretained(state).toOpaque()
+            )
+            let setupError = withUnsafeMutablePointer(to: &setup) { pointer in
+                cs_option(handle, CS_OPT_SKIPDATA_SETUP, UInt(bitPattern: pointer))
+            }
+            try check(setupError)
+            try check(cs_option(handle, CS_OPT_SKIPDATA, UInt(CS_OPT_ON.rawValue)))
+        }
+
+        for (identifier, mnemonic) in mnemonics {
+            // capstone copies the string into its own list.
+            let error = mnemonic.withCString { mnemonicPointer in
+                var customization = cs_opt_mnem(id: identifier.rawValue, mnemonic: mnemonicPointer)
+                return withUnsafeMutablePointer(to: &customization) { pointer in
+                    cs_option(handle, CS_OPT_MNEMONIC, UInt(bitPattern: pointer))
+                }
+            }
+            try check(error)
+        }
+    }
+}
+
+/// Called by capstone at bytes that do not decode, when the engine's `SkipData`
+/// has a `bytesToSkip`. capstone passes the remaining input, not the whole of it,
+/// with an offset of 0; the state knows where the pass's input starts.
+private let skipDataCallback: cs_skipdata_cb_t = { code, _, _, userData in
+    guard let code, let userData else {
+        return 0
+    }
+    let state = Unmanaged<DecodingState>.fromOpaque(userData).takeUnretainedValue()
+    return state.bytesToSkip(at: code)
+}
+
+/// What the borrowing methods of `Disassembler`, and capstone's skipdata callback,
+/// have to change or read. A class because the callback needs an address that
+/// stays put while the engine, a struct, can be moved.
 final class DecodingState {
     /// Whether a pass over code is in progress.
     var isDecoding = false
+
+    /// The input of the pass in progress.
+    var input: UnsafeRawBufferPointer?
+
+    let skipsData: Bool
+
+    /// The skipdata mnemonic as a C string, which capstone points at.
+    let skipDataMnemonic: UnsafeMutablePointer<CChar>?
+
+    private let skipDataBytesToSkip: ((_ code: RawSpan, _ offset: Int) -> Int)?
+
+    var hasSkipDataCallback: Bool {
+        skipDataBytesToSkip != nil
+    }
+
+    init(skipData: SkipData?) {
+        skipsData = skipData != nil
+        skipDataMnemonic = skipData?.mnemonic.flatMap { strdup($0) }
+        skipDataBytesToSkip = skipData?.bytesToSkip
+    }
+
+    deinit {
+        free(skipDataMnemonic)
+    }
+
+    /// Asks the caller's closure how many bytes to skip at `code`, which points into
+    /// the pass's input. Negative answers stop decoding, as 0 does.
+    func bytesToSkip(at code: UnsafePointer<UInt8>) -> Int {
+        guard let skipDataBytesToSkip, let input, let start = input.baseAddress else {
+            return 0
+        }
+        let offset = UnsafeRawPointer(code) - start
+        return max(skipDataBytesToSkip(input.bytes, offset), 0)
+    }
 }

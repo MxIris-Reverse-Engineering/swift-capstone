@@ -28,6 +28,23 @@ public enum AArch64: DisassemblyArchitecture {
         public static let appleProprietary = Mode(rawValue: CS_MODE_APPLE_PROPRIETARY.rawValue)
     }
 
+    /// Printing options capstone's AArch64 module reads. Of capstone's syntax
+    /// options these are the only two it acts on.
+    public struct Syntax: OptionSet, Sendable {
+        public let rawValue: UInt32
+
+        public init(rawValue: UInt32) {
+            self.rawValue = rawValue
+        }
+
+        /// Prints the register names LLVM leaves out: `fp` for x29 and `lr` for x30.
+        public static let capstoneRegisterAlias = Syntax(rawValue: CS_OPT_SYNTAX_CS_REG_ALIAS.rawValue)
+
+        /// Prints `movz` and `movn` with a shifted immediate in their own form,
+        /// `movz x0, #0x1, lsl #16`, rather than as the `mov` alias.
+        public static let explicitWideImmediate = Syntax(rawValue: CS_OPT_SYNTAX_AARCH64_EXPLICIT_WIDE_IMM.rawValue)
+    }
+
     /// A decoded instruction, copied out of the engine: it outlives the engine and
     /// can cross concurrency domains.
     ///

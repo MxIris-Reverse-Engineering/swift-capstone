@@ -7,6 +7,9 @@ public protocol DisassemblyArchitecture {
     /// Modes capstone accepts for this architecture, such as endianness.
     associatedtype Mode: OptionSet, Sendable where Mode.RawValue == UInt32
 
+    /// Printing options capstone's module for this architecture reads.
+    associatedtype Syntax: OptionSet, Sendable where Syntax.RawValue == UInt32
+
     /// The generated instruction identifiers, aliases included.
     associatedtype InstructionIdentifier: RawRepresentable, Hashable, Sendable
         where InstructionIdentifier.RawValue == UInt32

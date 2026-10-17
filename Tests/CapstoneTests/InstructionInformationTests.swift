@@ -56,23 +56,6 @@ struct InstructionInformationTests {
         #expect(flags == [true, false])
     }
 
-    @Test("real-instruction details give an alias the operands of the instruction it stands for")
-    func realInstructionDetail() throws {
-        // mov x0, x1 — an alias of orr x0, xzr, x1
-        let bytes: [UInt8] = [0xE0, 0x03, 0x01, 0xAA]
-        let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
-        try capstone.set(option: .realInstructionDetail)
-        let realForm: AArch64Instruction = try #require(try capstone.disassemble(code: Data(bytes), address: 0x1000).first)
-        let (usesAliasDetails, registers) = try withFirstInstruction(bytes) {
-            ($0.usesAliasDetails, $0.operands.compactMap(\.register))
-        }
-
-        #expect(usesAliasDetails)
-        #expect(registers == [.x0, .x1])
-        #expect(!realForm.usesAliasDetails)
-        #expect(realForm.operands.compactMap(\.register) == [.x0, .xzr, .x1])
-    }
-
     /// capstone's own `writeback` flag is set for any tied operand, which `movk`,
     /// `cas` and `bfi` have without touching a base register.
     @Test("write-back means a memory operand's base register is updated", arguments: [

@@ -85,8 +85,10 @@ public struct InstructionView<Architecture: DisassemblyArchitecture>: ~Copyable 
         !isData && instruction.pointee.usesAliasDetails
     }
 
-    /// capstone's details of the instruction, or `nil` for a data entry: capstone
-    /// leaves whatever the previous instruction had in the buffer.
+    /// capstone's details of the instruction, or `nil` for a data entry. capstone's
+    /// skipdata path does not touch the details, so what a data entry's buffer holds
+    /// depends on how far the architecture module got before the bytes failed to
+    /// decode. AArch64's clears them first; others may not.
     var details: UnsafePointer<cs_detail>? {
         guard !isData, let details = instruction.pointee.detail else {
             return nil
