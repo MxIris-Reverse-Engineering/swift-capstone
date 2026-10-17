@@ -54,4 +54,24 @@ struct ArchitectureTests {
             #expect(!Architecture.wrapped.contains(architecture))
         }
     }
+
+    /// When the engine has an architecture compiled in that this wrapper does not cover —
+    /// the trait of an unwrapped architecture, or another package enabling more capstone
+    /// traits — `cs_open` succeeds and only the instruction class lookup can fail. That
+    /// has to surface as an error from the initializer, not a trap.
+    ///
+    /// The default build compiles none of these into the engine, so `cs_open` already
+    /// rejects them; run `swift test --traits AARCH64,SH` to exercise the lookup itself.
+    @Test("opening an architecture without a wrapper throws instead of trapping", arguments: [
+        Architecture.alpha, .hppa, .loongarch, .xtensa, .arc, .sh, .tricore,
+    ])
+    func openingUnwrappedArchitectureThrows(architecture: Architecture) throws {
+        let error = try #require(throws: CapstoneError.self) {
+            _ = try Capstone(arch: architecture)
+        }
+        guard case .unsupportedArchitecture = error else {
+            Issue.record("expected CapstoneError.unsupportedArchitecture, got \(error)")
+            return
+        }
+    }
 }

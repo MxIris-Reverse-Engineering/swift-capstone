@@ -4,6 +4,10 @@ import Ccapstone
 /// Runtime option for the disassembler engine.
 public enum DisassemblyOption {
     /// Assembly output syntax.
+    ///
+    /// Several capstone v6 modules, AArch64's among them, add the flags to the ones set
+    /// before instead of replacing them, so a syntax set earlier cannot be cleared.
+    /// Create a new `Capstone` instead.
     case syntax(syntax: Syntax)
 
     /// Break down instruction structure into details.
@@ -15,6 +19,10 @@ public enum DisassemblyOption {
     case detail(value: Bool)
 
     /// Change engine's mode at run-time.
+    ///
+    /// Several capstone v6 modules, AArch64's among them, add the mode bits instead of
+    /// replacing them: a mode set earlier, such as big-endian, cannot be switched back.
+    /// Create a new `Capstone` instead.
     case mode(mode: Mode)
 
     /// Skip data when disassembling.
@@ -67,7 +75,8 @@ public enum SkipDataResult {
 ///
 /// - parameter capstone: `Capstone` instance
 /// - parameter code: code being disassembled
-/// - parameter offset: the position of the currently-examining byte
+/// - parameter offset: the index in `code` of the currently-examining byte. An index
+///   rather than a distance from the start: when `code` is a slice, the two differ.
 /// - returns: a `SkipDataResult` instructing to skip a number of bytes, or stop the disassembly
 public typealias SkipDataCallback = (_ capstone: Capstone, _ code: Data, _ offset: Data.Index) -> SkipDataResult
 
@@ -118,7 +127,8 @@ extension Capstone {
                 guard let skipCallback = cs.skipDataCallback, let code = cs.currentCode else {
                     return 0
                 }
-                switch skipCallback(cs, code, offset) {
+                // capstone counts from the start of the buffer; a slice's indices do not.
+                switch skipCallback(cs, code, code.startIndex + offset) {
                 case .skip(bytes: let bytes):
                     return bytes
                 case .stop:

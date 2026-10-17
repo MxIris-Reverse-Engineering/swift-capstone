@@ -948,8 +948,38 @@ private extension CapstoneEnumsGenerator {
         lines.append("    /// The class for disassembled instructions used for this architecture.")
         lines.append("    ///")
         lines.append("    /// This is a subclass of `Instruction`, with accessors for operands and")
-        lines.append("    /// architecture-specific properties.")
+        lines.append("    /// architecture-specific properties. Traps when this build has no class")
+        lines.append("    /// for the architecture; `Capstone(arch:)` throws")
+        lines.append("    /// `CapstoneError.unsupportedArchitecture` in that case instead.")
         lines.append("    var instructionClass: Instruction.Type {")
+        lines.append("        guard let compiledInstructionClass else {")
+        // Two distinct situations, and conflating them sends the reader down the
+        // wrong path: a trait that was never enabled is fixed in Package.swift,
+        // an architecture this package does not wrap yet is not.
+        lines.append("            if Architecture.wrapped.contains(self) {")
+        lines.append("                fatalError(\"Architecture \\(self) is not compiled in. Enable the corresponding package trait.\")")
+        lines.append("            } else {")
+        lines.append("                fatalError(\"Architecture \\(self) is not wrapped by swift-capstone yet.\")")
+        lines.append("            }")
+        lines.append("        }")
+        lines.append("        return compiledInstructionClass")
+        lines.append("    }")
+        lines.append("")
+        lines.append("    /// Architectures this package provides a wrapper for, whether or not the")
+        lines.append("    /// corresponding trait is enabled in this build.")
+        lines.append("    static var wrapped: Set<Architecture> {")
+        let wrappedCases = architectures
+            .filter { configurationsBySuffix[$0.cSuffix]?.instructionClass != nil }
+            .map { ".\($0.caseName)" }
+        lines.append("        [\(wrappedCases.joined(separator: ", "))]")
+        lines.append("    }")
+        lines.append("}")
+        lines.append("")
+        lines.append("extension Architecture {")
+        lines.append("    /// The class for disassembled instructions used for this architecture, or")
+        lines.append("    /// `nil` when this build has none: the architecture is not wrapped yet, or")
+        lines.append("    /// its trait is not enabled.")
+        lines.append("    var compiledInstructionClass: Instruction.Type? {")
         lines.append("        switch self {")
         for architecture in architectures {
             guard let configuration = configurationsBySuffix[architecture.cSuffix],
@@ -961,24 +991,8 @@ private extension CapstoneEnumsGenerator {
             lines.append("        #endif")
         }
         lines.append("        default:")
-        // Two distinct situations, and conflating them sends the reader down the
-        // wrong path: a trait that was never enabled is fixed in Package.swift,
-        // an architecture this package does not wrap yet is not.
-        lines.append("            if Architecture.wrapped.contains(self) {")
-        lines.append("                fatalError(\"Architecture \\(self) is not compiled in. Enable the corresponding package trait.\")")
-        lines.append("            } else {")
-        lines.append("                fatalError(\"Architecture \\(self) is not wrapped by swift-capstone yet.\")")
-        lines.append("            }")
+        lines.append("            return nil")
         lines.append("        }")
-        lines.append("    }")
-        lines.append("")
-        lines.append("    /// Architectures this package provides a wrapper for, whether or not the")
-        lines.append("    /// corresponding trait is enabled in this build.")
-        lines.append("    static var wrapped: Set<Architecture> {")
-        let wrappedCases = architectures
-            .filter { configurationsBySuffix[$0.cSuffix]?.instructionClass != nil }
-            .map { ".\($0.caseName)" }
-        lines.append("        [\(wrappedCases.joined(separator: ", "))]")
         lines.append("    }")
         lines.append("}")
         lines.append("")

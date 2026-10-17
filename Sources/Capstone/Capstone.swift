@@ -26,17 +26,24 @@ public class Capstone {
     /// - parameter arch: target architecture to disassemble
     /// - parameter mode: combination of modes - some are architecture-specific
     /// - throws:
-    ///   * `CapstoneError.unsupportedArchitecture` if capstone was built without support for the chosen architecture
+    ///   * `CapstoneError.unsupportedArchitecture` if capstone was built without support for the chosen architecture,
+    ///     or this build of the wrapper has no instruction class for it — the architecture is not wrapped yet
+    ///     (see `Architecture.wrapped`), or its package trait is not enabled
     ///   * `CapstoneError.invalidMode` if the given combination of modes is invalid for the target architecture
     ///   * `CapstoneError.unsupportedVersion` if the installed version of capstone does not match the Swift bindings
     public init(arch: Architecture, mode: Mode = []) throws {
+        // Looked up before cs_open: when the engine has the architecture compiled in but
+        // this build of the wrapper does not, cs_open succeeds and only this lookup fails.
+        guard let compiledInstructionClass = arch.compiledInstructionClass else {
+            throw CapstoneError.unsupportedArchitecture
+        }
         var h: csh = 0
         let err = cs_open(cs_arch(arch.rawValue), cs_mode(mode.rawValue), &h)
         guard err == CS_ERR_OK else {
             throw CapstoneError(err)
         }
         handle = h
-        instructionClass = arch.instructionClass
+        instructionClass = compiledInstructionClass
     }
 
     /// Check if an architecture is supported.

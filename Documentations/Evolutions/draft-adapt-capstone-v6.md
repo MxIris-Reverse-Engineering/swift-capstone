@@ -3,7 +3,7 @@
 - **状态**: In Progress
 - **作者**: JH
 - **创建日期**: 2026-09-21
-- **最后更新**: 2026-09-21
+- **最后更新**: 2026-10-17
 - **所属愿景**: 无
 - **关联提案**: 无
 - **实现分支 / PR**: `feat/capstone-v6-aarch64`
@@ -383,4 +383,9 @@ trait 是两种不同的状况，报错文本必须能区分，否则会把使�
 | 2026-09-21 | 旧测试套件暂置于 `Tests/CapstoneTests/Legacy/` | v5 套件以「一次跑遍十二个架构并打印详情」的形式组织，在只有 AArch64 适配完成时无法编译。整体移入 `Legacy/` 并在 target 中 `exclude`，随每个架构适配逐个迁回。新增的 AArch64 与 Architecture 套件为断言式，期望值取自指令编码与 `cs_arch` 头文件，不从被测代码回算。 |
 | 2026-09-21 | 删除 `CapstoneEnumsGeneratorTests.test()` | 该用例硬编码本机绝对路径 `/Volumes/Repositories/Private/Fork/Library/capstone/...`（已不存在）、向用户 Documents 目录写文件、且无任何断言。此前之所以「通过」，是因为路径不存在时生成器对所有架构静默跳过 —— 本次给生成器加上「找不到 capstone.h 即报错」后它才暴露。已删除。 |
 | 2026-09-21 | 步骤 7–9 完成 | 测试迁至 swift-testing（13 个用例全绿，原始退出码 0）；生成器加 `--check` 并双向验证（干净时退出 0，篡改生成物后退出 1）；README 与 AGENTS.md 同步更新。本仓库尚无 CI workflow，`--check` 的用法写入文档待接入。 |
-
+| 2026-10-17 | 修复：`Syntax` 取值沿用了 v5 | v6 把 `CS_OPT_SYNTAX_*` 改成位标志，迁移时 `Syntax.swift` 漏改：X86 适配后 `.att` 会得到 Intel，AArch64 上六个取值全部无效。改为 v6 常量值，测试对照 `cs_opt_value` 钉住。语法效果本身要等 X86 适配后才能端到端验证。 |
+| 2026-10-17 | 修复：`Capstone(arch:)` 对引擎编入、封装层没有的架构 trap | 开启 `SH` 等无封装架构的 trait，或依赖图里别的包给 capstone 开了更多架构时，`cs_open` 成功而类查找走到 `fatalError`。生成器改为产出可选的 `compiledInstructionClass`，init 在 `cs_open` 之前查找、缺失即抛 `unsupportedArchitecture`。原先区分「未开 trait / 未封装」两种报错文案的考虑保留在 `instructionClass` 里；这三个仍会 trap 的公开属性推迟到重写处理，见 [已裁决清单](../Internal/ReviewVerdicts.md)。回归测试只在 `--traits AARCH64,SH` 下生效，已写进 AGENTS.md。 |
+| 2026-10-17 | 修复：skipdata 回调的 offset 不是 `code` 的下标 | v5 遗留：回调参数标为 `Data.Index`，传的却是 capstone 从 0 起算的偏移，`Data` 切片的下标不从 0 开始。改为传 `code.startIndex + offset`。 |
+| 2026-10-17 | 修复（capstone fork）：`CS_OPT_DETAIL` 传 `CS_OPT_OFF` 无效 | v6 的 `cs_option` 对 detail 按位或，关闭成了空操作，与头文件对 `CS_OPT_OFF` 的说明矛盾；封装层却把自身标志置为关闭。fork 的 `cs.c` 改为关闭时清零，并在 `tests/unit/api.c` 补了回归测试。远程依赖要等 capstone 打出包含此修复的新版本、本仓库提高依赖下限后才生效。 |
+| 2026-10-17 | 判定误报：空输入抛出残留错误 | `Data.withUnsafeBytes` 对空数据也给出非空基址，`cs_disasm` 每次都会被调用并清零错误码，五种空 `Data` 实测均正常。见 [已裁决清单](../Internal/ReviewVerdicts.md)。 |
+| 2026-10-17 | 不修：`mode` / `syntax` 只能叠加 | 上游 v6 各模块对这两个选项赋值、叠加不一，是上游的设计分歧而非单点 bug；封装层在选项文档里写明。见 [已裁决清单](../Internal/ReviewVerdicts.md)。 |

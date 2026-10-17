@@ -13,3 +13,11 @@ swift-capstone 的项目文档。每新增或重命名一份文档，都要在�
 | 提案 | 状态 | 一句话 |
 |------|------|--------|
 | [适配 capstone v6](Evolutions/draft-adapt-capstone-v6.md) | In Progress | 迁到 capstone v6，公开 API 改用 v6 命名，把架构表与操作数访问器交给生成器，AArch64 优先落地 |
+
+## Internal
+
+面向维护者的记录。
+
+| 文档 | 一句话 |
+|------|--------|
+| [代码审查已裁决清单](Internal/ReviewVerdicts.md) | 审查中判为误报、不修或推迟的发现及理由；每次审查先对照它 |

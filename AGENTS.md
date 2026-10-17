@@ -26,6 +26,7 @@
 - Tests use swift-testing (`@Suite` / `@Test` / `#expect`); place new suites in `Tests/CapstoneTests`.
 - Expected values must come from the instruction encoding or the capstone headers, never from re-running the wrapper — a test that recomputes the implementation's answer can never disagree with it.
 - `Tests/CapstoneTests/Legacy/` holds the v5-era suite, excluded from the target because it covers twelve architectures at once. Move files back out as each architecture is adapted to v6.
+- Also run `swift test --traits AARCH64,SH`. SH is compiled into the engine but has no wrapper, the only configuration in which `Capstone(arch:)` reaches its instruction-class lookup for an architecture this package does not cover; the default build rejects such architectures in `cs_open` first.
 - For coverage checks, run `swift test --enable-code-coverage` and inspect the `.build` artifacts; aim to touch new instruction paths and error cases.
 
 ## Commit & Pull Request Guidelines

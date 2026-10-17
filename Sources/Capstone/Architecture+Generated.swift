@@ -140,8 +140,32 @@ public extension Architecture {
     /// The class for disassembled instructions used for this architecture.
     ///
     /// This is a subclass of `Instruction`, with accessors for operands and
-    /// architecture-specific properties.
+    /// architecture-specific properties. Traps when this build has no class
+    /// for the architecture; `Capstone(arch:)` throws
+    /// `CapstoneError.unsupportedArchitecture` in that case instead.
     var instructionClass: Instruction.Type {
+        guard let compiledInstructionClass else {
+            if Architecture.wrapped.contains(self) {
+                fatalError("Architecture \(self) is not compiled in. Enable the corresponding package trait.")
+            } else {
+                fatalError("Architecture \(self) is not wrapped by swift-capstone yet.")
+            }
+        }
+        return compiledInstructionClass
+    }
+
+    /// Architectures this package provides a wrapper for, whether or not the
+    /// corresponding trait is enabled in this build.
+    static var wrapped: Set<Architecture> {
+        [.arm, .aarch64, .systemz, .mips, .x86, .ppc, .sparc, .xcore, .m68k, .tms320c64x, .m680x, .evm, .mos65xx, .wasm, .bpf, .riscv]
+    }
+}
+
+extension Architecture {
+    /// The class for disassembled instructions used for this architecture, or
+    /// `nil` when this build has none: the architecture is not wrapped yet, or
+    /// its trait is not enabled.
+    var compiledInstructionClass: Instruction.Type? {
         switch self {
         #if CAPSTONE_HAS_ARM
         case .arm:
@@ -208,17 +232,7 @@ public extension Architecture {
             return RiscvInstruction.self
         #endif
         default:
-            if Architecture.wrapped.contains(self) {
-                fatalError("Architecture \(self) is not compiled in. Enable the corresponding package trait.")
-            } else {
-                fatalError("Architecture \(self) is not wrapped by swift-capstone yet.")
-            }
+            return nil
         }
-    }
-
-    /// Architectures this package provides a wrapper for, whether or not the
-    /// corresponding trait is enabled in this build.
-    static var wrapped: Set<Architecture> {
-        [.arm, .aarch64, .systemz, .mips, .x86, .ppc, .sparc, .xcore, .m68k, .tms320c64x, .m680x, .evm, .mos65xx, .wasm, .bpf, .riscv]
     }
 }

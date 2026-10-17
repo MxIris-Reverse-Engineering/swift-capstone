@@ -14,14 +14,16 @@ import Ccapstone
 public extension Architecture {
     /// The type for registers used in this architecture (if any).
     ///
-    /// This is an enum with values corresponding to the registers.
+    /// This is an enum with values corresponding to the registers. Traps, like
+    /// `instructionClass`, when this build has no class for the architecture.
     var registerType: Any.Type? {
         instructionClass.registerType
     }
 
     /// The type for instructions used in this architecture.
     ///
-    /// This is an enum with values corresponding to instruction mnemonics.
+    /// This is an enum with values corresponding to instruction mnemonics. Traps, like
+    /// `instructionClass`, when this build has no class for the architecture.
     var instructionType: InstructionType.Type {
         instructionClass.instructionType
     }
