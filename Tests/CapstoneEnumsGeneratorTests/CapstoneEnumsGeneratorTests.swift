@@ -3,11 +3,13 @@ import Foundation
 import Testing
 
 /// The smallest capstone.h `generate()` needs: it reads `cs_arch` to emit the
-/// architecture table. `arm` is the only architecture these fixtures exercise.
-private func writeMinimalCapstoneHeader(to includeDirectory: URL) throws {
+/// architecture table. The architecture it declares must be the one whose header
+/// the fixture supplies, since the generator requires a header for every
+/// architecture capstone.h has.
+private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring architecture: String = "ARM") throws {
     let header = """
     typedef enum cs_arch {
-        CS_ARCH_ARM = 0,
+        CS_ARCH_\(architecture) = 0,
         CS_ARCH_MAX,
         CS_ARCH_ALL = 0xFFFF,
     } cs_arch;
@@ -89,7 +91,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL) throws {
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
         let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
         try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
-        try writeMinimalCapstoneHeader(to: includeDir)
+        try writeMinimalCapstoneHeader(to: includeDir, declaring: "X86")
         try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
 
         let header = """
@@ -111,5 +113,33 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL) throws {
         #expect(contents.contains("public struct X86FpuFlags: OptionSet"))
         #expect(contents.contains("public static let modifyC0 = X86FpuFlags(rawValue: 1)"))
         #expect(contents.contains("public static let testC3 = X86FpuFlags(rawValue: 524288)"))
+    }
+
+    /// Models an upstream header rename, as v6 did with arm64.h: the files were
+    /// generated, then the header they came from disappeared. Skipping the
+    /// architecture leaves those files alone, so `--check` would call them current.
+    @Test func missingHeaderOfDeclaredArchitectureFailsTheCheck() async throws {
+        let fileManager = FileManager.default
+        let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
+        let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
+        try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
+        try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
+
+        let headerURL = includeDir.appendingPathComponent("arm.h")
+        try "typedef enum arm_test { ARM_TEST_INVALID = 0 } arm_test;"
+            .write(to: headerURL, atomically: true, encoding: .utf8)
+        let generator = CapstoneEnumsGenerator()
+        try await generator.generate(input: includeDir, output: outputDir)
+        try fileManager.removeItem(at: headerURL)
+
+        let error = try await #require(throws: GenerationError.self) {
+            try await generator.generate(input: includeDir, output: outputDir, checkOnly: true)
+        }
+        guard case .missingHeader("arm.h") = error else {
+            Issue.record("expected missingHeader(\"arm.h\"), got \(error)")
+            return
+        }
     }
 }

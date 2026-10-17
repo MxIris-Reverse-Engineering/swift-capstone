@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 - Swift Package layout: core API in `Sources/Capstone`, C bridge in `Sources/Ccapstone`, enum generator logic in `Sources/CapstoneEnumsGenerator` + `Sources/capstone-enums-generator`, and the SwiftPM command plugin in `Plugins/CapstoneEnumsGeneratePlugin`.
-- Tests live in `Tests/CapstoneTests` (XCTest) with fixtures in `TestFixtures.swift`; `Tests/LinuxMain.swift` provides Linux entry points.
+- Tests live in `Tests/CapstoneTests` and `Tests/CapstoneEnumsGeneratorTests`. The v5-era suite and its `TestFixtures.swift` sit in `Tests/CapstoneTests/Legacy/`, excluded from the target.
 - Examples such as `Examples/cstool` show end-to-end usage; keep them building with the main package.
 - Static docs under `docs/` are generated via swift-doc; avoid hand-editing them.
 - Generated sources carry an `AUTO-GENERATED` header — `*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift`. Change `Sources/CapstoneEnumsGenerator` and regenerate instead of editing them.
@@ -17,7 +17,7 @@
 - `swift run cstool -- --help` (from `Examples/cstool`) – sanity-check the example tool.
 
 ## Coding Style & Naming Conventions
-- Swift 5.3+ syntax (tools version 6.1); prefer 4-space indentation and trailing commas for multiline literals.
+- Swift 5 language mode (tools version 6.2); prefer 4-space indentation and trailing commas for multiline literals.
 - Follow Swift naming: UpperCamelCase types, lowerCamelCase methods/properties, UPPER_CASE for C-style constants bridged into Swift when necessary.
 - SwiftLint is configured (`.swiftlint.yml`); run `swiftlint lint` locally when available. Large tuples, nesting, and line length limits are relaxed; keep identifiers succinct (min length 1).
 - Keep generated enum files under `Sources/Capstone/*Enums.swift` excluded from lint but still readable.

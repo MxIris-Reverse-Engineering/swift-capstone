@@ -83,7 +83,7 @@ by inspection.
 ## API Usage
 1. Create an instance of `Capstone`, with the desired `Architecture` and `Mode`:
 ```swift
-let capstone = try Capstone(arch: .arm, mode: [Mode.arm.thumb, Mode.arm.mClass])
+let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
 ```
 2. Set `Options`s if needed:
 ```swift
@@ -92,23 +92,23 @@ try capstone.set(option: .detail(value: true))
 3. Disassemble code:
     > Instructions are returned as an architecture-specific instruction class, which descends from `Instruction`
 ```swift
-let code = Data([0xef, 0xf3, 0x02, 0x80])
-let instructions: [ArmInstruction] = try capstone.disassemble(code: code, address: 0x1000)
+let code = Data([0x62, 0x00, 0x04, 0x8b]) // add x2, x3, x4
+let instructions: [AArch64Instruction] = try capstone.disassemble(code: code, address: 0x1000)
 ```
 4. Examine code:
 ```swift
-for ins in instructions: {
-    print("  \(ins.mnemonic) \(ins.operandsString)")
+for instruction in instructions {
+    print("\(instruction.mnemonic) \(instruction.operandsString)")
 }
 ```
 
 ## Documentation
 
-* [Documentation](https://namedfork.net/capstone-swift) is generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc).
+* The API documentation under `docs/` was generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) before the v6 adaptation and still uses the v5 names.
 
 ## Examples
 
-* See `Examples/cstool` for an implementation of [`cstool`](https://github.com/aquynh/capstone/tree/master/cstool) in Swift.
+* `Examples/cstool` is an implementation of [`cstool`](https://github.com/capstone-engine/capstone/tree/next/cstool) in Swift. It still builds against the original capstone-swift package rather than this one.
 
 ### Small example
 
@@ -116,40 +116,36 @@ for ins in instructions: {
 import Capstone
 import Foundation
 
-// Code to disassemble
-let code = Data([0x8d, 0x4c, 0x32, 0x08, 0x01, 0xd8, 0x81, 0xc6, 0x34, 0x12, 0x00, 0x00, 0x05, 0x23, 0x01, 0x00, 0x00, 0x36, 0x8b, 0x84, 0x91, 0x23, 0x01, 0x00, 0x00, 0x41, 0x8d, 0x84, 0x39, 0x89, 0x67, 0x00, 0x00, 0x8d, 0x87, 0x89, 0x67, 0x00, 0x00, 0xb4, 0xc6, 0xe9, 0xea, 0xbe, 0xad, 0xde, 0xff, 0xa0, 0x23, 0x01, 0x00, 0x00, 0xe8, 0xdf, 0xbe, 0xad, 0xde, 0x74, 0xff])
+// add x2, x3, x4 / ldr x0, [x1, #8] / b 0x1018 / ret, starting at 0x1000
+let code = Data([
+    0x62, 0x00, 0x04, 0x8b,
+    0x20, 0x04, 0x40, 0xf9,
+    0x04, 0x00, 0x00, 0x14,
+    0xc0, 0x03, 0x5f, 0xd6,
+])
 
-// Create instance of capstone
-let capstone = try Capstone(arch: .x86, mode: Mode.bits.b32)
+let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
 
-// Enable detail mode to get instruction groups and operands
+// Groups and operands are only filled in with detail on
 try capstone.set(option: .detail(value: true))
 
-// Disassemble instructions
-let instructions: [X86Instruction] = try capstone.disassemble(code: code, address: 0x1000)
+let instructions: [AArch64Instruction] = try capstone.disassemble(code: code, address: 0x1000)
 
-// Iterate through instructions
-var insCountByGroup: [X86Grp: Int] = [:]
-var opCountByType: [X86Op: Int] = [:]
-print("Disassembly:")
-for ins in instructions {
-    print("  \(ins.mnemonic) \(ins.operandsString)")
-
-    // Count by instruction groups
-    insCountByGroup.merge(ins.groups.map({ ($0, 1) }), uniquingKeysWith: +)
-
-    // Count operands by type
-    opCountByType.merge(ins.operands.map({ ($0.type, 1) }), uniquingKeysWith: +)
+var instructionCountByGroup: [AArch64Grp: Int] = [:]
+var operandCountByType: [AArch64Op: Int] = [:]
+for instruction in instructions {
+    print("0x\(String(instruction.address, radix: 16))  \(instruction.mnemonic) \(instruction.operandsString)")
+    instructionCountByGroup.merge(instruction.groups.map { ($0, 1) }, uniquingKeysWith: +)
+    operandCountByType.merge(instruction.operands.map { ($0.type, 1) }, uniquingKeysWith: +)
 }
 
-// Print results
 print("Instructions by group:")
-for (group, count) in insCountByGroup {
+for (group, count) in instructionCountByGroup {
     print("  \(group): \(count)")
 }
 
 print("Operands by type:")
-for (type, count) in opCountByType {
+for (type, count) in operandCountByType {
     print("  \(type): \(count)")
 }
 ```

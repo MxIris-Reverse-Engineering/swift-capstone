@@ -66,11 +66,6 @@ public class Instruction: CustomStringConvertible {
     public var description: String {
         "\(mnemonic) \(operandsString)"
     }
-
-    /// Name of an instruction in a string.
-    var name: String {
-        String(cString: cs_insn_name(mgr.cs.handle, insn.id))
-    }
 }
 
 // Instruction Memory Management

@@ -104,9 +104,17 @@ public struct CapstoneEnumsGenerator {
         )
         try emit(architectureTable, to: outputDirectory.appendingPathComponent("Architecture+Generated.swift"))
 
+        let declaredSuffixes = Set(parsedArchitectures.map(\.cSuffix))
         for architecture in architectures {
             let headerURL = includeDirectory.appendingPathComponent(architecture.header)
-            guard FileManager.default.fileExists(atPath: headerURL.path) else { continue }
+            guard FileManager.default.fileExists(atPath: headerURL.path) else {
+                // Skipping an architecture capstone.h has would leave its generated
+                // files as they were, and --check would call them current.
+                if declaredSuffixes.contains(architecture.cPrefix) {
+                    throw GenerationError.missingHeader(architecture.header)
+                }
+                continue
+            }
 
             var enums = try parseEnums(from: headerURL, configuration: architecture, moduleCache: moduleCache)
             let macroOptionSets = try parseMacroOptionSets(from: headerURL, configuration: architecture)
