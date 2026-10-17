@@ -111,6 +111,15 @@ let defaultTrait = Trait.default(enabledTraits: adaptedArchitectures)
 
 let package = Package(
     name: "swift-capstone",
+    // RawSpan, which the decoding entry points take, needs macOS 10.14.4 or the
+    // matching releases; these are the two downstream packages' minimums.
+    platforms: [
+        .macOS(.v10_15),
+        .iOS(.v13),
+        .tvOS(.v13),
+        .watchOS(.v6),
+        .visionOS(.v1),
+    ],
     products: [
         .library(
             name: "Capstone",

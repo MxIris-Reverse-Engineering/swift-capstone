@@ -1,12 +1,12 @@
 # Draft - 用新 Swift 特性重写封装层：按架构泛型的不可复制引擎
 
-- **状态**: Accepted
+- **状态**: In Progress
 - **作者**: JH
 - **创建日期**: 2026-10-17
 - **最后更新**: 2026-10-17
 - **所属愿景**: 无
 - **关联提案**: [0001 - 适配 capstone v6](0001-adapt-capstone-v6.md)、[0002 - 在现有 API 上补齐 v6 新增的指令信息](0002-expose-v6-instruction-information.md)
-- **实现分支 / PR**: 待定
+- **实现分支 / PR**: `feat/rewrite-modern-swift`
 - **配套文档**: 待定 —— 落地时登记实现说明 / 使用指南的链接
 
 ## 摘要
@@ -462,3 +462,7 @@ README 重写（用法、版本与 capstone 的对应、Apple 专有指令模式
 | 2026-10-17 | 更正：公开 API 不用 typed throws | 最初设想公开 API 写 `throws(CapstoneError)`；按 SE-0413 的建议与项目的 modernize-swift 规则，只在透传处使用。 |
 | 2026-10-17 | 用户确认共识 | 第三轮后列出全部决定与自定的假设，用户确认，开始写本提案。 |
 | 2026-10-17 | Draft → Accepted | 用户批准：「可以，按你说的开工」。 |
+| 2026-10-17 | Accepted → In Progress | 在本地分支 `feat/rewrite-modern-swift` 上按落地步骤逐步提交；`next` 停在提案提交处，合并与推送等用户确认。 |
+| 2026-10-17 | 步骤 1：最低平台提前到这一步声明 | 入口一收 `RawSpan` 就要求 macOS 10.14.4 以上，不声明就得逐处标 `@available`。按两个下游的最低版本声明 macOS 10.15、iOS 13、tvOS 13、watchOS 6、visionOS 1；步骤 6 只剩语言模式与严格内存安全。 |
+| 2026-10-17 | 步骤 1：闭包里再次用同一引擎解码时，另用一块缓冲 | 提案没有考虑这种用法：闭包借用着引擎，可以在里面再调 `forEachInstruction` 或 `decode`，内层解码会覆盖外层视图读的那块缓冲。改为由引擎记录是否正在解码，嵌套的一轮临时 `cs_malloc` 一块、用完释放。测试先在去掉这层保护时确认失败。 |
+| 2026-10-17 | 步骤 1：视图的 `bytes` 取自输入，不取 capstone 的副本 | `cs_insn.bytes` 只有 24 字节，skipdata 回调要求跳过更多时，数据条目的副本是截断的，`size` 也被截到 24。引擎按每次调用前后剩余字节数之差，从输入里切出这一条覆盖的字节。 |
