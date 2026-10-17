@@ -6,7 +6,7 @@
 - Examples such as `Examples/cstool` show end-to-end usage; keep them building with the main package.
 - Static docs under `docs/` are generated via swift-doc; avoid hand-editing them.
 - Generated sources carry an `AUTO-GENERATED` header — `*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift`. Change `Sources/CapstoneEnumsGenerator` and regenerate instead of editing them.
-- Project documentation lives in `Documentations/`; evolution proposals in `Documentations/Evolutions/`.
+- Project documentation lives in `Documentations/`; evolution proposals in `Documentations/Evolutions/`. Read `Documentations/Internal/CodeGeneration.md` before changing the generator or adapting another architecture.
 
 ## Build, Test, and Development Commands
 - No prerequisite install: capstone is a Swift package dependency built from source. Set `USING_LOCAL_DEPENDENCIES=1` to resolve it from a sibling checkout instead of the remote.

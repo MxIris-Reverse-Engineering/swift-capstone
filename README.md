@@ -9,11 +9,11 @@ built from source.
 
 ## Status
 
-The v6 adaptation is in progress and lands one architecture at a time. **AArch64
-is adapted; the other architectures are not yet.** Their traits are still
-declared, but enabling one gets you a wrapper still written against capstone v5,
-which will not compile. See
-[the adaptation proposal](Documentations/Evolutions/draft-adapt-capstone-v6.md).
+The v6 adaptation lands one architecture at a time. **AArch64 is adapted; the
+other architectures are not yet.** Their traits are still declared, but enabling
+one gets you a wrapper still written against capstone v5, which will not
+compile. See
+[the adaptation proposal](Documentations/Evolutions/0001-adapt-capstone-v6.md).
 
 capstone v6 renames things this wrapper follows: `Arm64*` is now `AArch64*`,
 `Sysz*` is now `SystemZ*`, and `Architecture.arm64` is `Architecture.aarch64`.

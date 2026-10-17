@@ -97,7 +97,7 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
 ///
 /// AArch64 is adapted; the rest still carry v5 wrappers.
 ///
-/// See Documentations/Evolutions/draft-adapt-capstone-v6.md.
+/// See Documentations/Evolutions/0001-adapt-capstone-v6.md.
 let adaptedArchitectures: Set<String> = [
     "AARCH64",
 ]
