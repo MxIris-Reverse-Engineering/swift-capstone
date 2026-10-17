@@ -9,4 +9,4 @@
 |---|------|------|
 | 0001 | [适配 capstone v6：AArch64 优先，扩大代码生成覆盖面](0001-adapt-capstone-v6.md) | Implemented |
 | 0002 | [在现有 API 上补齐 v6 新增的指令信息](0002-expose-v6-instruction-information.md) | Implemented |
-| draft | [用新 Swift 特性重写封装层：按架构泛型的不可复制引擎](draft-rewrite-with-modern-swift.md) | In Progress |
+| 0003 | [用新 Swift 特性重写封装层：按架构泛型的不可复制引擎](0003-rewrite-with-modern-swift.md) | Implemented |

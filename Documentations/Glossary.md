@@ -44,6 +44,26 @@
 - **主要出现在**：`Package.swift`、`Sources/Capstone/Architecture.swift`、`Sources/Capstone/DisassemblyArchitecture.swift`
 - **延伸阅读**：[实现说明：代码生成](Internal/CodeGeneration.md)
 
+### Data entry
+
+数据条目：引擎带 `SkipData` 创建时，解不出指令的那段字节作为一个条目出现：`isData` 为真，助记符默认是
+`.byte`，没有指令标识、别名与任何详情。只有 skipdata 会产生它；判断它在 capstone 里只能看 `id == 0`。
+
+- **主要出现在**：`Sources/Capstone/InstructionView.swift`、`Sources/Capstone/DisassemblerOptions.swift`
+- **延伸阅读**：[实现说明：解码引擎](Internal/Disassembler.md)
+
+### Instruction view and snapshot
+
+取指令结果的两种形态，彼此对应：
+
+- **视图（instruction view）**：`InstructionView`，`forEachInstruction` 借给闭包的一条指令。直接读引擎的
+  缓冲，不拷贝；不可复制，带不出闭包，下一条指令会覆盖它读的内存。
+- **快照（snapshot）**：架构的 `Instruction` 类型，例如 `AArch64.Instruction`，由视图拷出全部字段而成。
+  `Sendable` 的值，不引用引擎，可以保存、跨任务传递；`decode` 返回它。
+
+- **主要出现在**：`Sources/Capstone/InstructionView.swift`、`Sources/Capstone/AArch64.swift`
+- **延伸阅读**：[实现说明：解码引擎](Internal/Disassembler.md)、DocC 文章 Streaming and Snapshots
+
 ### Semantic configuration
 
 语义配置：写在 `ArchitectureConfig.all` 里、生成器从头文件读不出来的那部分知识，主要是「操作数的哪个

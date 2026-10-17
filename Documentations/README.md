@@ -16,7 +16,7 @@ swift-capstone 的项目文档。每新增或重命名一份文档，都要在�
 |------|------|--------|
 | [0001 - 适配 capstone v6](Evolutions/0001-adapt-capstone-v6.md) | Implemented | 迁到 capstone v6，公开 API 改用 v6 命名，把架构表与操作数访问器交给生成器，AArch64 优先落地 |
 | [0002 - 在现有 API 上补齐 v6 新增的指令信息](Evolutions/0002-expose-v6-instruction-information.md) | Implemented | 以纯新增方式暴露别名、非法标记、按真实指令填详情、前后变址写回、Apple 专有指令模式与 Sendable |
-| [用新 Swift 特性重写封装层](Evolutions/draft-rewrite-with-modern-swift.md) | In Progress | 按架构泛型的不可复制引擎 `Disassembler<AArch64>`，流式视图与 Sendable 快照两种结果，发 7.0.0 |
+| [0003 - 用新 Swift 特性重写封装层](Evolutions/0003-rewrite-with-modern-swift.md) | Implemented | 按架构泛型的不可复制引擎 `Disassembler<AArch64>`，流式视图与 Sendable 快照两种结果，发 7.0.0 |
 
 ## Internal
 
@@ -24,5 +24,6 @@ swift-capstone 的项目文档。每新增或重命名一份文档，都要在�
 
 | 文档 | 一句话 |
 |------|--------|
+| [实现说明：解码引擎](Internal/Disassembler.md) | `Disassembler` 的缓冲复用与嵌套解码、capstone 残留标志与 skipdata 偏移的处理、数据条目、`@safe` / `unsafe` 的边界、性能与已知降级 |
 | [实现说明：代码生成](Internal/CodeGeneration.md) | 生成器生成什么、语义配置怎么写、各类报错的含义、适配下一个架构的步骤，以及与提案 0001 的差异 |
 | [代码审查已裁决清单](Internal/ReviewVerdicts.md) | 审查中判为误报、不修或推迟的发现及理由；每次审查先对照它 |

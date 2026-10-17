@@ -1,13 +1,13 @@
-# Draft - 用新 Swift 特性重写封装层：按架构泛型的不可复制引擎
+# 0003 - 用新 Swift 特性重写封装层：按架构泛型的不可复制引擎
 
-- **状态**: In Progress
+- **状态**: Implemented
 - **作者**: JH
 - **创建日期**: 2026-10-17
 - **最后更新**: 2026-10-17
 - **所属愿景**: 无
 - **关联提案**: [0001 - 适配 capstone v6](0001-adapt-capstone-v6.md)、[0002 - 在现有 API 上补齐 v6 新增的指令信息](0002-expose-v6-instruction-information.md)
 - **实现分支 / PR**: `feat/rewrite-modern-swift`
-- **配套文档**: 待定 —— 落地时登记实现说明 / 使用指南的链接
+- **配套文档**: [实现说明：解码引擎](../Internal/Disassembler.md)、[实现说明：代码生成](../Internal/CodeGeneration.md)（更新）、DocC 文章 [Streaming and Snapshots](../../Sources/Capstone/Capstone.docc/StreamingAndSnapshots.md) 与 [Migrating from Version 6](../../Sources/Capstone/Capstone.docc/MigratingFromVersion6.md)
 
 ## 摘要
 
@@ -485,3 +485,6 @@ README 重写（用法、版本与 capstone 的对应、Apple 专有指令模式
 | 2026-10-17 | 步骤 7：`Architecture` 加 `CaseIterable` | `Examples/cstool` 的 `--version` 要列出编入的架构；旧版靠试探原始值。生成器给枚举加上这个遵循。 |
 | 2026-10-17 | 步骤 7：文档、示例与 `docs/` | README 重写；DocC 目录含首页与两篇文章：「Streaming and Snapshots」写视图不能留存、两种取法怎么选、数据条目、一任务一引擎，「Migrating from Version 6」给出新旧对照与行为变化。所有代码片段在临时探针测试里编译运行过。`docs/`（swift-doc 生成、停在 v5 命名）删除。`Examples/cstool` 改为依赖本仓库、只做 AArch64，参数与 capstone 的 cstool 一致（`-d`、`-r`、`-a`、`-s`、`-u`、`+apple`），测试改用 swift-testing、直接测格式化函数。 |
 | 2026-10-17 | 步骤 8：性能对比 | 方法：同一组 10 万条指令（18 种 AArch64 指令轮流重复），release，Swift 6.4.2，机器负载约 10。两个一次性基准程序分别链接 `next`（6.x API）与本分支，capstone 都用同一个本地 fork；不留常驻基准 target。耗时取 7 次运行的中位数、做两轮：6.x「`disassemble` 后读操作数与助记符」1.56–1.57 µs/条；7.0 流式（`forEachInstruction` 里读同样的东西）0.93 µs/条，快约 1.7 倍；7.0 快照（`decode` 后读同样的东西）1.55–1.57 µs/条，与 6.x 相当——快照把读写寄存器、分组等全部算好拷出，做的事比 6.x 这条路径多；直接调 C（`cs_disasm_iter` 读操作数个数与助记符）0.78 µs/条，流式比它慢约 19%。内存：在新进程里只解一次、持有结果时量物理占用的增量，6.x 301 MiB（约 3.1 KB/条），7.0 快照 61 MiB（约 0.6 KB/条），流式不持有任何东西；`/usr/bin/time -l` 的峰值（6.x 304 MiB、7.0 63 MiB）与之相符。第一次测量得到 51 / 29 MiB，此后五次都无法复现、也与 `time -l` 不符，弃用。 |
+| 2026-10-17 | 步骤 9：两个下游在本地依赖下迁完 | 都在各自的本地分支 `feature/swift-capstone-7` 上提交，没有合入它们的 `next` / `main`。依赖都用 `swift package edit` 只在 agent 的构建目录里指向本地，`Package.swift` 与锁文件不动：MachOSwiftSection `.worktrees/` 下的链接由所有 worktree 共享，加一个 `swift-capstone` 链接会让它们的本地构建全部切到 7.0 API。**MachOSwiftSection**（`98d6fc3d`）：只改 `CapstoneThunkDecoder.swift`，在 `forEachInstruction` 里直接转成自己的 `ThunkInstruction`，别名看 `alias`、写回看 `writesBackBaseRegister`，对外签名不变；thunk 分析 82 个测试、间接用到解码器的 52 个测试、全量 `swift test --skip IntegrationTests` 2450 个测试全部通过。**swift-decompiler**（`cb1f7a7`）：`lowLevelIR(from:)`、`decompile(_:)` 与提升器改收 `[AArch64.Instruction]`；21 对别名由「编号 + 助记符」改为「编号 + 别名编号」配对，仍成对匹配，以免 `lslv` 这类同样显示成 `lsl` 的指令改变输出；`ARM64Register` 去掉 `@unchecked Sendable`；13 个测试的三行合成一行。核心 678 个、IDA 适配器 205 个测试通过；适配器的 `../..` 按目录名认包，在同名临时副本里跑。原始退出码都是 0。两边的依赖下限都等 7.0.0 发布后再改，在此之前那两个分支不能合入。 |
+| 2026-10-17 | 收尾判断：写实现说明与两篇 DocC 文章，登记三个术语 | 引擎里有几处代码里看不出原因的决定（嵌套解码另用缓冲、每条指令前清标志、`bytes` 取自输入、skipdata 偏移换算、数据条目不读详情、`@safe` / `unsafe` 的边界），写成[实现说明：解码引擎](../Internal/Disassembler.md)；生成器的变化更新进[实现说明：代码生成](../Internal/CodeGeneration.md)。调用方的契约（视图不能留存、流式与快照怎么选、数据条目、一任务一引擎）与迁移对照写成 DocC 文章，面向公众、英文，见步骤 7。「视图」「快照」「数据条目」在文档里反复出现，登记进[术语表](../Glossary.md)。 |
+| 2026-10-17 | In Progress → Implemented，编号 0003 | 步骤 1 到 9 都已完成，提交在 `feat/rewrite-modern-swift` 上。编号取各共享分支上的最大编号（本地 `next` 的 0002，远端尚无编号）加一；本提交就是落地提交，`next` 快进到本分支时随之落地。之后的事都要推送、由用户决定：给 capstone fork 打新版本、推送 `next`、打 swift-capstone 7.0.0 与 `v6` 分支上的 6.x 版本，再把两个下游的依赖改成 `from: "7.0.0"`、更新锁文件后合入。 |

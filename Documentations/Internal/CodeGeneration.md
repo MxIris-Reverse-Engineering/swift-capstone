@@ -9,7 +9,7 @@
 东西。生成物有三层：
 
 - 架构表 `Architecture+Generated.swift`：`Architecture` 枚举。7.0.0 之前它还生成各架构的 `Instruction` 子类与
-  按架构取类的分发，随旧 API 一起删除（见[用新特性重写的提案](../Evolutions/draft-rewrite-with-modern-swift.md)）。
+  按架构取类的分发，随旧 API 一起删除（见[0003 - 用新 Swift 特性重写封装层](../Evolutions/0003-rewrite-with-modern-swift.md)）。
 - 各架构的枚举 `*Enums.swift`。
 - 操作数访问器 `*+Operands.swift`，目前只有 AArch64 有。
 
@@ -180,6 +180,6 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 ## 延伸阅读
 
 - [0001 - 适配 capstone v6](../Evolutions/0001-adapt-capstone-v6.md)
-- [用新特性重写封装层](../Evolutions/draft-rewrite-with-modern-swift.md)
+- [0003 - 用新 Swift 特性重写封装层](../Evolutions/0003-rewrite-with-modern-swift.md)
 - [术语表](../Glossary.md)
 - [代码审查已裁决清单](ReviewVerdicts.md)

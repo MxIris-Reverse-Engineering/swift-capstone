@@ -52,7 +52,7 @@
   `fatalError`，文档已注明。
 - **理由**：它们不抛错，返回值也不是可选类型，要不 trap 就只能改签名，属于破坏性 API 改动。重写时引擎按架构
   类型参数化，没有封装的架构根本没有类型可写，这个问题随之消失。
-- **现状**（2026-10-17）：[重写提案](../Evolutions/draft-rewrite-with-modern-swift.md)删除了这三个属性与
+- **现状**（2026-10-17）：[重写提案 0003](../Evolutions/0003-rewrite-with-modern-swift.md)删除了这三个属性与
   `Architecture.wrapped`。引擎按架构类型参数化，没有封装的架构写不出类型参数，查询编入与否用不会 trap 的
   `Architecture.isCompiledIn`。
 - **何时重新审视**：不再需要，留作记录。
