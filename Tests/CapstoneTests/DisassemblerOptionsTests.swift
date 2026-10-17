@@ -170,17 +170,20 @@ struct DisassemblerOptionsTests {
         #expect(offsets == [0, 4])
     }
 
-    /// capstone replaces as many leading characters of the printed mnemonic as the
-    /// instruction's own name has (`str_replace` in cs.c assumes the mnemonic starts
-    /// with that name), so an alias of the instruction gets cut too: `mov` is three
-    /// characters, like `orr`, and all three go.
-    @Test("a custom mnemonic replaces the start of the printed mnemonic, an alias's too")
+    /// capstone replaces the instruction's name where the printed mnemonic starts
+    /// with it. Before capstone 6.0.101 it replaced as many characters regardless,
+    /// and `mov`, three characters like `orr`, became `or`.
+    @Test("a custom mnemonic replaces the instruction's own name and leaves its aliases alone")
     func customMnemonics() throws {
-        let disassembler = try Disassembler<AArch64>(mnemonics: [.add: "plus", .orr: "or"])
-        // mov x0, x1 is printed as an alias of orr.
-        let instructions = disassembler.decode(Self.addition + [0xE0, 0x03, 0x01, 0xAA], address: 0x1000)
+        let disassembler = try Disassembler<AArch64>(mnemonics: [.add: "plus", .orr: "or", .b: "jump"])
+        // orr x0, x1, x2; mov x0, x1, printed as an alias of orr; b.eq 0x100c,
+        // whose identifier is that of b.
+        let instructions = disassembler.decode(
+            Self.addition + [0x20, 0x00, 0x02, 0xAA, 0xE0, 0x03, 0x01, 0xAA, 0x00, 0x00, 0x00, 0x54],
+            address: 0x1000
+        )
 
-        #expect(instructions.map(\.description) == ["plus x2, x3, x4", "or x0, x1"])
+        #expect(instructions.map(\.description) == ["plus x2, x3, x4", "or x0, x1, x2", "mov x0, x1", "jump.eq 0x100c"])
         #expect(instructions.first?.identifier == .add)
     }
 

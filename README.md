@@ -26,8 +26,8 @@ adapted one at a time; see the [evolution proposals](Documentations/Evolutions/R
 
 | swift-capstone | capstone | Swift |
 |----------------|----------|-------|
-| 7.x | 6.0, from the [MxIris fork](https://github.com/MxIris-Reverse-Engineering/capstone) | 6.2 or later |
-| 6.x | 6.0, from the MxIris fork | 6.2 or later |
+| 7.x | 6.0, from the [MxIris fork](https://github.com/MxIris-Reverse-Engineering/capstone), 6.0.101 or later | 6.2 or later |
+| 6.x | 6.0, from the MxIris fork, 6.0.100 or later (6.0.101 from 6.1) | 6.2 or later |
 
 Version 7 replaced the class-based API of version 6. To move code over, see
 [Migrating from Version 6](Sources/Capstone/Capstone.docc/MigratingFromVersion6.md).

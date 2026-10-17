@@ -38,9 +38,10 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
     ///     stopping at them.
     ///   - mnemonics: Mnemonics to print instead of capstone's, keyed by
     ///     instruction; capstone keeps at most 31 bytes of each. capstone replaces
-    ///     as many leading characters of the printed mnemonic as the instruction's
-    ///     name has, which also cuts into the instruction's aliases: with
-    ///     `[.orr: "or"]`, `mov x0, x1`, an alias of `orr`, prints as `or x0, x1`.
+    ///     the instruction's name at the start of the printed mnemonic, so a suffix
+    ///     stays, `b.eq` becoming `jump.eq` for `[.b: "jump"]`, and an instruction
+    ///     printed as an alias keeps the alias's name: with `[.orr: "or"]`,
+    ///     `mov x0, x1`, an alias of `orr`, still prints as `mov`.
     /// - Throws: `CapstoneError.unsupportedArchitecture` when capstone was built
     ///   without the architecture, `.invalidMode` when capstone rejects the mode,
     ///   `.invalidOption` when it rejects an option, and `.outOfMemory`.
@@ -139,11 +140,6 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
             while limit.map({ decodedCount < $0 }) ?? true {
                 let entryStart = unsafe position
                 let remainingBefore = remaining
-                // capstone sets these when an instruction has them and never clears
-                // them, so in a reused buffer they would carry over from an earlier one.
-                unsafe instruction.pointee.illegal = false
-                unsafe instruction.pointee.is_alias = false
-                unsafe instruction.pointee.alias_id = 0
                 guard unsafe cs_disasm_iter(handle, &position, &remaining, &nextAddress, instruction) else {
                     break
                 }

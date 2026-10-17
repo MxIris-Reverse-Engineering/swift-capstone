@@ -40,8 +40,9 @@ struct InstructionInformationTests {
         #expect(try withFirstInstruction(bytes) { $0.isIllegal } == isIllegal)
     }
 
-    /// capstone sets the flag on an illegal instruction and never clears it, and the
-    /// engine decodes every instruction into the same buffer.
+    /// The engine decodes every instruction into the same buffer. Before capstone
+    /// 6.0.101, `cs_disasm_iter` never cleared the flag, so it stuck to every
+    /// instruction after the first illegal one.
     @Test("an instruction after an illegal one is not illegal")
     func illegalDoesNotCarryOver() throws {
         let disassembler = try Disassembler<AArch64>()

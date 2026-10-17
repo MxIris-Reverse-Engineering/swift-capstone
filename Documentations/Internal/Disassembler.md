@@ -27,11 +27,13 @@
 一块、结束时释放；out of memory 时 `fatalError`，因为解码入口不抛自己的错误。`DisassemblerTests` 的嵌套
 用例在去掉这层保护时会失败。
 
-### 每条指令解码前清掉三个标志
+### 复用缓冲依赖 capstone 6.0.101
 
 capstone 只在指令非法时置 `cs_insn.illegal`、从不清零，`is_alias` / `alias_id` 也只在部分路径上写。
 `cs_disasm` 每批用清零的新内存，所以旧 API 碰不到；`cs_disasm_iter` 复用缓冲，一条非法指令之后的每条都会
-报非法。引擎在每次调用前把这三个字段清零。这是上游缺陷，正确的修法在 `cs_disasm_iter` 里，fork 没有改。
+报非法。开发时引擎曾在每次调用前自己清零这几个字段；fork 6.0.101 在 `cs_disasm_iter` 里修好了，本包要求
+这个版本，引擎就不再自己清。`InstructionInformationTests` 里「非法指令之后的指令不是非法」的用例守着它：
+换回更早的 capstone 会失败。
 
 ### 视图的 `bytes` 取自输入
 
@@ -84,7 +86,7 @@ Sources/Capstone/Utils.swift                   # 枚举转换，读 C 定长数�
 
 1. 初始化：`cs_open` → 设语法、详情形式、无符号立即数、skipdata、自定义助记符 → `cs_malloc`。任何一步失败都
    `cs_close` 后抛 `CapstoneError`。
-2. `forEachInstruction`：选缓冲（嵌套时临时分配）→ 取输入的不安全字节视图、记下输入起点 → 循环：清三个标志、
+2. `forEachInstruction`：选缓冲（嵌套时临时分配）→ 取输入的不安全字节视图、记下输入起点 → 循环：
    `cs_disasm_iter`、按剩余字节数之差切出本条字节、把视图借给闭包。返回解掉的字节数。
 3. `decode`：在 `forEachInstruction` 的闭包里对每个视图调 `Architecture.snapshot(of:)`。
 
@@ -100,16 +102,14 @@ Sources/Capstone/Utils.swift                   # 枚举转换，读 C 定长数�
 
 - `Tests/CapstoneTests`：`DisassemblerTests`（流式、limit、空输入、闭包抛错、多引擎、嵌套、存进类属性）、
   `DisassemblerOptionsTests`（各选项与 skipdata）、`AArch64Tests`、`InstructionInformationTests`、
-  `SnapshotTests`、`SendableTests`（编译期）、`ArchitectureTests`。嵌套缓冲与标志清零各自在去掉保护时确认过
-  会失败。
+  `SnapshotTests`、`SendableTests`（编译期）、`ArchitectureTests`。嵌套缓冲的用例在去掉保护时确认过会失败；
+  非法标记的用例在 capstone 6.0.100 上失败、6.0.101 上通过。
 - 默认 trait 与 `--traits AARCH64,SH` 两种配置，Swift 6.4 与 6.3 两个编译器；`swift build --enable-all-traits`。
 - 性能：同一组 10 万条指令，流式 0.93 µs/条（直接调 C 0.78 µs），快照 1.55 µs/条、常驻 61 MiB；6.x 是
   1.57 µs/条、301 MiB。方法见提案决策日志。
 
 ## 已知降级
 
-- **自定义助记符会波及别名。** capstone 的 `str_replace` 假定打印出的助记符以指令名开头，直接替换等长前缀：
-  给 `orr` 定制助记符，它的别名 `mov x0, x1` 会印成 `or x0, x1`。文档写明，fork 未改。
 - **`cas` 一族多报一个写寄存器。** 见[已裁决清单](ReviewVerdicts.md)。
 - **生成文档要用旧构建系统。** 默认后端会给 `Ccapstone` 抽取符号而失败；`--build-system native` 在 Swift 6.4
   里已标为废弃。
