@@ -142,6 +142,38 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
         let slice = code[...]
         return try forEachInstruction(in: slice.span.bytes, address: address, limit: limit, body)
     }
+
+    /// Decodes `code` into values that no longer need the engine.
+    ///
+    /// Decoding stops at the end of `code`, at the first bytes that do not decode,
+    /// or after `limit` instructions. Each instruction is copied in full, its
+    /// operands and registers included; to read only a field or two, or to stop
+    /// partway, `forEachInstruction(in:address:limit:_:)` avoids the copies.
+    ///
+    /// - Parameters:
+    ///   - code: The machine code.
+    ///   - address: The address of the first byte of `code`.
+    ///   - limit: The most instructions to decode; `nil` for no limit.
+    public func decode(_ code: RawSpan, address: UInt64, limit: Int? = nil) -> [Architecture.Instruction] {
+        var instructions: [Architecture.Instruction] = []
+        forEachInstruction(in: code, address: address, limit: limit) { instruction in
+            instructions.append(Architecture.snapshot(of: instruction))
+        }
+        return instructions
+    }
+
+    /// Decodes `code` into values that no longer need the engine; see
+    /// `decode(_:address:limit:)` taking a `RawSpan`.
+    public func decode(_ code: Data, address: UInt64, limit: Int? = nil) -> [Architecture.Instruction] {
+        decode(code.bytes, address: address, limit: limit)
+    }
+
+    /// Decodes `code` into values that no longer need the engine; see
+    /// `decode(_:address:limit:)` taking a `RawSpan`.
+    public func decode(_ code: [UInt8], address: UInt64, limit: Int? = nil) -> [Architecture.Instruction] {
+        let slice = code[...]
+        return decode(slice.span.bytes, address: address, limit: limit)
+    }
 }
 
 @available(*, unavailable, message: "A Disassembler decodes into a buffer it reuses; give each task its own.")

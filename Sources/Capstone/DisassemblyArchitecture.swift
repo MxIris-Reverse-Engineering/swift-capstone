@@ -11,6 +11,13 @@ public protocol DisassemblyArchitecture {
     associatedtype InstructionIdentifier: RawRepresentable, Hashable, Sendable
         where InstructionIdentifier.RawValue == UInt32
 
+    /// A self-contained copy of one decoded instruction, what `Disassembler.decode`
+    /// returns.
+    associatedtype Instruction: Sendable
+
     /// The `cs_arch` member capstone knows this architecture by.
     static var architecture: Architecture { get }
+
+    /// Copies what the view exposes into a value that no longer needs the engine.
+    static func snapshot(of instruction: borrowing InstructionView<Self>) -> Instruction
 }

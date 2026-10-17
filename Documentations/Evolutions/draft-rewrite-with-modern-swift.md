@@ -468,3 +468,4 @@ README 重写（用法、版本与 capstone 的对应、Apple 专有指令模式
 | 2026-10-17 | 步骤 1：视图的 `bytes` 取自输入，不取 capstone 的副本 | `cs_insn.bytes` 只有 24 字节，skipdata 回调要求跳过更多时，数据条目的副本是截断的，`size` 也被截到 24。引擎按每次调用前后剩余字节数之差，从输入里切出这一条覆盖的字节。 |
 | 2026-10-17 | 步骤 2：每条指令解码前清掉 `illegal`、`is_alias`、`alias_id` | capstone 只在指令非法时置 `illegal`、从不清零，`cs_disasm_iter` 复用缓冲时它会沿用到后面每一条：`ldr x1, [x1, #8]!` 之后的合法指令也报非法。`cs_disasm` 每批用 `calloc` 的新内存，所以旧 API 没暴露这个问题。引擎在每次调用前清零这三个字段；测试在去掉清零时确认失败。上游的修法应在 `cs_disasm_iter` 里，未在 fork 中改动。 |
 | 2026-10-17 | 步骤 2：`AArch64OperandValue` 改为继承 `Sendable` | 提案 0002 为保持纯新增没加；7.0.0 本就是破坏性版本，遵循者都已是 `Sendable`，加上后 `value` 取到的存在类型可以直接跨并发域。操作数里保存 C 结构体的属性从 `op` 改名为 `capstoneOperand`，生成器同步。 |
+| 2026-10-17 | 步骤 3：快照加 `description` | 旧的 `Instruction` 类有 `description`（助记符加操作数文本），调试与日志常用；快照沿用，操作数为空时不留尾随空格。快照的初始化器不公开：操作数包着 C 结构体，调用方本来也造不出来。 |
