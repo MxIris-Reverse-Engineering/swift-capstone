@@ -104,7 +104,7 @@ Sources/Capstone/Architecture+Generated.swift                # 生成：架构�
 Sources/Capstone/*Enums.swift                                # 生成：各架构枚举
 Sources/Capstone/AArch64+Operands.swift                      # 生成：AArch64 操作数访问器
 Sources/Capstone/Architecture.swift                          # 手写：架构表里推导不出来的部分
-Sources/Capstone/AArch64.swift                               # 手写：Operand 的形状、包装 C 结构体的值类型、sysop 分派
+Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.Operand 的形状、包装 C 结构体的值类型、sysop 分派
 ```
 
 ## 核心流程
@@ -119,8 +119,9 @@ Sources/Capstone/AArch64.swift                               # 手写：Operand 
 
 ## 适配下一个架构要做什么
 
-1. 在该架构的 `ArchitectureConfig` 里加 `operandConfiguration`：操作数结构体名、访问器列表（名字、覆盖哪些
-   操作数类型、值从哪个 union 成员取）、`unexposedTypes`（每项写明为什么不暴露）。
+1. 在该架构的 `ArchitectureConfig` 里加 `operandConfiguration`：操作数结构体名、访问器扩展到的 Swift 类型
+   （`swiftOperandType`，例如 `AArch64.Operand`，它把 C 结构体存在 `capstoneOperand` 属性里）、访问器列表
+   （名字、覆盖哪些操作数类型、值从哪个 union 成员取）、`unexposedTypes`（每项写明为什么不暴露）。
 2. 运行生成器，按报错补配置，直到双向检查都通过。
 3. 手写生成器推不出来的部分：`Operand` 的形状、包装 C 结构体的 Swift 值类型，以及 sysop 这种不规则的分派。
 4. 用真实指令编码写断言式测试，覆盖每一种操作数类型；把 `Tests/CapstoneTests/Legacy/` 里该架构的旧测试迁回。

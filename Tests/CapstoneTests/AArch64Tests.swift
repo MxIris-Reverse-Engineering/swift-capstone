@@ -1,25 +1,19 @@
 #if CAPSTONE_HAS_AARCH64
-import Foundation
 import Testing
-@testable import Capstone
+import Capstone
 
 /// Expected values come from the AArch64 instruction encodings themselves, which
 /// are fixed by the architecture — never from re-running the wrapper.
 @Suite("AArch64")
 struct AArch64Tests {
-    private func disassemble(_ bytes: [UInt8], address: UInt64 = 0x1000) throws -> [AArch64Instruction] {
-        let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
-        try capstone.set(option: DisassemblyOption.detail(value: true))
-        return try capstone.disassemble(code: Data(bytes), address: address)
-    }
-
     @Test("register operands carry their register and access mode")
     func registerOperands() throws {
         // add x2, x3, x4
-        let instruction = try #require(try disassemble([0x62, 0x00, 0x04, 0x8B]).first)
-        #expect(instruction.mnemonic == "add")
+        let (mnemonic, operands) = try withFirstInstruction([0x62, 0x00, 0x04, 0x8B]) {
+            ($0.mnemonic, $0.operands)
+        }
+        #expect(mnemonic == "add")
 
-        let operands = instruction.operands
         try #require(operands.count == 3)
         #expect(operands[0].register == .x2)
         #expect(operands[0].access == .write)
@@ -28,11 +22,19 @@ struct AArch64Tests {
         #expect(operands[2].register == .x4)
     }
 
+    @Test("operands can be read one at a time")
+    func operandAtIndex() throws {
+        // add x2, x3, x4
+        let registers = try withFirstInstruction([0x62, 0x00, 0x04, 0x8B]) { instruction in
+            (0 ..< instruction.operandCount).map { instruction.operand(at: $0).register }
+        }
+        #expect(registers == [.x2, .x3, .x4])
+    }
+
     @Test("a memory operand reports base and displacement")
     func memoryOperand() throws {
         // ldr x0, [x1, #8]
-        let instruction = try #require(try disassemble([0x20, 0x04, 0x40, 0xF9]).first)
-        let memory = try #require(instruction.operands.last?.memory)
+        let memory = try #require(try withFirstInstruction([0x20, 0x04, 0x40, 0xF9]) { $0.operands.last?.memory })
 
         #expect(memory.base == .x1)
         #expect(memory.index == nil)
@@ -43,8 +45,8 @@ struct AArch64Tests {
     @Test("an immediate operand reports its value")
     func immediateOperand() throws {
         // cmp x5, #1
-        let instruction = try #require(try disassemble([0xBF, 0x04, 0x00, 0xF1]).first)
-        #expect(instruction.operands.last?.immediateValue == 1)
+        let immediate = try withFirstInstruction([0xBF, 0x04, 0x00, 0xF1]) { $0.operands.last?.immediateValue }
+        #expect(immediate == 1)
     }
 
     /// v6 replaced v5's four separate system-operand fields with one `sysop`
@@ -63,8 +65,8 @@ struct AArch64Tests {
         ([0x00, 0x78, 0x0C, 0xD5], .sysalias, "at"),
     ])
     func systemOperands(bytes: [UInt8], operandType: AArch64Op, expectedCase: String) throws {
-        let instruction = try #require(try disassemble(bytes).first)
-        let operand = try #require(instruction.operands.first { $0.type == operandType })
+        let operands = try withFirstInstruction(bytes) { $0.operands }
+        let operand = try #require(operands.first { $0.type == operandType })
         let systemOperand = try #require(operand.systemOperand)
 
         let described = String(describing: systemOperand.value)
@@ -77,8 +79,8 @@ struct AArch64Tests {
     @Test("mrs exposes its system register through the convenience accessor")
     func systemRegisterAccessor() throws {
         // mrs x0, nzcv
-        let instruction = try #require(try disassemble([0x00, 0x42, 0x3B, 0xD5]).first)
-        let operand = try #require(instruction.operands.first { $0.type == .sysreg })
+        let operands = try withFirstInstruction([0x00, 0x42, 0x3B, 0xD5]) { $0.operands }
+        let operand = try #require(operands.first { $0.type == .sysreg })
         // The kind lives in sysop.sub_type, not in the operand type.
         #expect(operand.systemOperand?.subType == .regMrs)
         #expect(operand.systemRegister == .nzcv)
@@ -86,16 +88,20 @@ struct AArch64Tests {
 
     @Test("every operand of a decoded instruction produces a value")
     func operandsAlwaysProduceValues() throws {
-        let instructions = try disassemble([
+        let disassembler = try Disassembler<AArch64>()
+        var decoded: [(mnemonic: String, operands: [AArch64.Operand])] = []
+        disassembler.forEachInstruction(in: [
             0x20, 0x04, 0x40, 0xF9, // ldr x0, [x1, #8]
             0x62, 0x00, 0x04, 0x8B, // add x2, x3, x4
             0xBF, 0x04, 0x00, 0xF1, // cmp x5, #1
             0x00, 0x42, 0x3B, 0xD5, // mrs x0, nzcv
             0x00, 0x00, 0x80, 0xF9, // prfm pldl1keep, [x0]
-        ])
-        try #require(instructions.count == 5)
+        ] as [UInt8], address: 0x1000) { instruction in
+            decoded.append((instruction.mnemonic, instruction.operands))
+        }
+        try #require(decoded.count == 5)
 
-        for instruction in instructions {
+        for instruction in decoded {
             for operand in instruction.operands where operand.type != .invalid {
                 #expect(
                     operand.value != nil,
@@ -109,11 +115,70 @@ struct AArch64Tests {
     func comparisonOperandsAreReads() throws {
         // cmp is an alias of subs with xzr as destination. v5 leaked the underlying
         // subs write onto the first visible operand; v6 looks this up per operand.
-        let instruction = try #require(try disassemble([0xBF, 0x04, 0x00, 0xF1]).first)
-        #expect(instruction.mnemonic == "cmp")
-        for operand in instruction.operands {
-            #expect(operand.access == .read)
+        let (mnemonic, accesses) = try withFirstInstruction([0xBF, 0x04, 0x00, 0xF1]) {
+            ($0.mnemonic, $0.operands.map(\.access))
         }
+        #expect(mnemonic == "cmp")
+        #expect(accesses == [.read, .read])
+    }
+
+    @Test("a conditional branch reports its condition and an unconditional one none")
+    func conditionCode() throws {
+        // b.eq 0x1000: the condition field, bits 3:0, is 0b0000, EQ.
+        #expect(try withFirstInstruction([0x00, 0x00, 0x00, 0x54]) { $0.conditionCode } == .eq)
+        // b 0x1010
+        #expect(try withFirstInstruction([0x04, 0x00, 0x00, 0x14]) { $0.conditionCode } == nil)
+    }
+
+    @Test("comparisons set the flags and plain arithmetic does not")
+    func flagUpdates() throws {
+        // cmp x5, #1 is subs xzr, x5, #1
+        #expect(try withFirstInstruction([0xBF, 0x04, 0x00, 0xF1]) { $0.updatesFlags })
+        // add x2, x3, x4
+        #expect(try !withFirstInstruction([0x62, 0x00, 0x04, 0x8B]) { $0.updatesFlags })
+    }
+
+    @Test("branches and returns are in their groups")
+    func groups() throws {
+        // b 0x1010
+        let branchGroups = try withFirstInstruction([0x04, 0x00, 0x00, 0x14]) { $0.groups }
+        #expect(branchGroups.contains(.jump))
+        #expect(branchGroups.contains(.branchRelative))
+        // ret
+        #expect(try withFirstInstruction([0xC0, 0x03, 0x5F, 0xD6]) { $0.groups }.contains(.ret))
+    }
+
+    /// Implicit registers come from capstone's mapping table,
+    /// arch/AArch64/AArch64GenCSMappingInsn.inc: `bl` writes the link register,
+    /// `b.cond` reads the flags, and neither names them among its operands.
+    @Test("instructions report the registers they use without naming them")
+    func implicitRegisters() throws {
+        // bl 0x1000
+        let call = try withFirstInstruction([0x00, 0x00, 0x00, 0x94]) {
+            ($0.implicitRegistersRead, $0.implicitRegistersWritten)
+        }
+        #expect(call.0 == [])
+        #expect(call.1 == [.lr])
+
+        // b.eq 0x1000
+        let conditionalBranch = try withFirstInstruction([0x00, 0x00, 0x00, 0x54]) {
+            ($0.implicitRegistersRead, $0.implicitRegistersWritten)
+        }
+        #expect(conditionalBranch.0 == [.nzcv])
+        #expect(conditionalBranch.1 == [])
+    }
+
+    @Test("registers accessed combine operands and implicit registers")
+    func registersAccessed() throws {
+        // add x2, x3, x4
+        let addition = try withFirstInstruction([0x62, 0x00, 0x04, 0x8B]) { $0.registersAccessed() }
+        #expect(addition.read == [.x3, .x4])
+        #expect(addition.written == [.x2])
+
+        // cmp x5, #1 writes only the flags.
+        let comparison = try withFirstInstruction([0xBF, 0x04, 0x00, 0xF1]) { $0.registersAccessed() }
+        #expect(comparison.read == [.x5])
+        #expect(comparison.written == [.nzcv])
     }
 }
 #endif

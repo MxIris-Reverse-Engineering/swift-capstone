@@ -7,13 +7,13 @@
 #if CAPSTONE_HAS_AARCH64
 import Ccapstone
 
-public extension AArch64Instruction.Operand {
+public extension AArch64.Operand {
     /// Register value for `reg` operands.
     ///
     /// `nil` when the operand is not of a matching type.
     var register: AArch64Reg? {
         guard type == .reg else { return nil }
-        let value: AArch64Reg? = optionalEnumCast(op.reg)
+        let value: AArch64Reg? = optionalEnumCast(capstoneOperand.reg)
         return value
     }
 
@@ -22,7 +22,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var immediateValue: Int64? {
         guard type == .imm || type == .cimm || type == .implicitImm0 else { return nil }
-        return op.imm
+        return capstoneOperand.imm
     }
 
     /// Immediate range for `immRange` operands.
@@ -30,7 +30,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var immediateRange: ImmediateRange? {
         guard type == .immRange else { return nil }
-        return ImmediateRange(op.imm_range)
+        return ImmediateRange(capstoneOperand.imm_range)
     }
 
     /// Floating point value for `fp` operands.
@@ -38,7 +38,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var doubleValue: Double? {
         guard type == .fp else { return nil }
-        return op.fp
+        return capstoneOperand.fp
     }
 
     /// Base, index and displacement for `mem` operands.
@@ -46,7 +46,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var memory: Memory? {
         guard type == .mem else { return nil }
-        return Memory(op.mem)
+        return Memory(capstoneOperand.mem)
     }
 
     /// SME matrix operand, for `sme` operands.
@@ -54,7 +54,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var matrixOperand: MatrixOperand? {
         guard type == .sme else { return nil }
-        return MatrixOperand(op.sme)
+        return MatrixOperand(capstoneOperand.sme)
     }
 
     /// Predicate register operand, for `pred` operands.
@@ -62,7 +62,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var predicate: Predicate? {
         guard type == .pred else { return nil }
-        return Predicate(op.pred)
+        return Predicate(capstoneOperand.pred)
     }
 
     /// System operand. Its `subType` says which kind, and `value` decodes it.
@@ -70,7 +70,7 @@ public extension AArch64Instruction.Operand {
     /// `nil` when the operand is not of a matching type.
     var systemOperand: SystemOperand? {
         guard type == .sysreg || type == .sysimm || type == .sysalias else { return nil }
-        return SystemOperand(op.sysop)
+        return SystemOperand(capstoneOperand.sysop)
     }
 
     /// Operand types that carry no value of their own.

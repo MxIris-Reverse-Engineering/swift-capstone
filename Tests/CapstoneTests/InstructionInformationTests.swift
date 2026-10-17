@@ -9,33 +9,24 @@ import Testing
 /// alias definitions in the Arm architecture reference, and from capstone's aarch64.h.
 @Suite("Instruction information")
 struct InstructionInformationTests {
-    private func disassemble(
-        _ bytes: [UInt8],
-        mode: Mode = Mode.endian.little,
-        options: [DisassemblyOption] = [.detail(value: true)]
-    ) throws -> [AArch64Instruction] {
-        let capstone = try Capstone(arch: .aarch64, mode: mode)
-        for option in options {
-            try capstone.set(option: option)
-        }
-        return try capstone.disassemble(code: Data(bytes), address: 0x1000)
-    }
-
     @Test("an alias reports both the alias and the real instruction")
     func aliasAndRealInstruction() throws {
         // mov x0, x1 — an alias of orr x0, xzr, x1
-        let instruction = try #require(try disassemble([0xE0, 0x03, 0x01, 0xAA]).first)
-        #expect(instruction.isAlias)
-        #expect(instruction.instruction == .orr)
-        #expect(instruction.aliasInstruction == .aliasMov)
+        let (identifier, alias) = try withFirstInstruction([0xE0, 0x03, 0x01, 0xAA]) {
+            ($0.identifier, $0.alias)
+        }
+        #expect(identifier == .orr)
+        #expect(alias == .aliasMov)
     }
 
     @Test("an instruction printed in its own form has no alias")
     func notAnAlias() throws {
         // ldr x0, [x1, #8]
-        let instruction = try #require(try disassemble([0x20, 0x04, 0x40, 0xF9]).first)
-        #expect(!instruction.isAlias)
-        #expect(instruction.aliasInstruction == nil)
+        let (identifier, alias) = try withFirstInstruction([0x20, 0x04, 0x40, 0xF9]) {
+            ($0.identifier, $0.alias)
+        }
+        #expect(identifier == .ldr)
+        #expect(alias == nil)
     }
 
     /// A load that writes back into its own transfer register decodes, but the
@@ -47,19 +38,37 @@ struct InstructionInformationTests {
         ([0x20, 0x8C, 0x40, 0xF8], false),
     ])
     func illegalWriteBack(bytes: [UInt8], isIllegal: Bool) throws {
-        let instruction = try #require(try disassemble(bytes).first)
-        #expect(instruction.isIllegal == isIllegal)
+        #expect(try withFirstInstruction(bytes) { $0.isIllegal } == isIllegal)
+    }
+
+    /// capstone sets the flag on an illegal instruction and never clears it, and the
+    /// engine decodes every instruction into the same buffer.
+    @Test("an instruction after an illegal one is not illegal")
+    func illegalDoesNotCarryOver() throws {
+        let disassembler = try Disassembler<AArch64>()
+        var flags: [Bool] = []
+        disassembler.forEachInstruction(in: [
+            0x21, 0x8C, 0x40, 0xF8, // ldr x1, [x1, #8]!
+            0x20, 0x8C, 0x40, 0xF8, // ldr x0, [x1, #8]!
+        ] as [UInt8], address: 0x1000) { instruction in
+            flags.append(instruction.isIllegal)
+        }
+        #expect(flags == [true, false])
     }
 
     @Test("real-instruction details give an alias the operands of the instruction it stands for")
     func realInstructionDetail() throws {
         // mov x0, x1 — an alias of orr x0, xzr, x1
         let bytes: [UInt8] = [0xE0, 0x03, 0x01, 0xAA]
-        let aliasForm = try #require(try disassemble(bytes).first)
-        let realForm = try #require(try disassemble(bytes, options: [.realInstructionDetail]).first)
+        let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
+        try capstone.set(option: .realInstructionDetail)
+        let realForm: AArch64Instruction = try #require(try capstone.disassemble(code: Data(bytes), address: 0x1000).first)
+        let (usesAliasDetails, registers) = try withFirstInstruction(bytes) {
+            ($0.usesAliasDetails, $0.operands.compactMap(\.register))
+        }
 
-        #expect(aliasForm.usesAliasDetails)
-        #expect(aliasForm.operands.compactMap(\.register) == [.x0, .x1])
+        #expect(usesAliasDetails)
+        #expect(registers == [.x0, .x1])
         #expect(!realForm.usesAliasDetails)
         #expect(realForm.operands.compactMap(\.register) == [.x0, .xzr, .x1])
     }
@@ -85,14 +94,25 @@ struct InstructionInformationTests {
         ([0x20, 0x0C, 0x78, 0xB3], false),
     ])
     func baseRegisterWriteBack(bytes: [UInt8], writesBack: Bool) throws {
-        let instruction = try #require(try disassemble(bytes).first)
-        #expect(instruction.writesBackBaseRegister == writesBack)
+        #expect(try withFirstInstruction(bytes) { $0.writesBackBaseRegister } == writesBack)
+    }
+
+    @Test("post-indexing is told apart from pre-indexing", arguments: [
+        // ldr x0, [x1], #8
+        ([0x20, 0x84, 0x40, 0xF8] as [UInt8], true),
+        // ldr x0, [x1, #8]!
+        ([0x20, 0x8C, 0x40, 0xF8], false),
+    ])
+    func postIndex(bytes: [UInt8], isPostIndex: Bool) throws {
+        #expect(try withFirstInstruction(bytes) { $0.isPostIndex } == isPostIndex)
     }
 
     @Test("write-back is unknown without detail")
     func baseRegisterWriteBackNeedsDetail() throws {
         // ldr x0, [x1, #8]!
-        let instruction = try #require(try disassemble([0x20, 0x8C, 0x40, 0xF8], options: []).first)
+        let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
+        let instructions: [AArch64Instruction] = try capstone.disassemble(code: Data([0x20, 0x8C, 0x40, 0xF8]), address: 0x1000)
+        let instruction = try #require(instructions.first)
         #expect(instruction.writesBackBaseRegister == nil)
     }
 
@@ -103,12 +123,17 @@ struct InstructionInformationTests {
     func appleProprietaryInstructions() throws {
         // ldx x0
         let bytes: [UInt8] = [0x00, 0x10, 0x20, 0x00]
-        #expect(try disassemble(bytes).isEmpty)
+        var decodedWithoutMode = 0
+        try Disassembler<AArch64>().forEachInstruction(in: bytes, address: 0x1000) { _ in
+            decodedWithoutMode += 1
+        }
+        #expect(decodedWithoutMode == 0)
 
-        let appleMode: Mode = [Mode.endian.little, Mode.aarch64.appleProprietary]
-        let instruction = try #require(try disassemble(bytes, mode: appleMode).first)
-        #expect(instruction.instruction == .ldx)
-        #expect(instruction.operandsString == "x0")
+        let (identifier, operandsText) = try withFirstInstruction(bytes, mode: [.littleEndian, .appleProprietary]) {
+            ($0.identifier, $0.operandsText)
+        }
+        #expect(identifier == .ldx)
+        #expect(operandsText == "x0")
     }
 }
 #endif

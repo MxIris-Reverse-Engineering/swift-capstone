@@ -40,3 +40,23 @@
     }
     return value
 }
+
+/// Reads a NUL-terminated string out of a fixed-size C character array, which Swift
+/// imports as a tuple, never reading past the array's end.
+internal func string<Characters>(fromCharacters characters: Characters) -> String {
+    withUnsafeBytes(of: characters) { bytes in
+        let length = bytes.firstIndex(of: 0) ?? bytes.count
+        return String(decoding: bytes[..<length], as: UTF8.self)
+    }
+}
+
+/// Reads the first `count` elements of a fixed-size C array, which Swift imports as
+/// a tuple, never reading past the array's end.
+internal func elements<Element, Elements>(of array: Elements, count: Int, as _: Element.Type) -> [Element] {
+    withUnsafeBytes(of: array) { bytes in
+        let capacity = bytes.count / MemoryLayout<Element>.stride
+        return (0 ..< min(max(count, 0), capacity)).map { index in
+            bytes.load(fromByteOffset: index * MemoryLayout<Element>.stride, as: Element.self)
+        }
+    }
+}

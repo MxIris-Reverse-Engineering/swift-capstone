@@ -193,6 +193,9 @@ private extension CapstoneEnumsGenerator {
     struct OperandConfiguration {
         /// C struct backing one operand, e.g. `cs_aarch64_op`.
         let cStructure: String
+        /// The hand-written Swift type the accessors extend, e.g. `AArch64.Operand`.
+        /// It keeps the C struct in a property named `capstoneOperand`.
+        let swiftOperandType: String
         let accessors: [OperandAccessor]
         /// Operand types that deliberately get no accessor of their own, each with
         /// the reason. Listing one here is a decision on record; an operand type
@@ -282,6 +285,7 @@ private extension CapstoneEnumsGenerator {
                   macroOptionSets: [], macroEnums: [],
                   operandConfiguration: .init(
                       cStructure: "cs_aarch64_op",
+                      swiftOperandType: "AArch64.Operand",
                       accessors: [
                           .init(name: "register", operandTypes: ["reg"],
                                 value: .enumeration(member: "reg", swiftType: "AArch64Reg"),
@@ -1051,7 +1055,7 @@ private extension CapstoneEnumsGenerator {
         lines.append("#if \(architecture.swiftDefine)")
         lines.append("import Ccapstone")
         lines.append("")
-        lines.append("public extension \(prefix)Instruction.Operand {")
+        lines.append("public extension \(configuration.swiftOperandType) {")
 
         for accessor in configuration.accessors {
             let conditions = accessor.operandTypes.map { "type == .\($0)" }.joined(separator: " || ")
@@ -1065,18 +1069,18 @@ private extension CapstoneEnumsGenerator {
                 lines.append("        guard \(conditions) else { return nil }")
                 // The member is an imported C enum, not an integer, so it goes
                 // through optionalEnumCast rather than a numericCast.
-                lines.append("        let value: \(swiftType)? = optionalEnumCast(op.\(member))")
+                lines.append("        let value: \(swiftType)? = optionalEnumCast(capstoneOperand.\(member))")
                 lines.append("        return value")
                 lines.append("    }")
             case .scalar(let member, let swiftType):
                 lines.append("    var \(accessor.name): \(swiftType)? {")
                 lines.append("        guard \(conditions) else { return nil }")
-                lines.append("        return op.\(member)")
+                lines.append("        return capstoneOperand.\(member)")
                 lines.append("    }")
             case .structure(let member, let swiftType):
                 lines.append("    var \(accessor.name): \(swiftType)? {")
                 lines.append("        guard \(conditions) else { return nil }")
-                lines.append("        return \(swiftType)(op.\(member))")
+                lines.append("        return \(swiftType)(capstoneOperand.\(member))")
                 lines.append("    }")
             case .handWritten(let member, let swiftType):
                 // The guard and the nil case are still generated, so the set of
@@ -1084,7 +1088,7 @@ private extension CapstoneEnumsGenerator {
                 // construction is hand-written.
                 lines.append("    var \(accessor.name): \(swiftType)? {")
                 lines.append("        guard \(conditions) else { return nil }")
-                lines.append("        return \(swiftType)(op.\(member))")
+                lines.append("        return \(swiftType)(capstoneOperand.\(member))")
                 lines.append("    }")
             }
             lines.append("")
