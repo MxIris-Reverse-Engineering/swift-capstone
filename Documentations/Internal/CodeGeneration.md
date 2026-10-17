@@ -8,7 +8,8 @@
 封装层里能从 capstone 头文件推导出来的部分，都交给 `CapstoneEnumsGenerator` 生成，手写的只剩推导不出来的
 东西。生成物有三层：
 
-- 架构表 `Architecture+Generated.swift`：`Architecture` 枚举、各架构的 `Instruction` 子类、按架构取类的分发。
+- 架构表 `Architecture+Generated.swift`：`Architecture` 枚举。7.0.0 之前它还生成各架构的 `Instruction` 子类与
+  按架构取类的分发，随旧 API 一起删除（见[用新特性重写的提案](../Evolutions/draft-rewrite-with-modern-swift.md)）。
 - 各架构的枚举 `*Enums.swift`。
 - 操作数访问器 `*+Operands.swift`，目前只有 AArch64 有。
 
@@ -69,15 +70,9 @@ v6 重排了 `cs_arch`：SystemZ 从 6 挪到 2，Mips、X86、PowerPC、Sparc �
 `Architecture.mips` 会把 2 传给 `cs_open`，也就是 v6 的 SystemZ，结果是解错而不是报错。所以 `Architecture`
 的取值一律从头文件读。
 
-`Architecture` 枚举列出 `cs_arch` 的全部成员，因为它描述的是引擎支持什么；哪些有 Swift 封装，另由
-`Architecture.wrapped` 表示。两者的区别见术语表的[已适配、已封装、已编入](../Glossary.md#adapted-wrapped-compiled-in)。
-
-### 两种「拿不到指令类」要分开处理
-
-拿不到某个架构的指令类有两种原因：这个架构没有封装，或者它的 trait 没开。修法完全不同，前者要写封装，
-后者改 `Package.swift`。所以公开的 `instructionClass` 在两种情况下给出不同的报错文案（仍然 trap）。
-`Capstone(arch:)` 则用内部的可选属性 `compiledInstructionClass`，在 `cs_open` 之前查，查不到就抛
-`unsupportedArchitecture`：引擎编入了某个架构而封装层没有时，`cs_open` 会成功，只有这一步能拦住。
+`Architecture` 枚举列出 `cs_arch` 的全部成员，因为它描述的是 capstone 认识什么；这次构建编入了哪些由手写的
+`isCompiledIn` 回答，哪些有 Swift 封装则看谁遵循 `DisassemblyArchitecture`，生成器不管。几种状态的区别见术语表的
+[已适配、已编入](../Glossary.md#adapted-compiled-in)。
 
 ### `--check` 不能对缺失的输入放水
 
@@ -103,7 +98,7 @@ Plugins/CapstoneEnumsGeneratePlugin/Plugin.swift             # swift package plu
 Sources/Capstone/Architecture+Generated.swift                # 生成：架构表
 Sources/Capstone/*Enums.swift                                # 生成：各架构枚举
 Sources/Capstone/AArch64+Operands.swift                      # 生成：AArch64 操作数访问器
-Sources/Capstone/Architecture.swift                          # 手写：架构表里推导不出来的部分
+Sources/Capstone/Architecture.swift                          # 手写：isCompiledIn
 Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.Operand 的形状、包装 C 结构体的值类型、sysop 分派
 ```
 
@@ -123,8 +118,11 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
    （`swiftOperandType`，例如 `AArch64.Operand`，它把 C 结构体存在 `capstoneOperand` 属性里）、访问器列表
    （名字、覆盖哪些操作数类型、值从哪个 union 成员取）、`unexposedTypes`（每项写明为什么不暴露）。
 2. 运行生成器，按报错补配置，直到双向检查都通过。
-3. 手写生成器推不出来的部分：`Operand` 的形状、包装 C 结构体的 Swift 值类型，以及 sysop 这种不规则的分派。
-4. 用真实指令编码写断言式测试，覆盖每一种操作数类型；把 `Tests/CapstoneTests/Legacy/` 里该架构的旧测试迁回。
+3. 手写生成器推不出来的部分：`Operand` 的形状、包装 C 结构体的 Swift 值类型、sysop 这种不规则的分派，以及
+   遵循 `DisassemblyArchitecture` 的命名空间（`Mode`、`Syntax`、快照类型与 `snapshot(of:)`）和
+   `InstructionView` 上这个架构的访问器。
+4. 用真实指令编码写断言式测试，覆盖每一种操作数类型。v5 时代的旧测试已随 7.0.0 删除，需要参考时从 git
+   历史里取（例如 `v6.0.1` 标签下的 `Tests/CapstoneTests/Legacy/`）。
 5. 把该架构加进 `Package.swift` 的默认 trait，确认 `--check` 退出码为 0。
 
 ## 与提案的差异
@@ -140,7 +138,7 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 - **架构表只生成一部分。** 提案写的是生成整个 `Architecture.swift`；实际生成到 `Architecture+Generated.swift`，
   推导不出来的部分留在手写的 `Architecture.swift`。
 - **分发不再只靠 `fatalError`。** 按提案落地后，2026-10-17 的代码审查发现 `Capstone(arch:)` 会因此崩溃，改为
-  初始化器抛错，见上文「两种拿不到指令类」。
+  初始化器抛错。7.0.0 起分发整个删除：没有封装的架构写不出 `Disassembler` 的类型参数。
 - **`--check` 没有接入 CI。** 仓库没有 CI，用法写在 README 与 AGENTS.md 里。
 
 ## 验证
@@ -164,12 +162,11 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 
 ## 后续工作
 
-- 用新特性重写的提案（7.0.0）会把架构表与分发换成按架构区分的类型，上文「架构表」和「两种拿不到指令类」
-  两节届时随之修改。
 - 其余架构逐个补操作数配置。
 
 ## 延伸阅读
 
 - [0001 - 适配 capstone v6](../Evolutions/0001-adapt-capstone-v6.md)
+- [用新特性重写封装层](../Evolutions/draft-rewrite-with-modern-swift.md)
 - [术语表](../Glossary.md)
 - [代码审查已裁决清单](ReviewVerdicts.md)

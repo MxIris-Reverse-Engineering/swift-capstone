@@ -1,4 +1,5 @@
 #if CAPSTONE_HAS_AARCH64
+import Foundation
 import Testing
 import Capstone
 
@@ -122,6 +123,21 @@ struct DisassemblerOptionsTests {
         #expect(instructions.map(\.isData) == [true, false])
         #expect(instructions.first?.bytes == data)
         #expect(instructions.last?.address == 0x101C)
+    }
+
+    /// A sliced `Data` starts at a non-zero index. The closure must be able to read
+    /// the byte at the offset it is given, so offsets count from the slice's start.
+    @Test("skip offsets count from the start of a Data slice")
+    func skipDataOffsetsInSlices() throws {
+        var bytesAtOffset: [UInt8] = []
+        let disassembler = try Disassembler<AArch64>(skipData: SkipData(bytesToSkip: { code, offset in
+            bytesAtOffset.append(code.unsafeLoad(fromByteOffset: offset, as: UInt8.self))
+            return 4
+        }))
+        let buffer = Data([0xAA, 0xBB, 0xCC, 0xDD] + Self.unallocated + Self.addition)
+        disassembler.forEachInstruction(in: buffer[4...], address: 0x1000) { _ in }
+
+        #expect(bytesAtOffset == [0xFF])
     }
 
     @Test("a skip closure returning 0 stops decoding")

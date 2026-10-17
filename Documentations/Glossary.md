@@ -26,18 +26,22 @@
 
 按英文名字母序排列。
 
-### Adapted, wrapped, compiled in
+### Adapted, compiled in
 
-说一个架构「能用」时容易混用的三种状态，彼此独立：
+说一个架构「能用」时容易混用的两种状态，彼此独立：
 
-- **已适配（adapted）**：它的 Swift 封装已经按 capstone v6 改写、能编译。目前只有 AArch64。
-  `Package.swift` 的默认 trait 只含已适配的架构。
-- **已封装（wrapped）**：本包为它写过 Swift 封装，即 `Architecture.wrapped` 里的架构，不管能否编译。
-  ARM、X86 等属于已封装、未适配：封装还是 v5 时代的代码。SH、TriCore 与 v6 新增的五个架构连封装都没有。
-- **已编入（compiled in）**：这次构建开启了它的 trait，capstone 引擎带着它的 C 代码。依赖图里别的包
-  也可能替 capstone 开 trait，所以引擎编入了、本包却没有对应封装的情况是存在的。
+- **已适配（adapted）**：本包为它写了遵循 `DisassemblyArchitecture` 的类型，能用 `Disassembler` 解码。
+  目前只有 `AArch64`。`Package.swift` 的默认 trait 只含已适配的架构。
+- **已编入（compiled in）**：这次构建开启了它的 trait，capstone 引擎带着它的 C 代码，
+  `Architecture.isCompiledIn` 为真。依赖图里别的包也可能替 capstone 开 trait，所以引擎编入了、本包却没有
+  对应类型的情况是存在的。
 
-- **主要出现在**：`Package.swift`、`Sources/Capstone/Architecture+Generated.swift`
+`Architecture` 有某个 case，只说明 capstone 认识这个架构，两种状态都不蕴含。
+
+7.0.0 之前还有第三种说法「已封装（wrapped）」：ARM、X86 等留着 v5 时代的封装、编不过，算已封装、未适配。
+这些封装随 7.0.0 删除，「已封装」与「已适配」从此是一回事，不再单独使用。
+
+- **主要出现在**：`Package.swift`、`Sources/Capstone/Architecture.swift`、`Sources/Capstone/DisassemblyArchitecture.swift`
 - **延伸阅读**：[实现说明：代码生成](Internal/CodeGeneration.md)
 
 ### Semantic configuration

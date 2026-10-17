@@ -98,10 +98,7 @@ public struct CapstoneEnumsGenerator {
             print("warning: \(GenerationError.unconfiguredArchitectures(unconfigured))")
         }
 
-        let architectureTable = renderArchitectureTable(
-            architectures: parsedArchitectures,
-            configurations: architectures
-        )
+        let architectureTable = renderArchitectureTable(architectures: parsedArchitectures)
         try emit(architectureTable, to: outputDirectory.appendingPathComponent("Architecture+Generated.swift"))
 
         let declaredSuffixes = Set(parsedArchitectures.map(\.cSuffix))
@@ -203,23 +200,6 @@ private extension CapstoneEnumsGenerator {
         let unexposedTypes: [String: String]
     }
 
-    /// How an architecture surfaces as an `Instruction` subclass.
-    ///
-    /// Absent for architectures whose enums are generated but which have no wrapper
-    /// yet — SH and TriCore are in that state. Such an architecture still appears in
-    /// the `Architecture` enum, because that enum mirrors `cs_arch` and leaving a
-    /// case out would misreport what the engine supports.
-    struct InstructionClassConfig {
-        /// Swift class name. Irregular often enough that it cannot be derived:
-        /// `CS_ARCH_PPC` is `PowerPCInstruction`, `CS_ARCH_EVM` is `EthereumInstruction`.
-        let className: String
-        /// Architectures with no register file — EVM, WASM — subclass
-        /// `PlatformInstructionBase`, which drops the register type parameter.
-        let hasRegisters: Bool
-        /// Doc comment above the class declaration.
-        let documentation: String
-    }
-
     struct ArchitectureConfig {
         /// Prefix of the generated Swift enum types, e.g. `AArch64` in `AArch64Reg`.
         let swiftPrefix: String
@@ -232,7 +212,6 @@ private extension CapstoneEnumsGenerator {
         let cPrefix: String
         /// Not derivable from `cPrefix` — `PPC` is guarded by `CAPSTONE_HAS_POWERPC`.
         let swiftDefine: String
-        let instructionClass: InstructionClassConfig?
         let macroOptionSets: [MacroOptionSetConfig]
         let macroEnums: [MacroEnumConfig]
         /// Present once the architecture's operand accessors are generated rather
@@ -252,7 +231,6 @@ private extension CapstoneEnumsGenerator {
             header: String,
             cPrefix: String,
             swiftDefine: String,
-            instructionClass: InstructionClassConfig?,
             macroOptionSets: [MacroOptionSetConfig],
             macroEnums: [MacroEnumConfig],
             operandConfiguration: OperandConfiguration? = nil,
@@ -262,7 +240,6 @@ private extension CapstoneEnumsGenerator {
             self.header = header
             self.cPrefix = cPrefix
             self.swiftDefine = swiftDefine
-            self.instructionClass = instructionClass
             self.macroOptionSets = macroOptionSets
             self.macroEnums = macroEnums
             self.operandConfiguration = operandConfiguration
@@ -276,12 +253,10 @@ private extension CapstoneEnumsGenerator {
 
         static let all: [ArchitectureConfig] = [
             .init(swiftPrefix: "Arm", header: "arm.h", cPrefix: "ARM", swiftDefine: "CAPSTONE_HAS_ARM",
-                  instructionClass: .init(className: "ArmInstruction", hasRegisters: true, documentation: "ARM Instruction"),
                   macroOptionSets: [], macroEnums: []),
             // v6 renamed ARM64 to AArch64 throughout. The Swift spelling keeps both
             // capitals; makeSwiftIdentifier would otherwise flatten it to "Aarch64".
             .init(swiftPrefix: "AArch64", header: "aarch64.h", cPrefix: "AARCH64", swiftDefine: "CAPSTONE_HAS_AARCH64",
-                  instructionClass: .init(className: "AArch64Instruction", hasRegisters: true, documentation: "AArch64 Instruction, also known as ARM64"),
                   macroOptionSets: [], macroEnums: [],
                   operandConfiguration: .init(
                       cStructure: "cs_aarch64_op",
@@ -354,35 +329,26 @@ private extension CapstoneEnumsGenerator {
                   ),
                   extraEnumPrefixes: ["AArch64CC": "AArch64CondCode"]),
             .init(swiftPrefix: "Mips", header: "mips.h", cPrefix: "MIPS", swiftDefine: "CAPSTONE_HAS_MIPS",
-                  instructionClass: .init(className: "MipsInstruction", hasRegisters: true, documentation: "MIPS Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "X86", header: "x86.h", cPrefix: "X86", swiftDefine: "CAPSTONE_HAS_X86",
-                  instructionClass: .init(className: "X86Instruction", hasRegisters: true, documentation: "X86 Instruction"),
                   macroOptionSets: [
                       .init(swiftName: "X86Eflags", prefixes: ["X86_EFLAGS_"], rawType: "UInt64", allowedNames: nil),
                       .init(swiftName: "X86FpuFlags", prefixes: ["X86_FPU_FLAGS_"], rawType: "UInt64", allowedNames: nil),
                   ], macroEnums: []),
             .init(swiftPrefix: "Ppc", header: "ppc.h", cPrefix: "PPC", swiftDefine: "CAPSTONE_HAS_POWERPC",
-                  instructionClass: .init(className: "PowerPCInstruction", hasRegisters: true, documentation: "PowerPC Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Sparc", header: "sparc.h", cPrefix: "SPARC", swiftDefine: "CAPSTONE_HAS_SPARC",
-                  instructionClass: .init(className: "SparcInstruction", hasRegisters: true, documentation: "SPARC Instruction"),
                   macroOptionSets: [], macroEnums: []),
             // v6 renamed SYSZ to SYSTEMZ.
             .init(swiftPrefix: "SystemZ", header: "systemz.h", cPrefix: "SYSTEMZ", swiftDefine: "CAPSTONE_HAS_SYSTEMZ",
-                  instructionClass: .init(className: "SystemZInstruction", hasRegisters: true, documentation: "SystemZ Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Xcore", header: "xcore.h", cPrefix: "XCORE", swiftDefine: "CAPSTONE_HAS_XCORE",
-                  instructionClass: .init(className: "XCoreInstruction", hasRegisters: true, documentation: "XCore Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "M68k", header: "m68k.h", cPrefix: "M68K", swiftDefine: "CAPSTONE_HAS_M68K",
-                  instructionClass: .init(className: "M68kInstruction", hasRegisters: true, documentation: "M68K Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Tms320c64x", header: "tms320c64x.h", cPrefix: "TMS320C64X", swiftDefine: "CAPSTONE_HAS_TMS320C64X",
-                  instructionClass: .init(className: "TMS320C64xInstruction", hasRegisters: true, documentation: "TMS320C64x Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "M680x", header: "m680x.h", cPrefix: "M680X", swiftDefine: "CAPSTONE_HAS_M680X",
-                  instructionClass: .init(className: "M680xInstruction", hasRegisters: true, documentation: "M680x Instruction"),
                   macroOptionSets: [
                       .init(swiftName: "M680xIdx", prefixes: ["M680X_IDX_"], rawType: "UInt8", allowedNames: nil),
                       .init(swiftName: "M680xOpFlags", prefixes: ["M680X_"], rawType: "UInt8", allowedNames: ["M680X_FIRST_OP_IN_MNEM", "M680X_SECOND_OP_IN_MNEM"]),
@@ -390,37 +356,32 @@ private extension CapstoneEnumsGenerator {
                       .init(swiftName: "M680xOffset", prefixes: ["M680X_OFFSET_"], rawType: "UInt8"),
                   ]),
             .init(swiftPrefix: "Evm", header: "evm.h", cPrefix: "EVM", swiftDefine: "CAPSTONE_HAS_EVM",
-                  instructionClass: .init(className: "EthereumInstruction", hasRegisters: false, documentation: "Ethereum Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Mos65xx", header: "mos65xx.h", cPrefix: "MOS65XX", swiftDefine: "CAPSTONE_HAS_MOS65XX",
-                  instructionClass: .init(className: "Mos65xxInstruction", hasRegisters: true, documentation: "MOS65xx Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Wasm", header: "wasm.h", cPrefix: "WASM", swiftDefine: "CAPSTONE_HAS_WASM",
-                  instructionClass: .init(className: "WasmInstruction", hasRegisters: false, documentation: "WebAssembly Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Bpf", header: "bpf.h", cPrefix: "BPF", swiftDefine: "CAPSTONE_HAS_BPF",
-                  instructionClass: .init(className: "BpfInstruction", hasRegisters: true, documentation: "Berkeley Packet Filter Instruction"),
                   macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Riscv", header: "riscv.h", cPrefix: "RISCV", swiftDefine: "CAPSTONE_HAS_RISCV",
-                  instructionClass: .init(className: "RiscvInstruction", hasRegisters: true, documentation: "RISCV Instruction"),
                   macroOptionSets: [], macroEnums: []),
             // Enums only so far: no wrapper has been written for these.
             .init(swiftPrefix: "Sh", header: "sh.h", cPrefix: "SH", swiftDefine: "CAPSTONE_HAS_SH",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Tricore", header: "tricore.h", cPrefix: "TRICORE", swiftDefine: "CAPSTONE_HAS_TRICORE",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             // Added in v6. Enums only for now; wrappers are out of scope for the
             // v6 adaptation proposal.
             .init(swiftPrefix: "Alpha", header: "alpha.h", cPrefix: "ALPHA", swiftDefine: "CAPSTONE_HAS_ALPHA",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Hppa", header: "hppa.h", cPrefix: "HPPA", swiftDefine: "CAPSTONE_HAS_HPPA",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "LoongArch", header: "loongarch.h", cPrefix: "LOONGARCH", swiftDefine: "CAPSTONE_HAS_LOONGARCH",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Xtensa", header: "xtensa.h", cPrefix: "XTENSA", swiftDefine: "CAPSTONE_HAS_XTENSA",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
             .init(swiftPrefix: "Arc", header: "arc.h", cPrefix: "ARC", swiftDefine: "CAPSTONE_HAS_ARC",
-                  instructionClass: nil, macroOptionSets: [], macroEnums: []),
+                  macroOptionSets: [], macroEnums: []),
         ]
     }
 
@@ -904,31 +865,23 @@ private extension CapstoneEnumsGenerator {
         return architectures.sorted(by: { $0.rawValue < $1.rawValue })
     }
 
-    /// Renders the `Architecture` enum, the `Instruction` subclasses and the
-    /// architecture-to-class dispatch.
+    /// Renders the `Architecture` enum.
     ///
-    /// An architecture present in `cs_arch` but absent from `ArchitectureConfig.all`
-    /// still gets a case — the enum mirrors what the engine supports, not what this
-    /// wrapper covers — and falls through to the unsupported branch of the dispatch.
-    func renderArchitectureTable(
-        architectures: [ParsedArchitecture],
-        configurations: [ArchitectureConfig]
-    ) -> String {
-        let configurationsBySuffix = Dictionary(
-            configurations.map { ($0.cPrefix, $0) },
-            uniquingKeysWith: { first, _ in first }
-        )
-
+    /// Every `cs_arch` member gets a case, whether or not `ArchitectureConfig.all`
+    /// has it: the enum mirrors what the engine supports, not what this package
+    /// wraps. Wrapped architectures are the `DisassemblyArchitecture` types, which
+    /// are hand-written.
+    func renderArchitectureTable(architectures: [ParsedArchitecture]) -> String {
         var lines = [String]()
         lines.append("// For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT.")
         lines.append("// Regenerate with: swift package plugin generate-enums")
         lines.append("")
-        lines.append("import Ccapstone")
-        lines.append("")
         lines.append("/// Architecture type.")
         lines.append("///")
-        lines.append("/// Mirrors `cs_arch`. A case here says the engine knows the architecture, not")
-        lines.append("/// that this package wraps it — see `instructionClass`.")
+        lines.append("/// Mirrors `cs_arch`. A case here says capstone knows the architecture, not")
+        lines.append("/// that this build has it compiled in — see `isCompiledIn` — or that this")
+        lines.append("/// package wraps it: only the `DisassemblyArchitecture` types, such as")
+        lines.append("/// `AArch64`, can be decoded from Swift.")
         lines.append("public enum Architecture: UInt32, Sendable {")
         for architecture in architectures {
             if let comment = architecture.comment?.trimmingCharacters(in: .whitespacesAndNewlines), !comment.isEmpty {
@@ -936,76 +889,6 @@ private extension CapstoneEnumsGenerator {
             }
             lines.append("    case \(architecture.caseName) = \(architecture.rawValue)")
         }
-        lines.append("}")
-        lines.append("")
-
-        for architecture in architectures {
-            guard let configuration = configurationsBySuffix[architecture.cSuffix],
-                  let instructionClass = configuration.instructionClass
-            else { continue }
-
-            let prefix = configuration.swiftPrefix
-            let baseClass = instructionClass.hasRegisters
-                ? "PlatformInstruction<\(prefix)Ins, \(prefix)Grp, \(prefix)Reg>"
-                : "PlatformInstructionBase<\(prefix)Ins, \(prefix)Grp>"
-
-            lines.append("#if \(configuration.swiftDefine)")
-            lines.append("/// \(instructionClass.documentation)")
-            lines.append("public class \(instructionClass.className): \(baseClass) {}")
-            lines.append("#endif")
-            lines.append("")
-        }
-
-        lines.append("public extension Architecture {")
-        lines.append("    /// The class for disassembled instructions used for this architecture.")
-        lines.append("    ///")
-        lines.append("    /// This is a subclass of `Instruction`, with accessors for operands and")
-        lines.append("    /// architecture-specific properties. Traps when this build has no class")
-        lines.append("    /// for the architecture; `Capstone(arch:)` throws")
-        lines.append("    /// `CapstoneError.unsupportedArchitecture` in that case instead.")
-        lines.append("    var instructionClass: Instruction.Type {")
-        lines.append("        guard let compiledInstructionClass else {")
-        // Two distinct situations, and conflating them sends the reader down the
-        // wrong path: a trait that was never enabled is fixed in Package.swift,
-        // an architecture this package does not wrap yet is not.
-        lines.append("            if Architecture.wrapped.contains(self) {")
-        lines.append("                fatalError(\"Architecture \\(self) is not compiled in. Enable the corresponding package trait.\")")
-        lines.append("            } else {")
-        lines.append("                fatalError(\"Architecture \\(self) is not wrapped by swift-capstone yet.\")")
-        lines.append("            }")
-        lines.append("        }")
-        lines.append("        return compiledInstructionClass")
-        lines.append("    }")
-        lines.append("")
-        lines.append("    /// Architectures this package provides a wrapper for, whether or not the")
-        lines.append("    /// corresponding trait is enabled in this build.")
-        lines.append("    static var wrapped: Set<Architecture> {")
-        let wrappedCases = architectures
-            .filter { configurationsBySuffix[$0.cSuffix]?.instructionClass != nil }
-            .map { ".\($0.caseName)" }
-        lines.append("        [\(wrappedCases.joined(separator: ", "))]")
-        lines.append("    }")
-        lines.append("}")
-        lines.append("")
-        lines.append("extension Architecture {")
-        lines.append("    /// The class for disassembled instructions used for this architecture, or")
-        lines.append("    /// `nil` when this build has none: the architecture is not wrapped yet, or")
-        lines.append("    /// its trait is not enabled.")
-        lines.append("    var compiledInstructionClass: Instruction.Type? {")
-        lines.append("        switch self {")
-        for architecture in architectures {
-            guard let configuration = configurationsBySuffix[architecture.cSuffix],
-                  let instructionClass = configuration.instructionClass
-            else { continue }
-            lines.append("        #if \(configuration.swiftDefine)")
-            lines.append("        case .\(architecture.caseName):")
-            lines.append("            return \(instructionClass.className).self")
-            lines.append("        #endif")
-        }
-        lines.append("        default:")
-        lines.append("            return nil")
-        lines.append("        }")
-        lines.append("    }")
         lines.append("}")
         lines.append("")
         return lines.joined(separator: "\n")

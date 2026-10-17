@@ -1,36 +1,20 @@
 import Ccapstone
 
-// The `Architecture` enum itself, the `Instruction` subclass per architecture and
-// the architecture-to-class dispatch are generated into Architecture+Generated.swift
-// from `cs_arch` and the generator's architecture configuration. Only what cannot be
-// derived from the headers lives here.
-//
-// Generating the enum rather than hand-maintaining it is not cosmetic: capstone v6
-// reordered `cs_arch`, moving SystemZ from 6 to 2 and shifting Mips, X86, PowerPC and
-// Sparc up by one. A hand-edited rename would have kept the v5 raw values and passed
-// the wrong architecture to `cs_open` — producing wrong disassembly rather than an
-// error.
+// The `Architecture` enum itself is generated into Architecture+Generated.swift from
+// `cs_arch`. Generating it rather than hand-maintaining it is not cosmetic: capstone
+// v6 reordered `cs_arch`, moving SystemZ from 6 to 2 and shifting Mips, X86, PowerPC
+// and Sparc up by one. A hand-edited rename would have kept the v5 raw values and
+// passed the wrong architecture to `cs_open` — producing wrong disassembly rather
+// than an error.
 
 public extension Architecture {
-    /// The type for registers used in this architecture (if any).
+    /// Whether the capstone engine in this build has the architecture compiled in.
     ///
-    /// This is an enum with values corresponding to the registers. Traps, like
-    /// `instructionClass`, when this build has no class for the architecture.
-    var registerType: Any.Type? {
-        instructionClass.registerType
+    /// Each architecture's package trait decides that, and another package in the
+    /// build can enable traits too. Being compiled in is not the same as being
+    /// wrapped: only architectures with a `DisassemblyArchitecture` type, such as
+    /// `AArch64`, can be decoded from Swift.
+    var isCompiledIn: Bool {
+        cs_support(Int32(rawValue))
     }
-
-    /// The type for instructions used in this architecture.
-    ///
-    /// This is an enum with values corresponding to instruction mnemonics. Traps, like
-    /// `instructionClass`, when this build has no class for the architecture.
-    var instructionType: InstructionType.Type {
-        instructionClass.instructionType
-    }
-}
-
-/// Protocol conformed to by enumerations representing architecture-specific instructions.
-public protocol InstructionType {
-    var rawValue: UInt32 { get }
-    init?(rawValue: UInt32)
 }

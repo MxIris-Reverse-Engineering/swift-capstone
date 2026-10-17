@@ -1,11 +1,10 @@
 import Testing
-@testable import Capstone
+import Capstone
 
 /// Checked by the compiler rather than at run time: each `requireSendable` call
-/// stops the test target from building if its type is not `Sendable`. Value types
-/// that hold no engine handle can cross concurrency domains; `Capstone` and the
-/// instruction classes stay out, since even their read-only accessors write the
-/// engine's error code.
+/// stops the test target from building if its type is not `Sendable`. Values that
+/// hold no engine handle can cross concurrency domains; `Disassembler` and
+/// `InstructionView` stay out, since they read the engine's buffer.
 @Suite("Sendable")
 struct SendableTests {
     private func requireSendable<Value: Sendable>(_: Value.Type) {}
@@ -13,13 +12,10 @@ struct SendableTests {
     @Test("value types can cross concurrency domains")
     func valueTypesAreSendable() {
         requireSendable(Architecture.self)
-        requireSendable(Mode.self)
-        requireSendable(Syntax.self)
         requireSendable(Access.self)
-        requireSendable(InstructionGroup.self)
-        requireSendable(BuildMode.self)
-        requireSendable(SkipDataResult.self)
+        requireSendable(DetailForm.self)
         requireSendable(CapstoneError.self)
+        requireSendable(CapstoneVersion.self)
     }
 
     #if CAPSTONE_HAS_AARCH64
@@ -32,6 +28,7 @@ struct SendableTests {
         requireSendable(AArch64CondCode.self)
         requireSendable(AArch64Sysreg.self)
         requireSendable(AArch64.Mode.self)
+        requireSendable(AArch64.Syntax.self)
         requireSendable(AArch64.Instruction.self)
         requireSendable(AArch64.Operand.self)
         requireSendable(AArch64.Operand.Memory.self)

@@ -1,7 +1,6 @@
 #if CAPSTONE_HAS_AARCH64
-import Foundation
 import Testing
-@testable import Capstone
+import Capstone
 
 /// What capstone v6 reports about an instruction beyond v5's fields: aliases,
 /// legality, real-instruction details, base-register write-back and Apple's
@@ -88,15 +87,6 @@ struct InstructionInformationTests {
     ])
     func postIndex(bytes: [UInt8], isPostIndex: Bool) throws {
         #expect(try withFirstInstruction(bytes) { $0.isPostIndex } == isPostIndex)
-    }
-
-    @Test("write-back is unknown without detail")
-    func baseRegisterWriteBackNeedsDetail() throws {
-        // ldr x0, [x1, #8]!
-        let capstone = try Capstone(arch: .aarch64, mode: Mode.endian.little)
-        let instructions: [AArch64Instruction] = try capstone.disassemble(code: Data([0x20, 0x8C, 0x40, 0xF8]), address: 0x1000)
-        let instruction = try #require(instructions.first)
-        #expect(instruction.writesBackBaseRegister == nil)
     }
 
     /// Apple's AMX instructions sit in encoding space the architecture leaves

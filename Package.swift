@@ -75,7 +75,7 @@ let architectures: [(trait: String, define: String)] = [
     ("RISCV", "CAPSTONE_HAS_RISCV"),
     ("SH", "CAPSTONE_HAS_SH"),
     ("TRICORE", "CAPSTONE_HAS_TRICORE"),
-    // Added in v6. Generated enums only so far, no wrapper.
+    // Added in v6.
     ("ALPHA", "CAPSTONE_HAS_ALPHA"),
     ("HPPA", "CAPSTONE_HAS_HPPA"),
     ("LOONGARCH", "CAPSTONE_HAS_LOONGARCH"),
@@ -88,14 +88,11 @@ let capstoneTraits: Set<Package.Dependency.Trait> = Set(
     architectures.map { .trait(name: $0.trait, condition: .when(traits: [$0.trait])) },
 )
 
-/// Architectures whose wrapper has been adapted to capstone v6.
+/// Architectures this package wraps: each has a `DisassemblyArchitecture` type.
 ///
-/// Grows one entry at a time as each architecture is migrated. An architecture
-/// left out here keeps its trait declared — callers can still enable it explicitly —
-/// but stays out of the default build, so its still-v5 wrapper is excluded by the
-/// `#if CAPSTONE_HAS_*` it already sits behind.
-///
-/// AArch64 is adapted; the rest still carry v5 wrappers.
+/// Grows one entry at a time as each architecture is adapted. The others keep their
+/// traits declared, and enabling one compiles it into capstone and builds its
+/// generated enums, but there is no Swift type to decode it with.
 ///
 /// See Documentations/Evolutions/0001-adapt-capstone-v6.md.
 let adaptedArchitectures: Set<String> = [
@@ -189,10 +186,6 @@ let package = Package(
         .testTarget(
             name: "CapstoneTests",
             dependencies: ["Capstone"],
-            // The v5 suite covers twelve architectures at once, so it cannot compile
-            // until their wrappers are adapted. Files move back out of Legacy/ as
-            // each architecture lands. See the v6 adaptation proposal.
-            exclude: ["Legacy"],
             // Swift 6 mode, as both downstream packages use: Swift 5 mode lets a
             // non-Sendable type through a Sendable requirement without a word, so
             // SendableTests could never fail there.

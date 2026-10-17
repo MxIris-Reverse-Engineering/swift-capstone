@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 - Swift Package layout: core API in `Sources/Capstone`, C bridge in `Sources/Ccapstone`, enum generator logic in `Sources/CapstoneEnumsGenerator` + `Sources/capstone-enums-generator`, and the SwiftPM command plugin in `Plugins/CapstoneEnumsGeneratePlugin`.
-- Tests live in `Tests/CapstoneTests` and `Tests/CapstoneEnumsGeneratorTests`. The v5-era suite and its `TestFixtures.swift` sit in `Tests/CapstoneTests/Legacy/`, excluded from the target.
+- Tests live in `Tests/CapstoneTests` and `Tests/CapstoneEnumsGeneratorTests`.
 - Examples such as `Examples/cstool` show end-to-end usage; keep them building with the main package.
 - Static docs under `docs/` are generated via swift-doc; avoid hand-editing them.
 - Generated sources carry an `AUTO-GENERATED` header — `*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift`. Change `Sources/CapstoneEnumsGenerator` and regenerate instead of editing them.
@@ -26,8 +26,7 @@
 - Tests use swift-testing (`@Suite` / `@Test` / `#expect`); place new suites in `Tests/CapstoneTests`.
 - `CapstoneTests` compiles in Swift 6 mode while the library is still Swift 5. Keep it that way: Swift 5 mode lets a non-Sendable type through a `Sendable` requirement silently, so `SendableTests` would stop catching anything.
 - Expected values must come from the instruction encoding or the capstone headers, never from re-running the wrapper — a test that recomputes the implementation's answer can never disagree with it.
-- `Tests/CapstoneTests/Legacy/` holds the v5-era suite, excluded from the target because it covers twelve architectures at once. Move files back out as each architecture is adapted to v6.
-- Also run `swift test --traits AARCH64,SH`. SH is compiled into the engine but has no wrapper, the only configuration in which `Capstone(arch:)` reaches its instruction-class lookup for an architecture this package does not cover; the default build rejects such architectures in `cs_open` first.
+- Also run `swift test --traits AARCH64,SH`. It compiles SH into the engine without a wrapper, the only configuration in which `Architecture.isCompiledIn` reports an architecture this package has no `DisassemblyArchitecture` type for.
 - For coverage checks, run `swift test --enable-code-coverage` and inspect the `.build` artifacts; aim to touch new instruction paths and error cases.
 
 ## Commit & Pull Request Guidelines
@@ -36,5 +35,5 @@
 - Include screenshots or sample output only when behavior changes are user-visible (e.g., example tool output); otherwise keep PRs text-focused.
 
 ## Security & Configuration Tips
-- This wrapper targets capstone v6. The v6 adaptation is in progress: only AArch64 is adapted, tracked by the default trait set in `Package.swift`.
+- This wrapper targets capstone v6. Only AArch64 is wrapped, as the one `DisassemblyArchitecture` type, tracked by the default trait set in `Package.swift`; the other architectures have generated enums only.
 - The enum-generation plugin writes to the package root; run it intentionally and commit deterministic outputs. Do not commit build products from `.build/` or `Examples/*/.build/`.

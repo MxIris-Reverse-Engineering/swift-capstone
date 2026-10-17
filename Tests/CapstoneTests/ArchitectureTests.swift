@@ -1,6 +1,5 @@
-import Foundation
 import Testing
-@testable import Capstone
+import Capstone
 
 @Suite("Architecture")
 struct ArchitectureTests {
@@ -41,37 +40,32 @@ struct ArchitectureTests {
         #expect(architecture.rawValue == expected)
     }
 
+    /// `CS_API_MAJOR` and `CS_API_MINOR` in capstone.h.
+    @Test("the version is the one capstone.h declares")
+    func capstoneVersion() {
+        #expect(CapstoneVersion.current == CapstoneVersion(major: 6, minor: 0))
+        #expect(CapstoneVersion.current.description == "6.0")
+        #expect(CapstoneVersion(major: 5, minor: 9) < CapstoneVersion(major: 6, minor: 0))
+    }
+
     @Test("every architecture capstone v6 supports has a case")
     func coversEveryArchitecture() {
         let cases = (0 ... 22).compactMap { Architecture(rawValue: UInt32($0)) }
         #expect(cases.count == 23)
     }
 
-    @Test("an architecture without a wrapper is reported as unwrapped, not missing")
-    func unwrappedArchitecturesAreKnown() {
-        // These exist in cs_arch and so have a case, but no Instruction subclass yet.
-        for architecture in [Architecture.alpha, .hppa, .loongarch, .xtensa, .arc, .sh, .tricore] {
-            #expect(!Architecture.wrapped.contains(architecture))
-        }
-    }
-
-    /// When the engine has an architecture compiled in that this wrapper does not cover —
-    /// the trait of an unwrapped architecture, or another package enabling more capstone
-    /// traits — `cs_open` succeeds and only the instruction class lookup can fail. That
-    /// has to surface as an error from the initializer, not a trap.
-    ///
-    /// The default build compiles none of these into the engine, so `cs_open` already
-    /// rejects them; run `swift test --traits AARCH64,SH` to exercise the lookup itself.
-    @Test("opening an architecture without a wrapper throws instead of trapping", arguments: [
-        Architecture.alpha, .hppa, .loongarch, .xtensa, .arc, .sh, .tricore,
-    ])
-    func openingUnwrappedArchitectureThrows(architecture: Architecture) throws {
-        let error = try #require(throws: CapstoneError.self) {
-            _ = try Capstone(arch: architecture)
-        }
-        guard case .unsupportedArchitecture = error else {
-            Issue.record("expected CapstoneError.unsupportedArchitecture, got \(error)")
-            return
-        }
+    /// The default build compiles in only the adapted architectures; run
+    /// `swift test --traits AARCH64,SH` for one compiled in without a wrapper.
+    @Test("an architecture is compiled in exactly when its trait is enabled")
+    func compiledInFollowsTraits() {
+        #expect(Architecture.aarch64.isCompiledIn)
+        #if CAPSTONE_HAS_SH
+        #expect(Architecture.sh.isCompiledIn)
+        #else
+        #expect(!Architecture.sh.isCompiledIn)
+        #endif
+        #if !CAPSTONE_HAS_X86
+        #expect(!Architecture.x86.isCompiledIn)
+        #endif
     }
 }

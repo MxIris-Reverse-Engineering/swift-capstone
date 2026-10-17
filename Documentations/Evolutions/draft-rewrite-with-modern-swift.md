@@ -473,3 +473,7 @@ README 重写（用法、版本与 capstone 的对应、Apple 专有指令模式
 | 2026-10-17 | 步骤 4：数据条目的详情 | 探针与变异测试表明，AArch64 模块每次尝试解码前先清零详情，数据条目的详情本来就是空的；视图仍对数据条目一律不读详情，因为这取决于各架构模块，别的模块未必清零。 |
 | 2026-10-17 | 步骤 4：自定义助记符照 capstone 的实际行为写进文档，不在 fork 里改 | capstone 的 `str_replace` 假定打印出的助记符以指令名开头，直接替换掉与指令名等长的前缀，所以给 `orr` 定制助记符也会把它的别名 `mov x0, x1` 印成 `or x0, x1`。这是上游缺陷；两个下游都不用这个选项。文档与测试按实际行为写，fork 是否修由用户决定。 |
 | 2026-10-17 | 步骤 4：`CapstoneError` 加 `Hashable` | 让测试和调用方能直接比较错误，例如 `#expect(error == .invalidMode)`。其余清理留到步骤 5。 |
+| 2026-10-17 | 步骤 5：`Capstone.version` 换成 `CapstoneVersion.current`，`BuildMode` 不再提供 | 提案只交代了 `supports(arch:)` 的去向（`Architecture.isCompiledIn`）。版本号仍有用处（`Examples/cstool` 的 `--version`、报问题时），做成一个可比较的小值类型，不叫 `Capstone`，理由同引擎的命名。`supports(buildMode:)` 查的是 diet 与 X86 精简两种编译方式，capstone fork 的 SwiftPM 构建两者都不提供，结果恒为假，删除。 |
+| 2026-10-17 | 步骤 5：随类层级删除的还有 `InstructionGroup`、`OperandContainer`、`InstructionOperand`、`InstructionType` 与按名字查寄存器 | 前四个只为类层级服务：`AArch64Grp` 已含 jump、call、ret 等通用分组。`name(ofRegister:)` 与 `registerNames*` 依赖引擎句柄，两个下游都不用；寄存器的 Swift 枚举本身就带名字。 |
+| 2026-10-17 | 步骤 5：`CapstoneError` 只留创建引擎可能遇到的错误 | `outOfMemory`、`unsupportedArchitecture`、`invalidMode`、`invalidOption`，其余归 `unknown(code:)`。删掉的除提案点名的 `.ok`、`.detailNotAvailable`，还有 `.unsupportedVersion`、`.notInDiet`、`.skipData`、`.unsupportedSyntax`：新 API 碰不到这些错误码，`.unsupportedSyntax` 还引用了被删的全局 `Syntax`。 |
+| 2026-10-17 | 步骤 5：工具函数改用完整的泛型参数名 | `Utils.swift` 的类型转换函数沿用 v5 时代的 `T`、`U`、`x`，按项目规则改为 `Source`、`Target`、`value`；删掉不再使用的 `optionalNumericCast` 与 `nonZero`。 |

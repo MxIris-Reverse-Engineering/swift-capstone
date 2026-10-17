@@ -1,44 +1,50 @@
-// Various utility functions that didn't fit anywhere else
+// Conversions between capstone's C values and the generated Swift types.
 
-@inlinable internal func optionalNumericCast<T, U>(_ x: T?) -> U? where T: BinaryInteger, U: BinaryInteger {
-    guard let x = x else {
+/// The generated enum case with `value` as its raw value. Traps when there is
+/// none, which means the generated enums no longer match capstone's headers.
+internal func enumCast<Source: BinaryInteger, Target: RawRepresentable>(_ value: Source) -> Target
+    where Target.RawValue: BinaryInteger {
+    optionalEnumCast(value)!
+}
+
+/// The generated enum case with `value` as its raw value, or `nil` when there is none.
+internal func optionalEnumCast<Source: BinaryInteger, Target: RawRepresentable>(_ value: Source) -> Target?
+    where Target.RawValue: BinaryInteger {
+    Target(rawValue: numericCast(value))
+}
+
+/// Converts an imported C enum to the generated Swift enum with the same raw value.
+internal func enumCast<Source: RawRepresentable, Target: RawRepresentable>(_ value: Source) -> Target
+    where Source.RawValue: BinaryInteger, Target.RawValue: BinaryInteger {
+    enumCast(value.rawValue)
+}
+
+/// The generated enum case for `value`, or `nil` when `value` is one of the values
+/// capstone uses to mean "none", or has no case.
+internal func optionalEnumCast<Source: BinaryInteger, Target: RawRepresentable>(
+    _ value: Source?,
+    ignoring absentValues: [Source] = []
+) -> Target? where Target.RawValue: BinaryInteger {
+    guard let value, !absentValues.contains(value) else {
         return nil
     }
-    return numericCast(x)
+    return Target(rawValue: numericCast(value))
 }
 
-@inlinable internal func enumCast<T, U: RawRepresentable>(_ x: T) -> U where T: BinaryInteger, U.RawValue: BinaryInteger {
-    return optionalEnumCast(x)!
+internal func optionalEnumCast<Source: BinaryInteger, Target: RawRepresentable>(
+    _ value: Source?,
+    ignoring absentValues: Source...
+) -> Target? where Target.RawValue: BinaryInteger {
+    optionalEnumCast(value, ignoring: absentValues)
 }
 
-@inlinable internal func optionalEnumCast<T, U: RawRepresentable>(_ x: T) -> U? where T: BinaryInteger, U.RawValue: BinaryInteger {
-    return U(rawValue: numericCast(x))
-}
-
-@inlinable internal func enumCast<T: RawRepresentable, U: RawRepresentable>(_ x: T) -> U where T.RawValue: BinaryInteger, U.RawValue: BinaryInteger {
-    return enumCast(x.rawValue)
-}
-
-@inlinable internal func optionalEnumCast<T: BinaryInteger, U: RawRepresentable>(_ x: T?, ignoring invalidValues: [T] = []) -> U? where U.RawValue: BinaryInteger {
-    guard let x = x, !invalidValues.contains(x) else {
-        return nil
-    }
-    return U(rawValue: numericCast(x))
-}
-
-@inlinable internal func optionalEnumCast<T: BinaryInteger, U: RawRepresentable>(_ x: T?, ignoring invalidValues: T...) -> U? where U.RawValue: BinaryInteger {
-    return optionalEnumCast(x, ignoring: invalidValues)
-}
-
-@inlinable internal func optionalEnumCast<T: RawRepresentable, U: RawRepresentable>(_ x: T?, ignoring invalidValues: T...) -> U? where T.RawValue: BinaryInteger, U.RawValue: BinaryInteger {
-    return optionalEnumCast(x?.rawValue, ignoring: invalidValues.map({ $0.rawValue }))
-}
-
-@inlinable internal func nonZero<T: BinaryInteger>(_ x: T?) -> T? {
-    guard let value = x, value != 0 else {
-        return nil
-    }
-    return value
+/// Converts an imported C enum to the generated Swift enum, treating the values
+/// capstone uses to mean "none" as `nil`.
+internal func optionalEnumCast<Source: RawRepresentable, Target: RawRepresentable>(
+    _ value: Source?,
+    ignoring absentValues: Source...
+) -> Target? where Source.RawValue: BinaryInteger, Target.RawValue: BinaryInteger {
+    optionalEnumCast(value?.rawValue, ignoring: absentValues.map(\.rawValue))
 }
 
 /// Reads a NUL-terminated string out of a fixed-size C character array, which Swift
