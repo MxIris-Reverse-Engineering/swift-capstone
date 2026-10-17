@@ -52,6 +52,17 @@ union 里；真正的种类（`at`、`db`、`prfm`……）在 `sysop.sub_type`�
 （`AArch64CC` → `AArch64CondCode`）。上游出现新的不规则前缀时，表现是「某个枚举在生成物里消失了」，
 要回到这里补登记。
 
+### 只差下划线的常量不能撞名
+
+capstone 有些常量只差两端的下划线：PowerPC 的 `PPC_INS_ALIAS_MR` 与 `PPC_INS_ALIAS_MR_`（后者是置 CR0 的记录形式），
+Xtensa 的 `XTENSA_INS_L32I` 与 `XTENSA_INS__L32I`。`makeSwiftIdentifier` 去掉两端下划线后它们同名，生成的枚举
+一开对应的 trait 就编不过。默认 trait 只有 AArch64，所以这个问题一直没人发现，直到 DocC 插件（它会打开全部
+trait 编译）编不过才暴露。
+
+现在每个枚举记着已用的名字：名字被占用时保留两端的下划线（`aliasMr_`、`_l32i`），还撞就报
+`conflictingCaseName`，需要在生成器里显式处理。先出现的常量保持原名，所以没撞名的枚举，包括已适配的 AArch64，
+生成结果不变。
+
 ### 生成的类型一律声明 `Sendable`
 
 生成的枚举、`OptionSet` 和 `Architecture` 只装原始值，不引用引擎句柄，所以都显式声明 `Sendable`。
@@ -144,7 +155,9 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 ## 验证
 
 - `Tests/CapstoneEnumsGeneratorTests/CapstoneEnumsGeneratorTests.swift`：枚举解析、按位标志识别成 `OptionSet`、
-  宏常量组，以及「头文件消失后 `--check` 必须失败」。
+  宏常量组、只差下划线的常量得到不同的名字，以及「头文件消失后 `--check` 必须失败」。
+- 全部 trait：`swift build --enable-all-traits --build-tests` 要能编过，即所有架构的生成枚举都合法；2026-10-17
+  修好撞名后验证过。DocC 插件就是这样编译的。
 - 双向检查：落地时故意改坏配置，确认两类报错都会触发（人工验证）。
 - `--check`：落地时验证过两个方向，干净的树退出 0，篡改一个生成文件后退出 1（人工验证）；对当前头文件退出 0。
 - 插件：2026-10-17 在 `USING_LOCAL_DEPENDENCIES=1` 下验证，修复前报找不到 capstone.h，修复后成功，重新生成

@@ -115,6 +115,40 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         #expect(contents.contains("public static let testC3 = X86FpuFlags(rawValue: 524288)"))
     }
 
+    /// capstone spells some distinct constants alike but for their underscores:
+    /// PowerPC's `PPC_INS_ALIAS_MR` and `PPC_INS_ALIAS_MR_`, the record form, and
+    /// Xtensa's `XTENSA_INS_L32I` and `XTENSA_INS__L32I`. Dropping the underscores
+    /// gave each pair one Swift name, and the enum stopped compiling as soon as its
+    /// trait was enabled.
+    @Test func constantsDifferingOnlyInUnderscoresGetDistinctNames() async throws {
+        let fileManager = FileManager.default
+        let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
+        let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
+        try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
+        try fileManager.createDirectory(at: outputDir, withIntermediateDirectories: true)
+
+        let header = """
+        typedef enum arm_insn {
+            ARM_INS_INVALID = 0,
+            ARM_INS_ALIAS_MR,
+            ARM_INS_ALIAS_MR_,
+            ARM_INS__ALIAS_MR,
+            ARM_INS_ALIAS_MR_SAME = ARM_INS_ALIAS_MR_,
+        } arm_insn;
+        """
+        try header.write(to: includeDir.appendingPathComponent("arm.h"), atomically: true, encoding: .utf8)
+
+        try await CapstoneEnumsGenerator().generate(input: includeDir, output: outputDir)
+
+        let contents = try String(contentsOf: outputDir.appendingPathComponent("ArmEnums.swift"), encoding: .utf8)
+        #expect(contents.contains("case aliasMr = 1"))
+        #expect(contents.contains("case aliasMr_ = 2"))
+        #expect(contents.contains("case _aliasMr = 3"))
+        #expect(contents.contains("public static let aliasMrSame = 2"))
+    }
+
     /// Models an upstream header rename, as v6 did with arm64.h: the files were
     /// generated, then the header they came from disappeared. Skipping the
     /// architecture leaves those files alone, so `--check` would call them current.

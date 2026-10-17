@@ -24,6 +24,9 @@ public enum GenerationError: Error, CustomStringConvertible {
     /// --check found generated files that do not match what the headers and the
     /// configuration produce now.
     case staleGeneratedFiles([String])
+    /// Two constants of one enum map to the same Swift name even with their
+    /// underscores kept. Generating both would not compile.
+    case conflictingCaseName(constant: String, swiftName: String)
 
     public var description: String {
         switch self {
@@ -51,6 +54,11 @@ public enum GenerationError: Error, CustomStringConvertible {
             return """
             generated files are out of date: \(names.joined(separator: ", ")). \
             Run `swift package plugin generate-enums` and commit the result.
+            """
+        case .conflictingCaseName(let constant, let swiftName):
+            return """
+            \(constant) maps to the Swift name \(swiftName), which another constant of the same \
+            enum already has. Map it explicitly in the generator.
             """
         }
     }
@@ -438,12 +446,20 @@ private extension CapstoneEnumsGenerator {
         )
 
         var enums = [ParsedEnum]()
+        var failure: (any Error)?
         translationUnit.visitChildren { cursor in
             guard let enumDecl = cursor as? EnumDecl else { return .continue }
             guard cursorIsInHeader(enumDecl, headerURL: headerURL) else { return .continue }
-            let parsed = parseEnum(enumDecl, configuration: configuration)
-            enums.append(contentsOf: parsed)
+            do {
+                enums.append(contentsOf: try parseEnum(enumDecl, configuration: configuration))
+            } catch {
+                failure = error
+                return .abort
+            }
             return .continue
+        }
+        if let failure {
+            throw failure
         }
 
         return enums.sorted(by: { $0.swiftName < $1.swiftName })
@@ -457,6 +473,7 @@ private extension CapstoneEnumsGenerator {
         for macroConfig in configuration.macroOptionSets {
             var cases = [ParsedEnum.Case]()
             var seenValues = [Int64: String]()
+            var usedNames = Set<String>()
 
             for line in contents.split(separator: "\n") {
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
@@ -473,7 +490,8 @@ private extension CapstoneEnumsGenerator {
                 let valueString = String(components[2])
                 guard let value = parseMacroNumericValue(valueString) else { continue }
                 guard let fragment = nameFragment(from: macroName, prefix: matchedPrefix) else { continue }
-                let swiftCaseName = makeSwiftIdentifier(fragment, lowercaseFirst: true)
+                let swiftCaseName = try caseName(for: fragment, constant: macroName, avoiding: usedNames)
+                usedNames.insert(swiftCaseName)
 
                 if let existing = seenValues[value] {
                     cases.append(.init(name: swiftCaseName, rawValue: value, comment: nil, kind: .alias(target: existing)))
@@ -508,6 +526,7 @@ private extension CapstoneEnumsGenerator {
         for macroConfig in configuration.macroEnums {
             var cases = [ParsedEnum.Case]()
             var seenValues = [Int64: String]()
+            var usedNames = Set<String>()
 
             for line in contents.split(separator: "\n") {
                 let trimmed = line.trimmingCharacters(in: .whitespaces)
@@ -519,7 +538,8 @@ private extension CapstoneEnumsGenerator {
                 let valueString = String(components[2])
                 guard let value = parseMacroNumericValue(valueString) else { continue }
                 guard let fragment = nameFragment(from: macroName, prefix: matchedPrefix) else { continue }
-                let swiftCaseName = makeSwiftIdentifier(fragment, lowercaseFirst: true)
+                let swiftCaseName = try caseName(for: fragment, constant: macroName, avoiding: usedNames)
+                usedNames.insert(swiftCaseName)
 
                 if let existing = seenValues[value] {
                     cases.append(.init(name: swiftCaseName, rawValue: value, comment: nil, kind: .alias(target: existing)))
@@ -551,7 +571,7 @@ private extension CapstoneEnumsGenerator {
         return URL(fileURLWithPath: cursorFile).lastPathComponent == headerURL.lastPathComponent
     }
 
-    func parseEnum(_ enumDecl: EnumDecl, configuration: ArchitectureConfig) -> [ParsedEnum] {
+    func parseEnum(_ enumDecl: EnumDecl, configuration: ArchitectureConfig) throws -> [ParsedEnum] {
         let constants = enumDecl.constants()
         guard !constants.isEmpty else { return [] }
 
@@ -561,7 +581,7 @@ private extension CapstoneEnumsGenerator {
             return []
         }
 
-        var groupedCases = [String: ([ParsedEnum.Case], [Int64: String])]()
+        var groupedCases = [String: (cases: [ParsedEnum.Case], namesByValue: [Int64: String], usedNames: Set<String>)]()
 
         for constant in constants {
             let constantName = constant.description
@@ -576,23 +596,24 @@ private extension CapstoneEnumsGenerator {
 
             guard let fragment = nameFragment(from: constantName, prefix: chosenPrefix) else { continue }
 
-            let swiftCaseName = makeSwiftIdentifier(fragment, lowercaseFirst: true)
+            var entry = groupedCases[chosenPrefix] ?? ([], [:], [])
+            let swiftCaseName = try caseName(for: fragment, constant: constantName, avoiding: entry.usedNames)
+            entry.usedNames.insert(swiftCaseName)
             let value = Int64(constant.value)
             let brief = constant.briefComment ?? constant.rawComment
 
-            var entry = groupedCases[chosenPrefix] ?? ([], [:])
-            if let existing = entry.1[value] {
-                entry.0.append(.init(name: swiftCaseName, rawValue: value, comment: brief, kind: .alias(target: existing)))
+            if let existing = entry.namesByValue[value] {
+                entry.cases.append(.init(name: swiftCaseName, rawValue: value, comment: brief, kind: .alias(target: existing)))
             } else {
-                entry.1[value] = swiftCaseName
-                entry.0.append(.init(name: swiftCaseName, rawValue: value, comment: brief, kind: .standard))
+                entry.namesByValue[value] = swiftCaseName
+                entry.cases.append(.init(name: swiftCaseName, rawValue: value, comment: brief, kind: .standard))
             }
             groupedCases[chosenPrefix] = entry
         }
 
         var parsedEnums = [ParsedEnum]()
         for prefix in groupedCases.keys.sorted() {
-            let cases = groupedCases[prefix]!.0.sorted(by: { $0.rawValue < $1.rawValue })
+            let cases = groupedCases[prefix]!.cases.sorted(by: { $0.rawValue < $1.rawValue })
             let typeBase = swiftTypeName(from: prefix, configuration: configuration)
             let fullSwiftName = configuration.swiftPrefix + typeBase
             var rawType = (try? swiftRawType(from: enumDecl.integerType)) ?? "UInt32"
@@ -675,14 +696,47 @@ private extension CapstoneEnumsGenerator {
         }
     }
 
-    func makeSwiftIdentifier(_ name: String, lowercaseFirst: Bool) -> String {
+    /// The Swift name for the constant whose name after the enum's prefix is
+    /// `fragment`, distinct from the names its enum already has.
+    ///
+    /// capstone spells some distinct constants alike but for leading or trailing
+    /// underscores — PowerPC's `PPC_INS_ALIAS_MR` and `PPC_INS_ALIAS_MR_`, Xtensa's
+    /// `XTENSA_INS_L32I` and `XTENSA_INS__L32I` — and `makeSwiftIdentifier` drops
+    /// those. A constant whose name is taken keeps its underscores, `aliasMr_`; one
+    /// whose name is taken even so stops generation rather than produce an enum
+    /// that does not compile.
+    func caseName(for fragment: String, constant: String, avoiding usedNames: Set<String>) throws -> String {
+        let name = makeSwiftIdentifier(fragment, lowercaseFirst: true)
+        guard usedNames.contains(name) else {
+            return name
+        }
+        let nameKeepingUnderscores = makeSwiftIdentifier(fragment, lowercaseFirst: true, keepingEdgeUnderscores: true)
+        guard !usedNames.contains(nameKeepingUnderscores) else {
+            throw GenerationError.conflictingCaseName(constant: constant, swiftName: nameKeepingUnderscores)
+        }
+        return nameKeepingUnderscores
+    }
+
+    func makeSwiftIdentifier(_ name: String, lowercaseFirst: Bool, keepingEdgeUnderscores: Bool = false) -> String {
         let trimmed = name.trimmingCharacters(in: .init(charactersIn: "_"))
         let parts = trimmed.split(separator: "_").map { $0.lowercased() }
         guard let first = parts.first else { return trimmed }
 
         let head = lowercaseFirst ? String(first) : first.capitalized
         let tail = parts.dropFirst().map { $0.capitalized }
-        let candidate = ([String(head)] + tail).joined()
+        var candidate = ([String(head)] + tail).joined()
+
+        if keepingEdgeUnderscores {
+            let leadingUnderscores = String(name.prefix { $0 == "_" })
+            let trailingUnderscores = String(name.reversed().prefix { $0 == "_" })
+            candidate = leadingUnderscores + candidate + trailingUnderscores
+            // An identifier with underscores at either end is no keyword, and a
+            // leading underscore already keeps a digit from starting it.
+            if leadingUnderscores.isEmpty, candidate.first?.isNumber == true {
+                return "_\(candidate)"
+            }
+            return candidate
+        }
 
         if swiftKeywords.contains(candidate) {
             return "`\(candidate)`"

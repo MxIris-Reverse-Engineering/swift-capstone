@@ -14,6 +14,7 @@
 - `swift test` – run the suite (swift-testing); use `swift test --filter <name>` to scope failures. Trust the raw exit code, never a formatter's summary.
 - `swift package plugin generate-enums` – regenerates the enums, the architecture table and the operand accessors from the capstone headers; run after upgrading capstone and commit the result.
 - `swift run capstone-enums-generator --include <capstone>/include/capstone --output Sources/Capstone --check` – verifies the checked-in generated files still match the headers, writing nothing. Exits non-zero when stale.
+- `swift build --enable-all-traits --build-tests` – every architecture's generated enums must compile, since the documentation plugin builds this way.
 - `swift run cstool -- --help` (from `Examples/cstool`) – sanity-check the example tool.
 
 ## Coding Style & Naming Conventions

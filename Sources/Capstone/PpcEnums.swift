@@ -3616,11 +3616,11 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_OR
     case aliasMr = 1720
     /// Real instr.: PPC_OR_rec
-    case aliasMr = 1721
+    case aliasMr_ = 1721
     /// Real instr.: PPC_NOR
     case aliasNot = 1722
     /// Real instr.: PPC_NOR_rec
-    case aliasNot = 1723
+    case aliasNot_ = 1723
     /// Real instr.: PPC_ORI
     case aliasNop = 1724
     /// Real instr.: PPC_MTUDSCR
@@ -3636,11 +3636,11 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_SUBF
     case aliasSub = 1730
     /// Real instr.: PPC_SUBF_rec
-    case aliasSub = 1731
+    case aliasSub_ = 1731
     /// Real instr.: PPC_SUBFC
     case aliasSubc = 1732
     /// Real instr.: PPC_SUBFC_rec
-    case aliasSubc = 1733
+    case aliasSubc_ = 1733
     /// Real instr.: PPC_VOR
     case aliasVmr = 1734
     /// Real instr.: PPC_VNOR
@@ -3648,15 +3648,15 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_RLWINM8
     case aliasRotlwi = 1736
     /// Real instr.: PPC_RLWINM8_rec
-    case aliasRotlwi = 1737
+    case aliasRotlwi_ = 1737
     /// Real instr.: PPC_RLWNM8
     case aliasRotlw = 1738
     /// Real instr.: PPC_RLWNM8_rec
-    case aliasRotlw = 1739
+    case aliasRotlw_ = 1739
     /// Real instr.: PPC_RLWINM8
     case aliasClrlwi = 1740
     /// Real instr.: PPC_RLWINM8_rec
-    case aliasClrlwi = 1741
+    case aliasClrlwi_ = 1741
     /// Real instr.: PPC_ISEL8
     case aliasIsellt = 1742
     /// Real instr.: PPC_ISEL8
@@ -3668,7 +3668,7 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_CNTLZW8
     case aliasCntlzw = 1746
     /// Real instr.: PPC_CNTLZW8_rec
-    case aliasCntlzw = 1747
+    case aliasCntlzw_ = 1747
     /// Real instr.: PPC_MTSPR8
     case aliasMtxer = 1748
     /// Real instr.: PPC_MFSPR8
@@ -3820,11 +3820,11 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_MTFSFI
     case aliasMtfsfi = 1822
     /// Real instr.: PPC_MTFSFI_rec
-    case aliasMtfsfi = 1823
+    case aliasMtfsfi_ = 1823
     /// Real instr.: PPC_MTFSF
     case aliasMtfsf = 1824
     /// Real instr.: PPC_MTFSF_rec
-    case aliasMtfsf = 1825
+    case aliasMtfsf_ = 1825
     /// Real instr.: PPC_SC
     case aliasSc = 1826
     /// Real instr.: PPC_SYNC
@@ -3978,15 +3978,15 @@ public enum PpcIns: UInt32, Sendable {
     /// Real instr.: PPC_RLDICL
     case aliasRotldi = 1901
     /// Real instr.: PPC_RLDICL_rec
-    case aliasRotldi = 1902
+    case aliasRotldi_ = 1902
     /// Real instr.: PPC_RLDCL
     case aliasRotld = 1903
     /// Real instr.: PPC_RLDCL_rec
-    case aliasRotld = 1904
+    case aliasRotld_ = 1904
     /// Real instr.: PPC_RLDICL
     case aliasClrldi = 1905
     /// Real instr.: PPC_RLDICL_rec
-    case aliasClrldi = 1906
+    case aliasClrldi_ = 1906
     /// Real instr.: PPC_ADDPCIS
     case aliasLnia = 1907
     /// Real instr.: PPC_gBCat

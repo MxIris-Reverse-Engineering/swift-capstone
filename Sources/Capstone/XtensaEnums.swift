@@ -2888,19 +2888,19 @@ public enum XtensaIns: UInt32, Sendable {
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
     case xsr = 1401
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case l32i = 1402
+    case _l32i = 1402
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case l32iN = 1403
+    case _l32iN = 1403
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case movi = 1404
+    case _movi = 1404
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case s32i = 1405
+    case _s32i = 1405
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case s32iN = 1406
+    case _s32iN = 1406
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case slli = 1407
+    case _slli = 1407
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
-    case srli = 1408
+    case _srli = 1408
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
     case mvQr = 1409
 }
