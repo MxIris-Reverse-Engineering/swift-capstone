@@ -51,6 +51,12 @@ union 里；真正的种类（`at`、`db`、`prfm`……）在 `sysop.sub_type`�
 （`AArch64CC` → `AArch64CondCode`）。上游出现新的不规则前缀时，表现是「某个枚举在生成物里消失了」，
 要回到这里补登记。
 
+### 生成的类型一律声明 `Sendable`
+
+生成的枚举、`OptionSet` 和 `Architecture` 只装原始值，不引用引擎句柄，所以都显式声明 `Sendable`。
+公开类型不会被自动推断成 `Sendable`，不写的话，Swift 6 模式的调用方把寄存器之类的值存进自己的
+`Sendable` 类型时会编译失败，只能退回 `@unchecked Sendable`。
+
 ### `Reg` 与 `Grp` 枚举的原始值类型不跟 C 枚举走
 
 以 `Reg` 结尾的枚举固定用 `UInt16`，以 `Grp` 结尾的固定用 `UInt8`，其余才按 C 枚举的实际宽度推。原因是这两类

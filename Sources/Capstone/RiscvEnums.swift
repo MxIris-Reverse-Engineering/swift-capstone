@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Riscv)
 
 /// > Group of RISCV instructions
-public enum RiscvFeature: UInt32 {
+public enum RiscvFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <RISCVGenCSFeatureEnum.inc> begin clang-format off
     case hasstdexti = 128
     /// Architecture-specific groups generated content <RISCVGenCSFeatureEnum.inc> begin clang-format off
@@ -206,7 +206,7 @@ public enum RiscvFeature: UInt32 {
 }
 
 /// > Group of RISCV instructions
-public enum RiscvGrp: UInt8 {
+public enum RiscvGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -228,7 +228,7 @@ public enum RiscvGrp: UInt8 {
 }
 
 /// > RISCV instruction
-public enum RiscvIns: UInt32 {
+public enum RiscvIns: UInt32, Sendable {
     /// generated content <RISCVGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <RISCVGenCSInsnEnum.inc> begin clang-format off
@@ -3760,7 +3760,7 @@ public enum RiscvIns: UInt32 {
 }
 
 /// > Operand type for instruction's operands
-public enum RiscvOp: UInt32 {
+public enum RiscvOp: UInt32, Sendable {
     /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// = CS_OP_REG (Register operand).
@@ -3776,7 +3776,7 @@ public enum RiscvOp: UInt32 {
 }
 
 /// > RISCV registers
-public enum RiscvReg: UInt16 {
+public enum RiscvReg: UInt16, Sendable {
     /// generated content <RISCVGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <RISCVGenCSRegEnum.inc> begin clang-format off
@@ -4700,7 +4700,7 @@ public enum RiscvReg: UInt16 {
 }
 
 /// > Floating-point rounding mode for RISC-V FP instructions
-public enum RiscvRm: UInt32 {
+public enum RiscvRm: UInt32, Sendable {
     /// not applicable (no rounding mode)
     case invalid = 0
     /// round to nearest, ties to even
@@ -4717,7 +4717,7 @@ public enum RiscvRm: UInt32 {
     case dyn = 6
 }
 
-public enum RiscvSysreg: UInt32 {
+public enum RiscvSysreg: UInt32, Sendable {
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case fflags = 1
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off

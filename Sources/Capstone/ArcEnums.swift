@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arc)
 
 /// > Group of ARC instructions
-public enum ArcGrp: UInt8 {
+public enum ArcGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -17,7 +17,7 @@ public enum ArcGrp: UInt8 {
 }
 
 /// ARC instruction
-public enum ArcIns: UInt32 {
+public enum ArcIns: UInt32, Sendable {
     /// generated content <ARCGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <ARCGenCSInsnEnum.inc> begin clang-format off
@@ -403,7 +403,7 @@ public enum ArcIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum ArcOp: UInt32 {
+public enum ArcOp: UInt32, Sendable {
     /// Invalid
     case invalid = 0
     /// Register operand
@@ -413,7 +413,7 @@ public enum ArcOp: UInt32 {
 }
 
 /// ARC registers
-public enum ArcReg: UInt16 {
+public enum ArcReg: UInt16, Sendable {
     /// generated content <ARCGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <ARCGenCSRegEnum.inc> begin clang-format off

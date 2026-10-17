@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M68k)
 
 /// M68K Addressing Modes
-public enum M68kAm: UInt32 {
+public enum M68kAm: UInt32, Sendable {
     /// No address mode.
     case none = 0
     /// Register Direct - Data
@@ -46,7 +46,7 @@ public enum M68kAm: UInt32 {
 }
 
 /// Operation size of the CPU instructions
-public struct M68kCpuSize: OptionSet {
+public struct M68kCpuSize: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// unsized or unspecified
@@ -60,7 +60,7 @@ public struct M68kCpuSize: OptionSet {
 }
 
 /// Operation size of the FPU instructions (Notice that FPU instruction can also use CPU sizes if needed)
-public enum M68kFpuSize: UInt32 {
+public enum M68kFpuSize: UInt32, Sendable {
     /// unsized like fsave/frestore
     case none = 0
     /// 4 byte in size (single float)
@@ -74,7 +74,7 @@ public enum M68kFpuSize: UInt32 {
 }
 
 /// Group of M68K instructions
-public enum M68kGrp: UInt8 {
+public enum M68kGrp: UInt8, Sendable {
     /// CS_GRUP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -90,7 +90,7 @@ public enum M68kGrp: UInt8 {
 }
 
 /// M68K instruction
-public enum M68kIns: UInt32 {
+public enum M68kIns: UInt32, Sendable {
     case invalid = 0
     case abcd = 1
     case add = 2
@@ -503,7 +503,7 @@ public enum M68kIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum M68kOp: UInt32 {
+public enum M68kOp: UInt32, Sendable {
     /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// = CS_OP_REG (Register operand).
@@ -531,7 +531,7 @@ public enum M68kOp: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct M68kOpBrDispSize: OptionSet {
+public struct M68kOpBrDispSize: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -545,7 +545,7 @@ public struct M68kOpBrDispSize: OptionSet {
 }
 
 /// Per-operand modifier flags.
-public struct M68kOpFlag: OptionSet {
+public struct M68kOpFlag: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     public static let none: M68kOpFlag = []
@@ -562,7 +562,7 @@ public struct M68kOpFlag: OptionSet {
 }
 
 /// M68K registers and special registers
-public enum M68kReg: UInt16 {
+public enum M68kReg: UInt16, Sendable {
     case invalid = 0
     case d0 = 1
     case d1 = 2
@@ -627,7 +627,7 @@ public enum M68kReg: UInt16 {
 }
 
 /// Type of size that is being used for the current instruction
-public enum M68kSizeType: UInt32 {
+public enum M68kSizeType: UInt32, Sendable {
     case invalid = 0
     case cpu = 1
     case fpu = 2

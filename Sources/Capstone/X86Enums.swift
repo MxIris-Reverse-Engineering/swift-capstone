@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (X86)
 
 /// AVX broadcast type
-public enum X86AvxBcast: UInt32 {
+public enum X86AvxBcast: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     /// AVX512 broadcast type {1to2}
@@ -16,7 +16,7 @@ public enum X86AvxBcast: UInt32 {
 }
 
 /// AVX Code Condition type
-public enum X86AvxCc: UInt32 {
+public enum X86AvxCc: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     case eq = 1
@@ -54,7 +54,7 @@ public enum X86AvxCc: UInt32 {
 }
 
 /// AVX static rounding mode type
-public enum X86AvxRm: UInt32 {
+public enum X86AvxRm: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     /// Round to nearest
@@ -67,7 +67,7 @@ public enum X86AvxRm: UInt32 {
     case rz = 4
 }
 
-public struct X86Eflags: OptionSet {
+public struct X86Eflags: OptionSet, Sendable {
     public let rawValue: UInt64
     public init(rawValue: UInt64) { self.rawValue = rawValue }
     public static let modifyAf = X86Eflags(rawValue: 1)
@@ -131,7 +131,7 @@ public struct X86Eflags: OptionSet {
     public static let resetAc = X86Eflags(rawValue: 288230376151711744)
 }
 
-public struct X86FpuFlags: OptionSet {
+public struct X86FpuFlags: OptionSet, Sendable {
     public let rawValue: UInt64
     public init(rawValue: UInt64) { self.rawValue = rawValue }
     public static let modifyC0 = X86FpuFlags(rawValue: 1)
@@ -157,7 +157,7 @@ public struct X86FpuFlags: OptionSet {
 }
 
 /// Group of X86 instructions
-public enum X86Grp: UInt8 {
+public enum X86Grp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -221,7 +221,7 @@ public enum X86Grp: UInt8 {
 }
 
 /// X86 instructions
-public enum X86Ins: UInt32 {
+public enum X86Ins: UInt32, Sendable {
     case invalid = 0
     case aaa = 1
     case aad = 2
@@ -1751,7 +1751,7 @@ public enum X86Ins: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct X86Op: OptionSet {
+public struct X86Op: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -1765,7 +1765,7 @@ public struct X86Op: OptionSet {
 }
 
 /// Instruction prefixes - to be used in cs_x86.prefix[]
-public enum X86Prefix: UInt32 {
+public enum X86Prefix: UInt32, Sendable {
     case _0 = 0
     /// segment override ES (cs_x86.prefix[1]
     case es = 38
@@ -1794,7 +1794,7 @@ public enum X86Prefix: UInt32 {
 }
 
 /// X86 registers
-public enum X86Reg: UInt16 {
+public enum X86Reg: UInt16, Sendable {
     case invalid = 0
     case ah = 1
     case al = 2
@@ -2046,7 +2046,7 @@ public enum X86Reg: UInt16 {
 }
 
 /// SSE Code Condition type
-public enum X86SseCc: UInt32 {
+public enum X86SseCc: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     case eq = 1
@@ -2060,7 +2060,7 @@ public enum X86SseCc: UInt32 {
 }
 
 /// XOP Code Condition type
-public enum X86XopCc: UInt32 {
+public enum X86XopCc: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     case lt = 1

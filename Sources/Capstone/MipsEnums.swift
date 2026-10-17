@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mips)
 
 /// Group of MIPS instructions
-public enum MipsFeature: UInt32 {
+public enum MipsFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
     case hasmips2 = 128
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
@@ -106,7 +106,7 @@ public enum MipsFeature: UInt32 {
 }
 
 /// Group of MIPS instructions
-public enum MipsFeatureHasmips3: UInt32 {
+public enum MipsFeatureHasmips3: UInt32, Sendable {
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
     case _32 = 129
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
@@ -114,7 +114,7 @@ public enum MipsFeatureHasmips3: UInt32 {
 }
 
 /// Group of MIPS instructions
-public enum MipsFeatureHasmips4: UInt32 {
+public enum MipsFeatureHasmips4: UInt32, Sendable {
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
     case _32 = 133
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
@@ -122,19 +122,19 @@ public enum MipsFeatureHasmips4: UInt32 {
 }
 
 /// Group of MIPS instructions
-public enum MipsFeatureHasmips5: UInt32 {
+public enum MipsFeatureHasmips5: UInt32, Sendable {
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
     case _32r2 = 136
 }
 
 /// Group of MIPS instructions
-public enum MipsFeatureNotmips4: UInt32 {
+public enum MipsFeatureNotmips4: UInt32, Sendable {
     /// Architecture-specific groups generated content <MipsGenCSFeatureEnum.inc> begin clang-format off
     case _32 = 134
 }
 
 /// Group of MIPS instructions
-public enum MipsGrp: UInt8 {
+public enum MipsGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -156,7 +156,7 @@ public enum MipsGrp: UInt8 {
 }
 
 /// MIPS instruction
-public enum MipsIns: UInt32 {
+public enum MipsIns: UInt32, Sendable {
     /// generated content <MipsGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <MipsGenCSInsnEnum.inc> begin clang-format off
@@ -3105,7 +3105,7 @@ public enum MipsIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct MipsOp: OptionSet {
+public struct MipsOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -3119,7 +3119,7 @@ public struct MipsOp: OptionSet {
 }
 
 /// MIPS registers
-public enum MipsReg: UInt16 {
+public enum MipsReg: UInt16, Sendable {
     /// generated content <MipsGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <MipsGenCSRegEnum.inc> begin clang-format off

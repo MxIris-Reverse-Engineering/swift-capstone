@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Mos65xx)
 
 /// MOS65XX Addressing Modes
-public enum Mos65xxAm: UInt32 {
+public enum Mos65xxAm: UInt32, Sendable {
     /// No address mode.
     case none = 0
     /// implied addressing (no addressing mode)
@@ -58,7 +58,7 @@ public enum Mos65xxAm: UInt32 {
 }
 
 /// Group of MOS65XX instructions
-public enum Mos65xxGrp: UInt8 {
+public enum Mos65xxGrp: UInt8, Sendable {
     /// CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -78,7 +78,7 @@ public enum Mos65xxGrp: UInt8 {
 }
 
 /// MOS65XX instruction
-public enum Mos65xxIns: UInt32 {
+public enum Mos65xxIns: UInt32, Sendable {
     case invalid = 0
     case adc = 1
     case and = 2
@@ -181,7 +181,7 @@ public enum Mos65xxIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct Mos65xxOp: OptionSet {
+public struct Mos65xxOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -195,7 +195,7 @@ public struct Mos65xxOp: OptionSet {
 }
 
 /// MOS65XX registers and special registers
-public enum Mos65xxReg: UInt16 {
+public enum Mos65xxReg: UInt16, Sendable {
     case invalid = 0
     /// accumulator
     case acc = 1

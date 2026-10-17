@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_SH
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sh)
 
-public enum ShDspCc: UInt32 {
+public enum ShDspCc: UInt32, Sendable {
     case invalid = 0
     case none = 1
     case dct = 2
@@ -9,7 +9,7 @@ public enum ShDspCc: UInt32 {
 }
 
 /// Group of SH instructions
-public enum ShGrp: UInt8 {
+public enum ShGrp: UInt8, Sendable {
     /// CS_GRUP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -41,7 +41,7 @@ public enum ShGrp: UInt8 {
 }
 
 /// SH instruction
-public enum ShIns: UInt32 {
+public enum ShIns: UInt32, Sendable {
     case invalid = 0
     case addR = 1
     case add = 2
@@ -205,7 +205,7 @@ public enum ShIns: UInt32 {
     case ending = 159
 }
 
-public enum ShInsDsp: UInt32 {
+public enum ShInsDsp: UInt32, Sendable {
     case invalid = 0
     case nop = 1
     case mov = 2
@@ -239,7 +239,7 @@ public enum ShInsDsp: UInt32 {
     case pwsb = 30
 }
 
-public struct ShOp: OptionSet {
+public struct ShOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -252,7 +252,7 @@ public struct ShOp: OptionSet {
     public static let mem = ShOp(rawValue: 128)
 }
 
-public enum ShOpDsp: UInt32 {
+public enum ShOpDsp: UInt32, Sendable {
     case invalid = 0
     case regPre = 1
     case regInd = 2
@@ -262,7 +262,7 @@ public enum ShOpDsp: UInt32 {
     case imm = 6
 }
 
-public enum ShOpMem: UInt32 {
+public enum ShOpMem: UInt32, Sendable {
     case invalid = 0
     /// <= Invalid
     case regInd = 1
@@ -285,7 +285,7 @@ public enum ShOpMem: UInt32 {
 }
 
 /// SH registers and special registers
-public enum ShReg: UInt16 {
+public enum ShReg: UInt16, Sendable {
     case invalid = 0
     case r0 = 1
     case r1 = 2

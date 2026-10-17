@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (M680x)
 
 /// Group of M680X instructions
-public enum M680xGrp: UInt8 {
+public enum M680xGrp: UInt8, Sendable {
     case invalid = 0
     /// = CS_GRP_JUMP
     case jump = 1
@@ -22,7 +22,7 @@ public enum M680xGrp: UInt8 {
     case ending = 8
 }
 
-public struct M680xIdx: OptionSet {
+public struct M680xIdx: OptionSet, Sendable {
     public let rawValue: UInt8
     public init(rawValue: UInt8) { self.rawValue = rawValue }
     public static let indirect = M680xIdx(rawValue: 1)
@@ -31,7 +31,7 @@ public struct M680xIdx: OptionSet {
 }
 
 /// M680X instruction IDs
-public enum M680xIns: UInt32 {
+public enum M680xIns: UInt32, Sendable {
     case invld = 0
     /// M6800/1/2/3
     case aba = 1
@@ -533,7 +533,7 @@ public enum M680xIns: UInt32 {
     case ending = 413
 }
 
-public enum M680xOffset: UInt8 {
+public enum M680xOffset: UInt8, Sendable {
     case none = 0
     case bits5 = 5
     case bits8 = 8
@@ -542,7 +542,7 @@ public enum M680xOffset: UInt8 {
 }
 
 /// Operand type for instruction's operands
-public enum M680xOp: UInt32 {
+public enum M680xOp: UInt32, Sendable {
     /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// = Register operand.
@@ -561,7 +561,7 @@ public enum M680xOp: UInt32 {
     case constant = 20
 }
 
-public struct M680xOpFlags: OptionSet {
+public struct M680xOpFlags: OptionSet, Sendable {
     public let rawValue: UInt8
     public init(rawValue: UInt8) { self.rawValue = rawValue }
     public static let firstOpInMnem = M680xOpFlags(rawValue: 1)
@@ -569,7 +569,7 @@ public struct M680xOpFlags: OptionSet {
 }
 
 /// M680X registers and special registers
-public enum M680xReg: UInt16 {
+public enum M680xReg: UInt16, Sendable {
     case invalid = 0
     /// M6800/1/2/3/9, HD6301/9
     case a = 1

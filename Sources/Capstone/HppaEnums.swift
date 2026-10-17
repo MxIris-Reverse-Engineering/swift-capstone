@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Hppa)
 
 /// Group of HPPA instructions
-public enum HppaGrp: UInt8 {
+public enum HppaGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     case computation = 128
@@ -18,7 +18,7 @@ public enum HppaGrp: UInt8 {
 }
 
 /// HPPA instruction
-public enum HppaIns: UInt32 {
+public enum HppaIns: UInt32, Sendable {
     case invalid = 0
     case add = 1
     case addi = 2
@@ -273,13 +273,13 @@ public enum HppaIns: UInt32 {
 }
 
 /// HPPA modifiers type. Can be string (most of them) or int (uid, sop)
-public enum HppaMod: UInt32 {
+public enum HppaMod: UInt32, Sendable {
     case str = 0
     case int = 1
 }
 
 /// Operand type for instruction's operands
-public enum HppaOp: UInt32 {
+public enum HppaOp: UInt32, Sendable {
     case invalid = 0
     case reg = 1
     case imm = 2
@@ -290,7 +290,7 @@ public enum HppaOp: UInt32 {
 }
 
 /// > HPPA registers
-public enum HppaReg: UInt16 {
+public enum HppaReg: UInt16, Sendable {
     case invalid = 0
     /// > General registers
     case gr0 = 1

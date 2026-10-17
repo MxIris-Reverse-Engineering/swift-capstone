@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_AARCH64
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (AArch64)
 
-public enum AArch64At: UInt32 {
+public enum AArch64At: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_AT> begin clang-format off
     case s1e1r = 960
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_AT> begin clang-format off
@@ -40,7 +40,7 @@ public enum AArch64At: UInt32 {
     case s1e3a = 13258
 }
 
-public enum AArch64Bti: UInt32 {
+public enum AArch64Bti: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BTI> begin clang-format off
     case c = 2
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BTI> begin clang-format off
@@ -52,7 +52,7 @@ public enum AArch64Bti: UInt32 {
 }
 
 /// Moved from AArch64BaseInfo.h The CondCodes constants map directly to the 4-bit encoding of the condition field for predicated instructions.
-public enum AArch64CondCode: UInt32 {
+public enum AArch64CondCode: UInt32, Sendable {
     /// Equal Equal
     case eq = 0
     /// ( Z)
@@ -97,7 +97,7 @@ public enum AArch64CondCode: UInt32 {
     case invalid = 16
 }
 
-public enum AArch64Db: UInt32 {
+public enum AArch64Db: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DB> begin clang-format off
     case oshld = 1
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DB> begin clang-format off
@@ -126,7 +126,7 @@ public enum AArch64Db: UInt32 {
     case ending = 16
 }
 
-public enum AArch64Dbnxs: UInt32 {
+public enum AArch64Dbnxs: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DBnXS> begin clang-format off
     case oshnxs = 3
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DBnXS> begin clang-format off
@@ -139,7 +139,7 @@ public enum AArch64Dbnxs: UInt32 {
     case ending = 16
 }
 
-public enum AArch64Dc: UInt32 {
+public enum AArch64Dc: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DC> begin clang-format off
     case ivac = 945
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_DC> begin clang-format off
@@ -204,7 +204,7 @@ public enum AArch64Dc: UInt32 {
     case cigdpae = 9207
 }
 
-public enum AArch64Exactfpimm: UInt32 {
+public enum AArch64Exactfpimm: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ExactFPImm> begin clang-format off
     case zero = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ExactFPImm> begin clang-format off
@@ -220,7 +220,7 @@ public enum AArch64Exactfpimm: UInt32 {
 }
 
 /// AArch64 extender type
-public enum AArch64Ext: UInt32 {
+public enum AArch64Ext: UInt32, Sendable {
     case invalid = 0
     case uxtb = 1
     case uxth = 2
@@ -233,7 +233,7 @@ public enum AArch64Ext: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64Feature: UInt32 {
+public enum AArch64Feature: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case hasel2vmsa = 144
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
@@ -433,31 +433,31 @@ public enum AArch64Feature: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHaspan: UInt32 {
+public enum AArch64FeatureHaspan: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case rwv = 252
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHasrcpc: UInt32 {
+public enum AArch64FeatureHasrcpc: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case immo = 161
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHassme: UInt32 {
+public enum AArch64FeatureHassme: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case lutv2 = 203
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHasspe: UInt32 {
+public enum AArch64FeatureHasspe: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case eef = 232
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHasssve: UInt32 {
+public enum AArch64FeatureHasssve: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case fp8fma = 197
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
@@ -467,7 +467,7 @@ public enum AArch64FeatureHasssve: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHassve2P1Or: UInt32 {
+public enum AArch64FeatureHassve2P1Or: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case hassme = 209
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
@@ -477,19 +477,19 @@ public enum AArch64FeatureHassve2P1Or: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHastlb: UInt32 {
+public enum AArch64FeatureHastlb: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case rmi = 159
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHastracev8: UInt32 {
+public enum AArch64FeatureHastracev8: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case _4 = 156
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHasv8: UInt32 {
+public enum AArch64FeatureHasv8: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case _0a = 128
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
@@ -515,7 +515,7 @@ public enum AArch64FeatureHasv8: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64FeatureHasv9: UInt32 {
+public enum AArch64FeatureHasv9: UInt32, Sendable {
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
     case _0a = 138
     /// generated content <AArch64GenCSFeatureEnum.inc> begin clang-format off
@@ -529,7 +529,7 @@ public enum AArch64FeatureHasv9: UInt32 {
 }
 
 /// Group of AArch64 instructions
-public enum AArch64Grp: UInt8 {
+public enum AArch64Grp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -545,7 +545,7 @@ public enum AArch64Grp: UInt8 {
     case ending = 254
 }
 
-public enum AArch64Ic: UInt32 {
+public enum AArch64Ic: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_IC> begin clang-format off
     case ialluis = 904
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_IC> begin clang-format off
@@ -557,7 +557,7 @@ public enum AArch64Ic: UInt32 {
 }
 
 /// AArch64 instruction
-public enum AArch64Ins: UInt32 {
+public enum AArch64Ins: UInt32, Sendable {
     /// generated content <AArch64GenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <AArch64GenCSInsnEnum.inc> begin clang-format off
@@ -4169,7 +4169,7 @@ public enum AArch64Ins: UInt32 {
     case aliasEnd = 1804
 }
 
-public enum AArch64Isb: UInt32 {
+public enum AArch64Isb: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ISB> begin clang-format off
     case sy = 15
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ISB> end
@@ -4177,7 +4177,7 @@ public enum AArch64Isb: UInt32 {
 }
 
 /// Moved from AArch64BaseInfo.h and modified With extension of Q
-public enum AArch64Layout: UInt32 {
+public enum AArch64Layout: UInt32, Sendable {
     case invalid = 0
     /// Bare layout for the 128-bit vector (only show ".b", ".h", ".s", ".d" without vector number)
     case vlB = 8
@@ -4226,7 +4226,7 @@ public enum AArch64Layout: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum AArch64Op: UInt32 {
+public enum AArch64Op: UInt32, Sendable {
     /// CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// = CS_OP_REG (Register operand).
@@ -4301,7 +4301,7 @@ public enum AArch64Op: UInt32 {
     case memImm = 130
 }
 
-public enum AArch64Prfm: UInt32 {
+public enum AArch64Prfm: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PRFM> begin clang-format off
     case pldl1keep = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PRFM> begin clang-format off
@@ -4354,14 +4354,14 @@ public enum AArch64Prfm: UInt32 {
     case ending = 24
 }
 
-public enum AArch64Psb: UInt32 {
+public enum AArch64Psb: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PSB> begin clang-format off
     case csync = 17
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PSB> end
     case ending = 18
 }
 
-public enum AArch64Pstateimm01: UInt32 {
+public enum AArch64Pstateimm01: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_1> begin clang-format off
     case allint = 8
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_1> begin clang-format off
@@ -4370,7 +4370,7 @@ public enum AArch64Pstateimm01: UInt32 {
     case ending = 73
 }
 
-public enum AArch64Pstateimm015: UInt32 {
+public enum AArch64Pstateimm015: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> begin clang-format off
     case uao = 3
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> begin clang-format off
@@ -4392,7 +4392,7 @@ public enum AArch64Pstateimm015: UInt32 {
 }
 
 /// AArch64 registers
-public enum AArch64Reg: UInt16 {
+public enum AArch64Reg: UInt16, Sendable {
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
@@ -5811,7 +5811,7 @@ public enum AArch64Reg: UInt16 {
     case ending = 703
 }
 
-public enum AArch64Rprfm: UInt32 {
+public enum AArch64Rprfm: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_RPRFM> begin clang-format off
     case pldkeep = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_RPRFM> begin clang-format off
@@ -5825,7 +5825,7 @@ public enum AArch64Rprfm: UInt32 {
 }
 
 /// AArch64 shift type Those values do not correspond to the bit values encoded in the instruction.
-public enum AArch64Sft: UInt32 {
+public enum AArch64Sft: UInt32, Sendable {
     case invalid = 0
     case lsl = 1
     case msl = 2
@@ -5839,7 +5839,7 @@ public enum AArch64Sft: UInt32 {
     case rorReg = 10
 }
 
-public enum AArch64SmeOp: UInt32 {
+public enum AArch64SmeOp: UInt32, Sendable {
     case invalid = 0
     /// SME operand is a single tile.
     case tile = 1
@@ -5847,7 +5847,7 @@ public enum AArch64SmeOp: UInt32 {
     case tileVec = 2
 }
 
-public enum AArch64Svcr: UInt32 {
+public enum AArch64Svcr: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVCR> begin clang-format off
     case svcrsm = 1
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVCR> begin clang-format off
@@ -5858,7 +5858,7 @@ public enum AArch64Svcr: UInt32 {
     public static let ending = 3
 }
 
-public enum AArch64Svepredpat: UInt32 {
+public enum AArch64Svepredpat: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> begin clang-format off
     case pow2 = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> begin clang-format off
@@ -5897,7 +5897,7 @@ public enum AArch64Svepredpat: UInt32 {
     case all = 31
 }
 
-public enum AArch64Sveprfm: UInt32 {
+public enum AArch64Sveprfm: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPRFM> begin clang-format off
     case pldl1keep = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPRFM> begin clang-format off
@@ -5926,7 +5926,7 @@ public enum AArch64Sveprfm: UInt32 {
     case ending = 14
 }
 
-public enum AArch64Sveveclenspecifier: UInt32 {
+public enum AArch64Sveveclenspecifier: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEVECLENSPECIFIER> begin clang-format off
     case vlx2 = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEVECLENSPECIFIER> begin clang-format off
@@ -5935,7 +5935,7 @@ public enum AArch64Sveveclenspecifier: UInt32 {
     case ending = 2
 }
 
-public enum AArch64Sysreg: UInt32 {
+public enum AArch64Sysreg: UInt32, Sendable {
     case invalid = 0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case osdtrrxEl1 = 32770
@@ -8368,7 +8368,7 @@ public enum AArch64Sysreg: UInt32 {
 }
 
 /// end namespace AArch64CC
-public enum AArch64Tlbi: UInt32 {
+public enum AArch64Tlbi: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_TLBI> begin clang-format off
     case vmalle1os = 1032
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_TLBI> begin clang-format off
@@ -8713,7 +8713,7 @@ public enum AArch64Tlbi: UInt32 {
     case vale3nxs = 13501
 }
 
-public enum AArch64Tsb: UInt32 {
+public enum AArch64Tsb: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_TSB> begin clang-format off
     case csync = 0
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_TSB> end

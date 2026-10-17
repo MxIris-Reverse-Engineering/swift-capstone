@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Evm)
 
 /// Group of EVM instructions
-public enum EvmGrp: UInt8 {
+public enum EvmGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// all jump instructions
@@ -28,7 +28,7 @@ public enum EvmGrp: UInt8 {
 }
 
 /// EVM instruction
-public enum EvmIns: UInt32 {
+public enum EvmIns: UInt32, Sendable {
     case stop = 0
     case add = 1
     case mul = 2

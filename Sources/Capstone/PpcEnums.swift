@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Ppc)
 
 /// Encodes the different meanings of the BH field. The enum values does NOT match the BH field values!
-public enum PpcBh: UInt32 {
+public enum PpcBh: UInt32, Sendable {
     case invalid = 0
     case subroutineRet = 1
     case noSubroutineRet = 2
@@ -11,7 +11,7 @@ public enum PpcBh: UInt32 {
 }
 
 /// CR field indices and their meaning.
-public enum PpcBi: UInt32 {
+public enum PpcBi: UInt32, Sendable {
     /// CR bit Less Than
     case lt = 0
     /// CR bit Greater Than
@@ -25,56 +25,56 @@ public enum PpcBi: UInt32 {
 }
 
 /// Masks of flags in the BO field.
-public enum PpcBo: UInt32 {
+public enum PpcBo: UInt32, Sendable {
     /// Either ignored (z) or hint bit t
     case t = 1
 }
 
 /// Masks of flags in the BO field.
-public enum PpcBoCr: UInt32 {
+public enum PpcBoCr: UInt32, Sendable {
     /// Flag mask: Compare CR bit to 0 or 1.
     case cmp = 8
 }
 
 /// Masks of flags in the BO field.
-public enum PpcBoCtr: UInt32 {
+public enum PpcBoCtr: UInt32, Sendable {
     /// Flag mask: Compare CTR to 0 or 1.
     case cmp = 2
 }
 
 /// Masks of flags in the BO field.
-public enum PpcBoDecr: UInt32 {
+public enum PpcBoDecr: UInt32, Sendable {
     /// Flag mask: Decrement counter.
     case ctr = 4
 }
 
 /// Masks of flags in the BO field.
-public enum PpcBoTest: UInt32 {
+public enum PpcBoTest: UInt32, Sendable {
     /// Flag mask: Test CR bit.
     case cr = 16
 }
 
 /// Bit for branch taken (plus) or not-taken (minus) hint Encodes the meaning of the branch hint bits. Bit: | 0 | 1 | Name: | a | t |
-public enum PpcBr: UInt32 {
+public enum PpcBr: UInt32, Sendable {
     case reserved = 1
     /// Plus
     case taken = 3
 }
 
 /// Bit for branch taken (plus) or not-taken (minus) hint Encodes the meaning of the branch hint bits. Bit: | 0 | 1 | Name: | a | t |
-public enum PpcBrHint: UInt32 {
+public enum PpcBrHint: UInt32, Sendable {
     case mask = 3
 }
 
 /// Bit for branch taken (plus) or not-taken (minus) hint Encodes the meaning of the branch hint bits. Bit: | 0 | 1 | Name: | a | t |
-public enum PpcBrNot: UInt32 {
+public enum PpcBrNot: UInt32, Sendable {
     case given = 0
     /// Minus
     case taken = 2
 }
 
 /// Group of PPC instructions
-public enum PpcFeature: UInt32 {
+public enum PpcFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
     case hasps = 128
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
@@ -130,7 +130,7 @@ public enum PpcFeature: UInt32 {
 }
 
 /// Group of PPC instructions
-public enum PpcFeatureIsisa2: UInt32 {
+public enum PpcFeatureIsisa2: UInt32, Sendable {
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
     case _06 = 146
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
@@ -138,19 +138,19 @@ public enum PpcFeatureIsisa2: UInt32 {
 }
 
 /// Group of PPC instructions
-public enum PpcFeatureIsisa3: UInt32 {
+public enum PpcFeatureIsisa3: UInt32, Sendable {
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
     case _0 = 148
 }
 
 /// Group of PPC instructions
-public enum PpcFeatureIsnotisa3: UInt32 {
+public enum PpcFeatureIsnotisa3: UInt32, Sendable {
     /// Architecture-specific groups generated content <PPCGenCSFeatureEnum.inc> begin clang-format off
     case _1 = 151
 }
 
 /// Group of PPC instructions
-public enum PpcGrp: UInt8 {
+public enum PpcGrp: UInt8, Sendable {
     /// CS_GRP_INVALID
     case invalid = 0
     /// CS_GRP_JUMP
@@ -172,7 +172,7 @@ public enum PpcGrp: UInt8 {
 }
 
 /// PPC instruction
-public enum PpcIns: UInt32 {
+public enum PpcIns: UInt32, Sendable {
     /// generated content <PPCGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <PPCGenCSInsnEnum.inc> begin clang-format off
@@ -4983,7 +4983,7 @@ public enum PpcIns: UInt32 {
 }
 
 /// PPC instruction formats. To get details about them please refer to `PPCInstrFormats.td` in LLVM.
-public enum PpcInsnForm: UInt32 {
+public enum PpcInsnForm: UInt32, Sendable {
     case invalid = 0
     /// generated content <PPCGenCSInsnFormatsEnum.inc> begin clang-format off
     case dform2R0 = 1
@@ -5248,7 +5248,7 @@ public enum PpcInsnForm: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct PpcOp: OptionSet {
+public struct PpcOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// Uninitialized.
@@ -5262,7 +5262,7 @@ public struct PpcOp: OptionSet {
 }
 
 /// Enum was moved from PPCPredicates.h so we do not have duplicates.
-public enum PpcPred: UInt32 {
+public enum PpcPred: UInt32, Sendable {
     /// Name | BI | BO
     case ge = 4
     /// Reserved
@@ -5358,7 +5358,7 @@ public enum PpcPred: UInt32 {
 }
 
 /// PPC registers
-public enum PpcReg: UInt16 {
+public enum PpcReg: UInt16, Sendable {
     /// generated content <PPCGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <PPCGenCSRegEnum.inc> begin clang-format off

@@ -134,7 +134,7 @@ public class Capstone {
 ///
 /// By default, Capstone is built in full mode, with all supported architectures.
 /// Use `Capstone.supports(buildMode:)` to check if Capstone was built in any special mode.
-public enum BuildMode: Int32 {
+public enum BuildMode: Int32, Sendable {
     /// Support value to verify diet mode of the engine.
     ///
     /// If capstone is compiled in "diet" mode, the following information is not available:

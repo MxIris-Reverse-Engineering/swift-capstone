@@ -122,7 +122,7 @@ extension Instruction {
 }
 
 /// Common instruction operand access types - to be consistent across all architectures.
-public struct Access: OptionSet, CustomStringConvertible {
+public struct Access: OptionSet, CustomStringConvertible, Sendable {
     // must match cs_ac_type
     public var rawValue: UInt32
 
@@ -148,7 +148,7 @@ public struct Access: OptionSet, CustomStringConvertible {
 }
 
 /// Common instruction groups - to be consistent across all architectures.
-public enum InstructionGroup: UInt8 {
+public enum InstructionGroup: UInt8, Sendable {
     // must match cs_group_type
     /// uninitialized/invalid group.
     case invalid

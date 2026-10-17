@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_SYSTEMZ
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (SystemZ)
 
-public enum SystemZAm: UInt32 {
+public enum SystemZAm: UInt32, Sendable {
     case invalid = 0
     /// Base and displacement are set.
     case bd = 1
@@ -16,7 +16,7 @@ public enum SystemZAm: UInt32 {
 }
 
 /// Enums corresponding to SystemZ condition codes
-public enum SystemZCc: UInt32 {
+public enum SystemZCc: UInt32, Sendable {
     case o = 0
     case h = 1
     case nle = 2
@@ -35,7 +35,7 @@ public enum SystemZCc: UInt32 {
 }
 
 /// Group of SystemZ instructions
-public enum SystemZFeature: UInt32 {
+public enum SystemZFeature: UInt32, Sendable {
     /// generated content <SystemZGenCSFeatureEnum.inc> begin clang-format off
     case featuresoftfloat = 128
     /// generated content <SystemZGenCSFeatureEnum.inc> begin clang-format off
@@ -123,7 +123,7 @@ public enum SystemZFeature: UInt32 {
 }
 
 /// Group of SystemZ instructions
-public enum SystemZGrp: UInt8 {
+public enum SystemZGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -145,7 +145,7 @@ public enum SystemZGrp: UInt8 {
 }
 
 /// SystemZ instruction
-public enum SystemZIns: UInt32 {
+public enum SystemZIns: UInt32, Sendable {
     /// generated content <SystemZGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <SystemZGenCSInsnEnum.inc> begin clang-format off
@@ -5238,7 +5238,7 @@ public enum SystemZIns: UInt32 {
     case aliasEnd = 2544
 }
 
-public enum SystemZInsnForm: UInt32 {
+public enum SystemZInsnForm: UInt32, Sendable {
     case invalid = 0
     /// generated content <SystemZGenCSInsnFormatsEnum.inc> begin clang-format off
     case instrxa = 1
@@ -5399,7 +5399,7 @@ public enum SystemZInsnForm: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct SystemZOp: OptionSet {
+public struct SystemZOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// CS_OP_INVALID (Uninitialized).
@@ -5413,7 +5413,7 @@ public struct SystemZOp: OptionSet {
 }
 
 /// SystemZ registers
-public enum SystemZReg: UInt16 {
+public enum SystemZReg: UInt16, Sendable {
     /// generated content <SystemZGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <SystemZGenCSRegEnum.inc> begin clang-format off

@@ -5,7 +5,7 @@ import Ccapstone
 /// Raw values are capstone v6's `CS_OPT_SYNTAX_*` flags; `set(option:)` hands them to
 /// `cs_option` unchanged. v6 made these bit flags, so the consecutive numbering v5
 /// used would select a different syntax rather than fail.
-public enum Syntax: Int {
+public enum Syntax: Int, Sendable {
     /// Default asm syntax
     case `default` = 2 // CS_OPT_SYNTAX_DEFAULT
     /// X86 Intel asm syntax - default on X86

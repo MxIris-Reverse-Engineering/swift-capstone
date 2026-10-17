@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Arm)
 
 /// Mask values for IT and VPT Blocks, to be used by MCOperands. Note that this is different from the "real" encoding used by the instructions. In this encoding, the lowest set bit indicates the end of the encoding, and above that, "1" indicates an else, while "0" indicates a then. Tx = x100 Txy = xy10 Txyz = xyz1
-public enum Arm: UInt32 {
+public enum Arm: UInt32, Sendable {
     case predblockmaskinvalid = 0
     /// 0b0001
     case tttt = 1
@@ -37,13 +37,13 @@ public enum Arm: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregElr: UInt32 {
+public enum ArmBankedregElr: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case hyp = 30
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregLr: UInt32 {
+public enum ArmBankedregLr: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 6
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -61,7 +61,7 @@ public enum ArmBankedregLr: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregR10: UInt32 {
+public enum ArmBankedregR10: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 2
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -69,7 +69,7 @@ public enum ArmBankedregR10: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregR11: UInt32 {
+public enum ArmBankedregR11: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 3
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -77,7 +77,7 @@ public enum ArmBankedregR11: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregR12: UInt32 {
+public enum ArmBankedregR12: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 4
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -85,7 +85,7 @@ public enum ArmBankedregR12: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregR8: UInt32 {
+public enum ArmBankedregR8: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 0
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -93,7 +93,7 @@ public enum ArmBankedregR8: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregR9: UInt32 {
+public enum ArmBankedregR9: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 1
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -101,7 +101,7 @@ public enum ArmBankedregR9: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregSp: UInt32 {
+public enum ArmBankedregSp: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case usr = 5
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -121,7 +121,7 @@ public enum ArmBankedregSp: UInt32 {
 }
 
 /// From LLVM docs: The values here come from B9.2.3 of the ARM ARM, where bits 4-0 are SysM field and bit 5 is R.
-public enum ArmBankedregSpsr: UInt32 {
+public enum ArmBankedregSpsr: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
     case fiq = 46
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_BankedReg> begin clang-format off
@@ -139,7 +139,7 @@ public enum ArmBankedregSpsr: UInt32 {
 }
 
 /// Enums corresponding to ARM condition codes The CondCodes constants map directly to the 4-bit encoding of the condition field for predicated instructions.
-public enum ArmCc: UInt32 {
+public enum ArmCc: UInt32, Sendable {
     /// Equal Equal
     case eq = 0
     /// Not equal Not equal, or unordered
@@ -177,7 +177,7 @@ public enum ArmCc: UInt32 {
 }
 
 /// Operand type for SETEND instruction
-public struct ArmCpsflag: OptionSet {
+public struct ArmCpsflag: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     public static let invalid: ArmCpsflag = []
@@ -188,14 +188,14 @@ public struct ArmCpsflag: OptionSet {
     public static let none = ArmCpsflag(rawValue: 16)
 }
 
-public enum ArmCpsmode: UInt32 {
+public enum ArmCpsmode: UInt32, Sendable {
     case invalid = 0
     case ie = 2
     case id = 3
 }
 
 /// Group of ARM instructions
-public enum ArmFeature: UInt32 {
+public enum ArmFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <ARMGenCSFeatureEnum.inc> begin clang-format off
     case hasv4t = 128
     /// Architecture-specific groups generated content <ARMGenCSFeatureEnum.inc> begin clang-format off
@@ -315,13 +315,13 @@ public enum ArmFeature: UInt32 {
 }
 
 /// Group of ARM instructions
-public enum ArmFeatureHasfpregsv8: UInt32 {
+public enum ArmFeatureHasfpregsv8: UInt32, Sendable {
     /// Architecture-specific groups generated content <ARMGenCSFeatureEnum.inc> begin clang-format off
     case _1m = 143
 }
 
 /// Group of ARM instructions
-public enum ArmFeatureHasv8: UInt32 {
+public enum ArmFeatureHasv8: UInt32, Sendable {
     /// Architecture-specific groups generated content <ARMGenCSFeatureEnum.inc> begin clang-format off
     case _1mmainline = 135
     /// Architecture-specific groups generated content <ARMGenCSFeatureEnum.inc> begin clang-format off
@@ -340,7 +340,7 @@ public enum ArmFeatureHasv8: UInt32 {
     case _7a = 155
 }
 
-public struct ArmFieldCpsr: OptionSet {
+public struct ArmFieldCpsr: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// CPSR* field flags can be OR combined
@@ -353,7 +353,7 @@ public struct ArmFieldCpsr: OptionSet {
     public static let f = ArmFieldCpsr(rawValue: 128)
 }
 
-public struct ArmFieldSpsr: OptionSet {
+public struct ArmFieldSpsr: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// SPSR* field flags can be OR combined
@@ -367,7 +367,7 @@ public struct ArmFieldSpsr: OptionSet {
 }
 
 /// Group of ARM instructions
-public enum ArmGrp: UInt8 {
+public enum ArmGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -387,7 +387,7 @@ public enum ArmGrp: UInt8 {
 }
 
 /// ARM instruction
-public enum ArmIns: UInt32 {
+public enum ArmIns: UInt32, Sendable {
     /// generated content <ARMGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <ARMGenCSInsnEnum.inc> begin clang-format off
@@ -1766,7 +1766,7 @@ public enum ArmIns: UInt32 {
 }
 
 /// The memory barrier constants map directly to the 4-bit encoding of the option field for Memory Barrier operations.
-public enum ArmMb: UInt32 {
+public enum ArmMb: UInt32, Sendable {
     case oshld = 1
     case oshst = 2
     case osh = 3
@@ -1782,14 +1782,14 @@ public enum ArmMb: UInt32 {
 }
 
 /// The memory barrier constants map directly to the 4-bit encoding of the option field for Memory Barrier operations.
-public enum ArmMbReserved: UInt32 {
+public enum ArmMbReserved: UInt32, Sendable {
     case _0 = 0
     case _4 = 4
     case _8 = 8
     case _12 = 12
 }
 
-public enum ArmMclasssysreg: UInt32 {
+public enum ArmMclasssysreg: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case apsrG = 1024
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
@@ -1899,7 +1899,7 @@ public enum ArmMclasssysreg: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum ArmOp: UInt32 {
+public enum ArmOp: UInt32, Sendable {
     /// Invalid
     case invalid = 0
     /// Register operand
@@ -1935,7 +1935,7 @@ public enum ArmOp: UInt32 {
 }
 
 /// ARM registers
-public enum ArmReg: UInt16 {
+public enum ArmReg: UInt16, Sendable {
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
@@ -2547,7 +2547,7 @@ public enum ArmReg: UInt16 {
 }
 
 /// Operand type for SETEND instruction
-public enum ArmSetend: UInt32 {
+public enum ArmSetend: UInt32, Sendable {
     /// Uninitialized.
     case invalid = 0
     /// BE operand.
@@ -2557,7 +2557,7 @@ public enum ArmSetend: UInt32 {
 }
 
 /// ARM shift type
-public enum ArmSft: UInt32 {
+public enum ArmSft: UInt32, Sendable {
     case invalid = 0
     case asr = 1
     case lsl = 2
@@ -2577,14 +2577,14 @@ public enum ArmSft: UInt32 {
     case rorReg = 11
 }
 
-public enum ArmVcc: UInt32 {
+public enum ArmVcc: UInt32, Sendable {
     case none = 0
     case then = 1
     case `else` = 2
 }
 
 /// Data type for elements of vector instructions.
-public enum ArmVectordata: UInt32 {
+public enum ArmVectordata: UInt32, Sendable {
     case invalid = 0
     /// Integer type
     case i8 = 1

@@ -29,6 +29,18 @@
   实现与文档矛盾，因此判为 bug，已在 capstone fork 里修复（传 `CS_OPT_OFF` 时清零）。
 - **何时重新审视**：上游统一了这两个选项的语义，或提供了复位用的取值时。
 
+## capstone 把 `cas` 一族的基址寄存器报成被写
+
+- **裁决**：不修，属于上游语义问题（2026-10-17）
+- **现象**：`cas x0, x1, [x2]` 的 `registersAccessed.written` 含有 x2，而 `cas` 并不写回基址。
+- **根源**：capstone 的 `MCInst.c` 只要有操作数被绑定（tied）就置 `cs_detail.writeback`，`cas` 的 Rs 正是被绑定的；
+  `AArch64Mapping.c` 又在 `writeback` 为真时把访存操作数的基址加进写寄存器列表。同一个标志在 `movk`、`bfi` 上
+  也为真，只是它们没有访存操作数，不会多报寄存器。
+- **理由**：影响面小，只涉及 `cas` 这一族原子指令的读写寄存器列表，两个下游都不靠它判断基址写回。要修对，就得让
+  capstone 区分「基址写回」和「一般的绑定操作数」，这是上游该定的语义；在 fork 里单方面改会与上游分叉，理由与
+  上面 `mode` / `syntax` 那条相同。封装层自己的 `writesBackBaseRegister` 不依赖这份列表，已经给出正确结果。
+- **何时重新审视**：有调用方依赖 `cas` 一族的写寄存器列表，或上游改了 `writeback` 的语义时。
+
 ## `Architecture.instructionClass` / `registerType` / `instructionType` 在架构不可用时 trap
 
 - **裁决**：推迟到用新特性重写的提案（2026-10-17）

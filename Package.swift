@@ -184,9 +184,12 @@ let package = Package(
             // until their wrappers are adapted. Files move back out of Legacy/ as
             // each architecture lands. See the v6 adaptation proposal.
             exclude: ["Legacy"],
+            // Swift 6 mode, as both downstream packages use: Swift 5 mode lets a
+            // non-Sendable type through a Sendable requirement without a word, so
+            // SendableTests could never fail there.
             swiftSettings: architectures.map {
                 .define($0.define, .when(traits: [$0.trait]))
-            },
+            } + [.swiftLanguageMode(.v6)],
         ),
         .testTarget(
             name: "CapstoneEnumsGeneratorTests",

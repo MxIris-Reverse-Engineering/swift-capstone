@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_SPARC
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Sparc)
 
-public enum SparcAsitagAsi: UInt32 {
+public enum SparcAsitagAsi: UInt32, Sendable {
     case invalid = 0
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case n = 4
@@ -62,13 +62,13 @@ public enum SparcAsitagAsi: UInt32 {
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
-public enum SparcCc: UInt32 {
+public enum SparcCc: UInt32, Sendable {
     /// Greater than or equal to zero
     case undef = 65535
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
-public enum SparcCcCpcc: UInt32 {
+public enum SparcCcCpcc: UInt32, Sendable {
     /// Co-processor conditional branches
     case begin = 32
     /// Never
@@ -92,7 +92,7 @@ public enum SparcCcCpcc: UInt32 {
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
-public enum SparcCcFcc: UInt32 {
+public enum SparcCcFcc: UInt32, Sendable {
     case begin = 16
     /// Never
     public static let n = 16
@@ -129,7 +129,7 @@ public enum SparcCcFcc: UInt32 {
 }
 
 /// The cc field values encoded in the cc0, cc1, cc2 bits or opf_cc. They are equivalent to ISA Sparc v9 - Table 41 - Chapter E.2 Tables - Page 281.
-public enum SparcCcField: UInt32 {
+public enum SparcCcField: UInt32, Sendable {
     case fcc0 = 0
     case fcc1 = 1
     case fcc2 = 2
@@ -142,7 +142,7 @@ public enum SparcCcField: UInt32 {
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
-public enum SparcCcIcc: UInt32 {
+public enum SparcCcIcc: UInt32, Sendable {
     /// Never
     case n = 0
     /// Equal
@@ -178,7 +178,7 @@ public enum SparcCcIcc: UInt32 {
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
-public enum SparcCcReg: UInt16 {
+public enum SparcCcReg: UInt16, Sendable {
     case begin = 48
     /// Is zero
     case z = 49
@@ -195,7 +195,7 @@ public enum SparcCcReg: UInt16 {
 }
 
 /// Group of SPARC instructions
-public enum SparcFeature: UInt32 {
+public enum SparcFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <SparcGenCSFeatureEnum.inc> begin clang-format off
     case is64bit = 128
     /// Architecture-specific groups generated content <SparcGenCSFeatureEnum.inc> begin clang-format off
@@ -215,7 +215,7 @@ public enum SparcFeature: UInt32 {
 }
 
 /// Group of SPARC instructions
-public enum SparcGrp: UInt8 {
+public enum SparcGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID = 0
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -237,7 +237,7 @@ public enum SparcGrp: UInt8 {
 }
 
 /// Branch hint
-public enum SparcHint: UInt32 {
+public enum SparcHint: UInt32, Sendable {
     /// no hint
     case invalid = 0
     /// annul delay slot instruction
@@ -251,7 +251,7 @@ public enum SparcHint: UInt32 {
 }
 
 /// SPARC instruction
-public enum SparcIns: UInt32 {
+public enum SparcIns: UInt32, Sendable {
     /// generated content <SparcGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <SparcGenCSInsnEnum.inc> begin clang-format off
@@ -1603,7 +1603,7 @@ public enum SparcIns: UInt32 {
 }
 
 /// The instruction formats. They are only loosely equivalent to the one in the ISA. Because in LLVM they are not defined one to one.
-public enum SparcInsnForm: UInt32 {
+public enum SparcInsnForm: UInt32, Sendable {
     /// generated content <SparcGenCSInsnFormatsEnum.inc> begin clang-format off
     case asmpseudoinst = 0
     /// generated content <SparcGenCSInsnFormatsEnum.inc> begin clang-format off
@@ -1644,7 +1644,7 @@ public enum SparcInsnForm: UInt32 {
     case f33C = 18
 }
 
-public struct SparcMembarTag: OptionSet {
+public struct SparcMembarTag: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     public static let none: SparcMembarTag = []
@@ -1658,7 +1658,7 @@ public struct SparcMembarTag: OptionSet {
 }
 
 /// Operand type for instruction's operands
-public enum SparcOp: UInt32 {
+public enum SparcOp: UInt32, Sendable {
     /// = CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// = CS_OP_REG (Register operand).
@@ -1672,7 +1672,7 @@ public enum SparcOp: UInt32 {
 }
 
 /// SPARC registers
-public enum SparcReg: UInt16 {
+public enum SparcReg: UInt16, Sendable {
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off

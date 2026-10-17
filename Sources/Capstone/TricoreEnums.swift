@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_TRICORE
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Tricore)
 
-public enum TricoreFeature: UInt32 {
+public enum TricoreFeature: UInt32, Sendable {
     case invalid = 0
     /// generated content <TriCoreGenCSFeatureEnum.inc> begin clang-format off
     case hasv110 = 128
@@ -52,7 +52,7 @@ public enum TricoreFeature: UInt32 {
 }
 
 /// Group of TriCore instructions
-public enum TricoreGrp: UInt8 {
+public enum TricoreGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_CALL
@@ -64,7 +64,7 @@ public enum TricoreGrp: UInt8 {
 }
 
 /// TriCore instruction
-public enum TricoreIns: UInt32 {
+public enum TricoreIns: UInt32, Sendable {
     /// generated content <TriCoreGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <TriCoreGenCSInsnEnum.inc> begin clang-format off
@@ -924,7 +924,7 @@ public enum TricoreIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct TricoreOp: OptionSet {
+public struct TricoreOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// CS_OP_INVALID (Uninitialized).
@@ -938,7 +938,7 @@ public struct TricoreOp: OptionSet {
 }
 
 /// TriCore registers
-public enum TricoreReg: UInt16 {
+public enum TricoreReg: UInt16, Sendable {
     /// generated content <TriCoreGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <TriCoreGenCSRegEnum.inc> begin clang-format off

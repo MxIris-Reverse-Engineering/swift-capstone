@@ -7,7 +7,7 @@ import Ccapstone
 ///
 /// Mirrors `cs_arch`. A case here says the engine knows the architecture, not
 /// that this package wraps it — see `instructionClass`.
-public enum Architecture: UInt32 {
+public enum Architecture: UInt32, Sendable {
     /// ARM architecture (including Thumb, Thumb-2)
     case arm = 0
     /// AArch64

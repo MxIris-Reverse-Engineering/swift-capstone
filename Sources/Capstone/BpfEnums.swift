@@ -1,13 +1,13 @@
 #if CAPSTONE_HAS_BPF
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Bpf)
 
-public enum BpfExt: UInt32 {
+public enum BpfExt: UInt32, Sendable {
     case invalid = 0
     case len = 1
 }
 
 /// Group of BPF instructions
-public enum BpfGrp: UInt8 {
+public enum BpfGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     case load = 1
@@ -23,7 +23,7 @@ public enum BpfGrp: UInt8 {
 }
 
 /// BPF instruction
-public enum BpfIns: UInt32 {
+public enum BpfIns: UInt32, Sendable {
     case invalid = 0
     case add = 1
     case sub = 2
@@ -189,7 +189,7 @@ public enum BpfIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public enum BpfOp: UInt32 {
+public enum BpfOp: UInt32, Sendable {
     case invalid = 0
     case reg = 1
     case imm = 2
@@ -204,7 +204,7 @@ public enum BpfOp: UInt32 {
 }
 
 /// BPF registers
-public enum BpfReg: UInt16 {
+public enum BpfReg: UInt16, Sendable {
     case invalid = 0
     case a = 1
     case x = 2

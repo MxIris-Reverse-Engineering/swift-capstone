@@ -66,6 +66,36 @@ public class Instruction: CustomStringConvertible {
     public var description: String {
         "\(mnemonic) \(operandsString)"
     }
+
+    /// Whether the instruction is printed as an alias, such as `mov x0, x1` for
+    /// `orr x0, xzr, x1`. `instruction` still names the real instruction; the
+    /// architecture's `aliasInstruction` names the alias.
+    ///
+    /// Only the architectures capstone generates with its auto-sync updater report
+    /// aliases, AArch64 among them; the others always say `false`. This information
+    /// is available even when detail option is disabled.
+    public var isAlias: Bool {
+        insn.is_alias
+    }
+
+    /// Whether the details describe the alias form of an alias, such as the two
+    /// operands of `mov x0, x1`, rather than the real instruction's three of
+    /// `orr x0, xzr, x1`.
+    ///
+    /// `true` unless the engine has `DisassemblyOption.realInstructionDetail` on.
+    /// It reflects that option for every instruction, aliases or not.
+    public var usesAliasDetails: Bool {
+        insn.usesAliasDetails
+    }
+
+    /// Whether the bytes decode to an instruction the architecture nonetheless
+    /// forbids, for using a register it does not allow or for appearing where it is
+    /// not valid. A load that writes back into its own transfer register is one.
+    ///
+    /// This information is available even when detail option is disabled.
+    public var isIllegal: Bool {
+        insn.illegal
+    }
 }
 
 // Instruction Memory Management
@@ -100,6 +130,18 @@ public class PlatformInstructionBase<
     /// This is the instruction mnemonic, represented in an architecture-specific enumeration.
     public var instruction: InsType? {
         InsType(rawValue: insn.id)
+    }
+
+    /// The alias the instruction is printed as, such as `.aliasMov` for `mov x0, x1`,
+    /// or `nil` when it is not an alias. `instruction` names the real instruction,
+    /// `.orr` in that example.
+    ///
+    /// This information is available even when detail option is disabled.
+    public var aliasInstruction: InsType? {
+        guard insn.is_alias, let rawValue = UInt32(exactly: insn.alias_id) else {
+            return nil
+        }
+        return InsType(rawValue: rawValue)
     }
 
     /// The type for instructions used in this architecture.

@@ -5,7 +5,7 @@ import Ccapstone
 /// Mode type
 ///
 /// Used to set modes when creating an instance of Capstone.
-public struct Mode: OptionSet {
+public struct Mode: OptionSet, Sendable {
     public var rawValue: UInt32
 
     public init(rawValue: UInt32) {
@@ -45,6 +45,15 @@ public struct Mode: OptionSet {
         public static let mClass = Mode(CS_MODE_MCLASS)
         /// ARMv8 A32 encodings for ARM
         public static let v8 = Mode(CS_MODE_V8)
+    }
+    #endif
+
+    #if CAPSTONE_HAS_AARCH64
+    /// AArch64 modes
+    public enum aarch64 {
+        /// Apple's proprietary instructions, such as AMX. Without it they do not
+        /// decode, and disassembly stops at the first one.
+        public static let appleProprietary = Mode(CS_MODE_APPLE_PROPRIETARY)
     }
     #endif
 

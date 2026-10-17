@@ -8,3 +8,4 @@
 | # | 标题 | 状态 |
 |---|------|------|
 | 0001 | [适配 capstone v6：AArch64 优先，扩大代码生成覆盖面](0001-adapt-capstone-v6.md) | Implemented |
+| 0002 | [在现有 API 上补齐 v6 新增的指令信息](0002-expose-v6-instruction-information.md) | Implemented |

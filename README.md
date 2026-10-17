@@ -102,6 +102,14 @@ for instruction in instructions {
 }
 ```
 
+Code from Apple platforms can contain Apple's proprietary instructions, such as
+AMX. capstone decodes them only with `Mode.aarch64.appleProprietary`; without it,
+disassembly stops at the first one:
+
+```swift
+let capstone = try Capstone(arch: .aarch64, mode: [Mode.endian.little, Mode.aarch64.appleProprietary])
+```
+
 ## Documentation
 
 * The API documentation under `docs/` was generated with [swift-doc](https://github.com/SwiftDocOrg/swift-doc) before the v6 adaptation and still uses the v5 names.

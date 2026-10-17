@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_XTENSA
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Xtensa)
 
-public enum XtensaFeature: UInt32 {
+public enum XtensaFeature: UInt32, Sendable {
     /// generated content <XtensaGenCSFeatureEnum.inc> begin clang-format off
     case hasdensity = 128
     /// generated content <XtensaGenCSFeatureEnum.inc> begin clang-format off
@@ -72,7 +72,7 @@ public enum XtensaFeature: UInt32 {
     case hasforcedatomics = 161
 }
 
-public enum XtensaGrp: UInt8 {
+public enum XtensaGrp: UInt8, Sendable {
     case invalid = 0
     case call = 1
     case jump = 2
@@ -82,7 +82,7 @@ public enum XtensaGrp: UInt8 {
 }
 
 /// Xtensa registers
-public enum XtensaIns: UInt32 {
+public enum XtensaIns: UInt32, Sendable {
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <XtensaGenCSInsnEnum.inc> begin clang-format off
@@ -2906,7 +2906,7 @@ public enum XtensaIns: UInt32 {
 }
 
 /// Xtensa instruction formats. To get details about them please refer to `XtensaInstrFormats.td` in LLVM.
-public enum XtensaInsnForm: UInt32 {
+public enum XtensaInsnForm: UInt32, Sendable {
     case invalid = 0
     /// generated content <XtensaGenCSInsnFormatsEnum.inc> begin clang-format off
     case rrr = 1
@@ -2936,7 +2936,7 @@ public enum XtensaInsnForm: UInt32 {
     case max = 13
 }
 
-public struct XtensaOp: OptionSet {
+public struct XtensaOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = (Uninitialized).
@@ -2952,7 +2952,7 @@ public struct XtensaOp: OptionSet {
 }
 
 /// Xtensa registers
-public enum XtensaReg: UInt16 {
+public enum XtensaReg: UInt16, Sendable {
     /// generated content <XtensaGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <XtensaGenCSRegEnum.inc> begin clang-format off

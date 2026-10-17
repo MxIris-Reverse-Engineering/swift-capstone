@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (LoongArch)
 
 /// > Group of LOONGARCH instructions
-public enum LoongArchFeature: UInt32 {
+public enum LoongArchFeature: UInt32, Sendable {
     /// Architecture-specific groups generated content <LoongArchGenCSFeatureEnum.inc> begin clang-format off
     case isla64 = 128
     /// Architecture-specific groups generated content <LoongArchGenCSFeatureEnum.inc> begin clang-format off
@@ -16,7 +16,7 @@ public enum LoongArchFeature: UInt32 {
 }
 
 /// > Group of LOONGARCH instructions
-public enum LoongArchGrp: UInt8 {
+public enum LoongArchGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -38,7 +38,7 @@ public enum LoongArchGrp: UInt8 {
 }
 
 /// LoongArch instruction
-public enum LoongArchIns: UInt32 {
+public enum LoongArchIns: UInt32, Sendable {
     /// generated content <LoongArchGenCSInsnEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <LoongArchGenCSInsnEnum.inc> begin clang-format off
@@ -4164,7 +4164,7 @@ public enum LoongArchIns: UInt32 {
 }
 
 /// LoongArch instruction formats. To get details about them please refer to `LoongArchInstrFormats.td` in LLVM.
-public enum LoongArchInsnForm: UInt32 {
+public enum LoongArchInsnForm: UInt32, Sendable {
     /// generated content <LoongArchGenCSInsnFormatsEnum.inc> begin clang-format off
     case pseudo = 0
     /// generated content <LoongArchGenCSInsnFormatsEnum.inc> begin clang-format off
@@ -4394,7 +4394,7 @@ public enum LoongArchInsnForm: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct LoongArchOp: OptionSet {
+public struct LoongArchOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// Invalid
@@ -4408,7 +4408,7 @@ public struct LoongArchOp: OptionSet {
 }
 
 /// LoongArch registers
-public enum LoongArchReg: UInt16 {
+public enum LoongArchReg: UInt16, Sendable {
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off

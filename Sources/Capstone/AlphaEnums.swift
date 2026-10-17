@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Alpha)
 
 /// > Group of Alpha instructions
-public enum AlphaGrp: UInt8 {
+public enum AlphaGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_CALL
@@ -16,7 +16,7 @@ public enum AlphaGrp: UInt8 {
 }
 
 /// > Alpha instruction
-public enum AlphaIns: UInt32 {
+public enum AlphaIns: UInt32, Sendable {
     /// generated content <AlphaGenCSInsnEnum.inc:GET_INSTR_ENUM> begin clang-format off
     case invalid = 0
     /// generated content <AlphaGenCSInsnEnum.inc:GET_INSTR_ENUM> begin clang-format off
@@ -326,7 +326,7 @@ public enum AlphaIns: UInt32 {
 }
 
 /// > Operand type for instruction's operands
-public enum AlphaOp: UInt32 {
+public enum AlphaOp: UInt32, Sendable {
     /// CS_OP_INVALID (Uninitialized).
     case invalid = 0
     /// CS_OP_REG (Register operand).
@@ -336,7 +336,7 @@ public enum AlphaOp: UInt32 {
 }
 
 /// > Alpha registers
-public enum AlphaReg: UInt16 {
+public enum AlphaReg: UInt16, Sendable {
     /// generated content <AlphaGenCSRegEnum.inc> begin clang-format off
     case invalid = 0
     /// generated content <AlphaGenCSRegEnum.inc> begin clang-format off

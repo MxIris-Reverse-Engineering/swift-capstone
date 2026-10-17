@@ -21,13 +21,32 @@ extension AArch64Instruction: OperandContainer {
 
     /// For a write-back instruction, whether the write-back is post-index.
     ///
-    /// capstone v6 replaced v5's `writeback` flag with `post_index`. They are not
-    /// the same question: `post_index` is only meaningful when the instruction
-    /// writes back at all, and `false` then means pre-index rather than "no
-    /// write-back". Which instructions write back is visible in the mnemonic.
+    /// Only meaningful when the instruction writes back at all: `false` then means
+    /// pre-index rather than "no write-back". `writesBackBaseRegister` says whether
+    /// it does.
     ///
     /// `nil` when detail mode is off.
     public var isPostIndex: Bool? { detail?.aarch64.post_index }
+
+    /// Whether the instruction writes the updated address back into the base
+    /// register of its memory operand, pre-indexed as in `[x1, #8]!` or post-indexed
+    /// as in `[x1], #8`.
+    ///
+    /// capstone's own `writeback` flag is not this: it is set whenever an operand is
+    /// tied to another, which `movk`, `bfi` and `cas` also have. Post-indexing comes
+    /// from capstone's detail; pre-indexing has no field of its own and is read off
+    /// the printed operands, where `]!` marks it and nothing else.
+    ///
+    /// `nil` when detail mode is off.
+    public var writesBackBaseRegister: Bool? {
+        guard let detail else {
+            return nil
+        }
+        guard detail.writeback else {
+            return false
+        }
+        return detail.aarch64.post_index || operandsString.contains("]!")
+    }
 
     /// Is a SME or SVE operand currently being edited?
     ///
@@ -50,7 +69,7 @@ extension AArch64Instruction: OperandContainer {
     /// Read the value through the property matching the operand's `type` — see
     /// AArch64+Operands.swift for the full set. `value` returns whichever of them
     /// applies, type-erased.
-    public struct Operand: InstructionOperand {
+    public struct Operand: InstructionOperand, Sendable {
         internal var op: cs_aarch64_op
 
         /// Operand type.
@@ -117,7 +136,7 @@ extension AArch64Instruction: OperandContainer {
         }
 
         /// Operand value referring to memory.
-        public struct Memory {
+        public struct Memory: Sendable {
             /// Base register.
             public let base: AArch64Reg
             /// Index register, if any.
@@ -133,7 +152,7 @@ extension AArch64Instruction: OperandContainer {
         }
 
         /// An inclusive range of immediates, as used by SVE index operands.
-        public struct ImmediateRange {
+        public struct ImmediateRange: Sendable {
             public let first: UInt8
             public let offset: UInt8
 
@@ -149,7 +168,7 @@ extension AArch64Instruction: OperandContainer {
         }
 
         /// SME matrix operand.
-        public struct MatrixOperand {
+        public struct MatrixOperand: Sendable {
             public let type: AArch64SmeOp
             /// Matrix tile register.
             public let tile: AArch64Reg
@@ -160,7 +179,7 @@ extension AArch64Instruction: OperandContainer {
             /// Is the slice vertical rather than horizontal?
             public let isVertical: Bool
 
-            public enum SliceOffset {
+            public enum SliceOffset: Sendable {
                 case immediate(UInt16)
                 case range(first: UInt8, offset: UInt8)
                 /// capstone marks an absent offset with a sentinel rather than a flag.
@@ -187,7 +206,7 @@ extension AArch64Instruction: OperandContainer {
         }
 
         /// Predicate register operand.
-        public struct Predicate {
+        public struct Predicate: Sendable {
             /// Vector predicate register.
             public let register: AArch64Reg
             /// Vector select register.
@@ -207,11 +226,11 @@ extension AArch64Instruction: OperandContainer {
         /// v6 replaced v5's separate `sys`, `pstate`, `prefetch` and `barrier`
         /// fields with one struct carrying three unions and a `sub_type` saying
         /// which applies. `subType` is that discriminator; `value` decodes it.
-        public struct SystemOperand {
+        public struct SystemOperand: Sendable {
             /// Which kind of system operand this is.
             public let subType: AArch64Op
 
-            public enum Value {
+            public enum Value: Sendable {
                 case systemRegister(AArch64Sysreg)
                 case tlbi(AArch64Tlbi)
                 case ic(AArch64Ic)

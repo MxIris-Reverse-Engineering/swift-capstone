@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Wasm)
 
 /// Group of WASM instructions
-public enum WasmGrp: UInt8 {
+public enum WasmGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     case numberic = 8
@@ -15,7 +15,7 @@ public enum WasmGrp: UInt8 {
 }
 
 /// WASM instruction
-public enum WasmIns: UInt32 {
+public enum WasmIns: UInt32, Sendable {
     case unreachable = 0
     case nop = 1
     case block = 2
@@ -190,7 +190,7 @@ public enum WasmIns: UInt32 {
     case ending = 513
 }
 
-public enum WasmOp: UInt32 {
+public enum WasmOp: UInt32, Sendable {
     case invalid = 0
     case imm = 2
     case none = 16

@@ -1,7 +1,7 @@
 #if CAPSTONE_HAS_TMS320C64X
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Tms320c64x)
 
-public enum Tms320c64xFunit: UInt32 {
+public enum Tms320c64xFunit: UInt32, Sendable {
     case invalid = 0
     case d = 1
     case l = 2
@@ -10,7 +10,7 @@ public enum Tms320c64xFunit: UInt32 {
     case no = 5
 }
 
-public enum Tms320c64xGrp: UInt8 {
+public enum Tms320c64xGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -24,7 +24,7 @@ public enum Tms320c64xGrp: UInt8 {
     case ending = 133
 }
 
-public enum Tms320c64xIns: UInt32 {
+public enum Tms320c64xIns: UInt32, Sendable {
     case invalid = 0
     case abs = 1
     case abs2 = 2
@@ -180,26 +180,26 @@ public enum Tms320c64xIns: UInt32 {
     case ending = 145
 }
 
-public enum Tms320c64xMemDir: UInt32 {
+public enum Tms320c64xMemDir: UInt32, Sendable {
     case invalid = 0
     case fw = 1
     case bw = 2
 }
 
-public enum Tms320c64xMemDisp: UInt32 {
+public enum Tms320c64xMemDisp: UInt32, Sendable {
     case invalid = 0
     case constant = 1
     case register = 2
 }
 
-public enum Tms320c64xMemMod: UInt32 {
+public enum Tms320c64xMemMod: UInt32, Sendable {
     case invalid = 0
     case no = 1
     case pre = 2
     case post = 3
 }
 
-public struct Tms320c64xOp: OptionSet {
+public struct Tms320c64xOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -214,7 +214,7 @@ public struct Tms320c64xOp: OptionSet {
     public static let mem = Tms320c64xOp(rawValue: 128)
 }
 
-public enum Tms320c64xReg: UInt16 {
+public enum Tms320c64xReg: UInt16, Sendable {
     case invalid = 0
     case amr = 1
     case csr = 2

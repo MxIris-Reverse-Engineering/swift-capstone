@@ -18,6 +18,14 @@ public enum DisassemblyOption {
     /// - Registers accessed
     case detail(value: Bool)
 
+    /// Break down instruction structure into details, filling an alias's details
+    /// from the real instruction it stands for: `mov x0, x1` gets the three operands
+    /// of `orr x0, xzr, x1` rather than its own two.
+    ///
+    /// capstone adds detail flags to the ones set before, so going back to alias
+    /// details takes `.detail(value: false)` followed by `.detail(value: true)`.
+    case realInstructionDetail
+
     /// Change engine's mode at run-time.
     ///
     /// Several capstone v6 modules, AArch64's among them, add the mode bits instead of
@@ -64,7 +72,7 @@ public enum DisassemblyOption {
 }
 
 /// Return value for a skip data callback
-public enum SkipDataResult {
+public enum SkipDataResult: Sendable {
     /// Stop disassembling and return
     case stop
     /// Skip a non-zero number of bytes and continue
@@ -91,6 +99,11 @@ extension Capstone {
             err = cs_option(handle, CS_OPT_DETAIL, value.csOptValue)
             if err == CS_ERR_OK {
                 detail = value
+            }
+        case .realInstructionDetail:
+            err = cs_option(handle, CS_OPT_DETAIL, uintptr_t(CS_OPT_DETAIL_REAL.rawValue | CS_OPT_ON.rawValue))
+            if err == CS_ERR_OK {
+                detail = true
             }
         case .unsigned(value: let value):
             err = cs_option(handle, CS_OPT_UNSIGNED, value.csOptValue)

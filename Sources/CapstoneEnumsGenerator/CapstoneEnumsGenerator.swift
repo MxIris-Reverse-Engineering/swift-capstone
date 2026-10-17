@@ -925,7 +925,7 @@ private extension CapstoneEnumsGenerator {
         lines.append("///")
         lines.append("/// Mirrors `cs_arch`. A case here says the engine knows the architecture, not")
         lines.append("/// that this package wraps it — see `instructionClass`.")
-        lines.append("public enum Architecture: UInt32 {")
+        lines.append("public enum Architecture: UInt32, Sendable {")
         for architecture in architectures {
             if let comment = architecture.comment?.trimmingCharacters(in: .whitespacesAndNewlines), !comment.isEmpty {
                 lines.append("    /// \(comment)")
@@ -1128,7 +1128,7 @@ private extension CapstoneEnumsGenerator {
         }
 
         if item.isOptionSet {
-            lines.append("public struct \(item.swiftName): OptionSet {")
+            lines.append("public struct \(item.swiftName): OptionSet, Sendable {")
             lines.append("    public let rawValue: \(item.rawType)")
             lines.append("    public init(rawValue: \(item.rawType)) { self.rawValue = rawValue }")
             for constant in item.cases {
@@ -1144,7 +1144,7 @@ private extension CapstoneEnumsGenerator {
                 }
             }
         } else {
-            lines.append("public enum \(item.swiftName): \(item.rawType) {")
+            lines.append("public enum \(item.swiftName): \(item.rawType), Sendable {")
             for constant in item.cases {
                 let comment = constant.comment?.trimmingCharacters(in: .whitespacesAndNewlines)
                 if let comment, !comment.isEmpty {

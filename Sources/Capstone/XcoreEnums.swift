@@ -2,7 +2,7 @@
 // For Capstone Engine. AUTO-GENERATED FILE, DO NOT EDIT (Xcore)
 
 /// Group of XCore instructions
-public enum XcoreGrp: UInt8 {
+public enum XcoreGrp: UInt8, Sendable {
     /// = CS_GRP_INVALID
     case invalid = 0
     /// = CS_GRP_JUMP
@@ -12,7 +12,7 @@ public enum XcoreGrp: UInt8 {
 }
 
 /// XCore instruction
-public enum XcoreIns: UInt32 {
+public enum XcoreIns: UInt32, Sendable {
     case invalid = 0
     case add = 1
     case andnot = 2
@@ -139,7 +139,7 @@ public enum XcoreIns: UInt32 {
 }
 
 /// Operand type for instruction's operands
-public struct XcoreOp: OptionSet {
+public struct XcoreOp: OptionSet, Sendable {
     public let rawValue: UInt32
     public init(rawValue: UInt32) { self.rawValue = rawValue }
     /// = CS_OP_INVALID (Uninitialized).
@@ -153,7 +153,7 @@ public struct XcoreOp: OptionSet {
 }
 
 /// XCore registers
-public enum XcoreReg: UInt16 {
+public enum XcoreReg: UInt16, Sendable {
     case invalid = 0
     case cp = 1
     case dp = 2
