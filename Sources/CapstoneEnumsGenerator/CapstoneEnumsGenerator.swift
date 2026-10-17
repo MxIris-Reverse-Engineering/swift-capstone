@@ -936,7 +936,7 @@ private extension CapstoneEnumsGenerator {
         lines.append("/// that this build has it compiled in — see `isCompiledIn` — or that this")
         lines.append("/// package wraps it: only the `DisassemblyArchitecture` types, such as")
         lines.append("/// `AArch64`, can be decoded from Swift.")
-        lines.append("public enum Architecture: UInt32, Sendable {")
+        lines.append("public enum Architecture: UInt32, CaseIterable, Sendable {")
         for architecture in architectures {
             if let comment = architecture.comment?.trimmingCharacters(in: .whitespacesAndNewlines), !comment.isEmpty {
                 lines.append("    /// \(comment)")

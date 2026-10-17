@@ -7,7 +7,7 @@
 /// that this build has it compiled in — see `isCompiledIn` — or that this
 /// package wraps it: only the `DisassemblyArchitecture` types, such as
 /// `AArch64`, can be decoded from Swift.
-public enum Architecture: UInt32, Sendable {
+public enum Architecture: UInt32, CaseIterable, Sendable {
     /// ARM architecture (including Thumb, Thumb-2)
     case arm = 0
     /// AArch64

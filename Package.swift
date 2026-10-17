@@ -19,6 +19,7 @@ func envEnable(_ key: String, default defaultValue: Bool = false) -> Bool {
 }
 
 let usingLocalDependencies = envEnable("USING_LOCAL_DEPENDENCIES")
+let buildingDocumentation = envEnable("SWIFT_CAPSTONE_DOCUMENTATION")
 
 extension Package.Dependency {
     enum LocalSearchPath {
@@ -205,3 +206,11 @@ let package = Package(
     // so SendableTests could never fail there.
     swiftLanguageModes: [.v6],
 )
+
+// swift-docc-plugin matters only to whoever builds the documentation. Left out of
+// ordinary resolution, packages depending on this one never fetch it.
+if buildingDocumentation {
+    package.dependencies.append(
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.0"),
+    )
+}

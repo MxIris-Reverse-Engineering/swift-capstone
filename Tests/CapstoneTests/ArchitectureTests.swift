@@ -43,9 +43,9 @@ struct ArchitectureTests {
     /// `CS_API_MAJOR` and `CS_API_MINOR` in capstone.h.
     @Test("the version is the one capstone.h declares")
     func capstoneVersion() {
-        #expect(CapstoneVersion.current == CapstoneVersion(major: 6, minor: 0))
-        #expect(CapstoneVersion.current.description == "6.0")
-        #expect(CapstoneVersion(major: 5, minor: 9) < CapstoneVersion(major: 6, minor: 0))
+        #expect(EngineVersion.current == EngineVersion(major: 6, minor: 0))
+        #expect(EngineVersion.current.description == "6.0")
+        #expect(EngineVersion(major: 5, minor: 9) < EngineVersion(major: 6, minor: 0))
     }
 
     @Test("every architecture capstone v6 supports has a case")

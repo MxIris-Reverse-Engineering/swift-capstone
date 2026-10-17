@@ -15,7 +15,7 @@ struct SendableTests {
         requireSendable(Access.self)
         requireSendable(DetailForm.self)
         requireSendable(CapstoneError.self)
-        requireSendable(CapstoneVersion.self)
+        requireSendable(EngineVersion.self)
     }
 
     #if CAPSTONE_HAS_AARCH64

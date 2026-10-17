@@ -1,10 +1,10 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Swift Package layout: core API in `Sources/Capstone`, C bridge in `Sources/Ccapstone`, enum generator logic in `Sources/CapstoneEnumsGenerator` + `Sources/capstone-enums-generator`, and the SwiftPM command plugin in `Plugins/CapstoneEnumsGeneratePlugin`.
+- Swift Package layout: core API in `Sources/Capstone`, enum generator logic in `Sources/CapstoneEnumsGenerator` + `Sources/capstone-enums-generator`, and the SwiftPM command plugin in `Plugins/CapstoneEnumsGeneratePlugin`. The C module, `Ccapstone`, comes from the capstone package.
 - Tests live in `Tests/CapstoneTests` and `Tests/CapstoneEnumsGeneratorTests`.
 - Examples such as `Examples/cstool` show end-to-end usage; keep them building with the main package.
-- Static docs under `docs/` are generated via swift-doc; avoid hand-editing them.
+- API documentation is the DocC catalog `Sources/Capstone/Capstone.docc`; its articles carry the contracts the signatures do not show. Build it with `SWIFT_CAPSTONE_DOCUMENTATION=1 swift package --build-system native generate-documentation --target Capstone`; the output is not committed. The plugin builds every trait, so the generated enums of all architectures must compile.
 - Generated sources carry an `AUTO-GENERATED` header — `*Enums.swift`, `Architecture+Generated.swift`, `*+Operands.swift`. Change `Sources/CapstoneEnumsGenerator` and regenerate instead of editing them.
 - Project documentation lives in `Documentations/`; evolution proposals in `Documentations/Evolutions/`. Read `Documentations/Internal/CodeGeneration.md` before changing the generator or adapting another architecture.
 

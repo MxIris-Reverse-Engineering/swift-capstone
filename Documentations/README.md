@@ -3,8 +3,8 @@
 swift-capstone 的项目文档。每新增或重命名一份文档，都要在同一批次更新本索引 ——
 没有登记在这里的文档等同于不存在。
 
-面向调用方的公开文档（`README.md`、`docs/`）不在此列：`docs/` 是 swift-doc 的生成物，
-随代码重新生成，不手工编辑。
+面向调用方的公开文档不在此列：`README.md`，以及 DocC 文档目录 `Sources/Capstone/Capstone.docc`
+（API 文档与「流式与快照」「从 6.x 迁移」两篇文章，英文）。
 
 [术语表](Glossary.md)收录本项目特有的说法，例如「已适配 / 已编入」的区别。
 
