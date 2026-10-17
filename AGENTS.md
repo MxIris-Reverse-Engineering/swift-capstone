@@ -17,14 +17,15 @@
 - `swift run cstool -- --help` (from `Examples/cstool`) – sanity-check the example tool.
 
 ## Coding Style & Naming Conventions
-- Swift 5 language mode (tools version 6.2); prefer 4-space indentation and trailing commas for multiline literals.
+- Swift 6 language mode (tools version 6.2); prefer 4-space indentation and trailing commas for multiline literals.
+- The `Capstone` target checks strict memory safety. Mark unsafe operations with `unsafe` where they meet capstone's C API (the engine, the instruction view, the operand types, the C-array helpers) and keep them out of everything else. Build with the current toolchain clean: Swift 6.3 also flags calls such as `withUnsafeBytes` and `withCString` that 6.4 considers safe, and no marking satisfies both.
 - Follow Swift naming: UpperCamelCase types, lowerCamelCase methods/properties, UPPER_CASE for C-style constants bridged into Swift when necessary.
 - SwiftLint is configured (`.swiftlint.yml`); run `swiftlint lint` locally when available. Large tuples, nesting, and line length limits are relaxed; keep identifiers succinct (min length 1).
 - Keep generated enum files under `Sources/Capstone/*Enums.swift` excluded from lint but still readable.
 
 ## Testing Guidelines
 - Tests use swift-testing (`@Suite` / `@Test` / `#expect`); place new suites in `Tests/CapstoneTests`.
-- `CapstoneTests` compiles in Swift 6 mode while the library is still Swift 5. Keep it that way: Swift 5 mode lets a non-Sendable type through a `Sendable` requirement silently, so `SendableTests` would stop catching anything.
+- Keep the package in Swift 6 mode: Swift 5 mode lets a non-Sendable type through a `Sendable` requirement silently, so `SendableTests` would stop catching anything.
 - Expected values must come from the instruction encoding or the capstone headers, never from re-running the wrapper — a test that recomputes the implementation's answer can never disagree with it.
 - Also run `swift test --traits AARCH64,SH`. It compiles SH into the engine without a wrapper, the only configuration in which `Architecture.isCompiledIn` reports an architecture this package has no `DisassemblyArchitecture` type for.
 - For coverage checks, run `swift test --enable-code-coverage` and inspect the `.build` artifacts; aim to touch new instruction paths and error cases.

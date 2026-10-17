@@ -139,12 +139,12 @@ extension AArch64 {
                 sliceRegister = enumCast(matrix.slice_reg)
                 isVertical = matrix.is_vertical
                 if matrix.has_range_offset {
-                    let range = matrix.slice_offset.imm_range
+                    let range = unsafe matrix.slice_offset.imm_range
                     sliceOffset = range.first == AARCH64_SLICE_IMM_RANGE_INVALID
                         ? .none
                         : .range(first: range.first, offset: range.offset)
                 } else {
-                    let immediate = matrix.slice_offset.imm
+                    let immediate = unsafe matrix.slice_offset.imm
                     sliceOffset = immediate == AARCH64_SLICE_IMM_INVALID
                         ? .none
                         : .immediate(immediate)
@@ -214,39 +214,39 @@ extension AArch64 {
                 // MRS/MSR name a system register and arrive as a sub_type, with the
                 // value in the same union as a plain sysreg.
                 case .sysreg, .regMrs, .regMsr:
-                    return decode(systemOperand.reg.sysreg, AArch64Sysreg.self, Value.systemRegister)
-                case .tlbi: return decode(systemOperand.reg.tlbi, AArch64Tlbi.self, Value.tlbi)
-                case .ic: return decode(systemOperand.reg.ic, AArch64Ic.self, Value.ic)
+                    return decode(unsafe systemOperand.reg.sysreg, AArch64Sysreg.self, Value.systemRegister)
+                case .tlbi: return decode(unsafe systemOperand.reg.tlbi, AArch64Tlbi.self, Value.tlbi)
+                case .ic: return decode(unsafe systemOperand.reg.ic, AArch64Ic.self, Value.ic)
 
-                case .dbnxs: return decode(systemOperand.imm.dbnxs, AArch64Dbnxs.self, Value.dbnxs)
+                case .dbnxs: return decode(unsafe systemOperand.imm.dbnxs, AArch64Dbnxs.self, Value.dbnxs)
                 case .exactfpimm:
-                    return decode(systemOperand.imm.exactfpimm, AArch64Exactfpimm.self, Value.exactFloatingPointImmediate)
+                    return decode(unsafe systemOperand.imm.exactfpimm, AArch64Exactfpimm.self, Value.exactFloatingPointImmediate)
 
-                case .svcr: return decode(systemOperand.alias.svcr, AArch64Svcr.self, Value.svcr)
-                case .at: return decode(systemOperand.alias.at, AArch64At.self, Value.at)
-                case .db: return decode(systemOperand.alias.db, AArch64Db.self, Value.dataBarrier)
-                case .dc: return decode(systemOperand.alias.dc, AArch64Dc.self, Value.dc)
-                case .isb: return decode(systemOperand.alias.isb, AArch64Isb.self, Value.isb)
-                case .tsb: return decode(systemOperand.alias.tsb, AArch64Tsb.self, Value.tsb)
-                case .prfm: return decode(systemOperand.alias.prfm, AArch64Prfm.self, Value.prefetch)
-                case .sveprfm: return decode(systemOperand.alias.sveprfm, AArch64Sveprfm.self, Value.svePrefetch)
-                case .rprfm: return decode(systemOperand.alias.rprfm, AArch64Rprfm.self, Value.rangePrefetch)
+                case .svcr: return decode(unsafe systemOperand.alias.svcr, AArch64Svcr.self, Value.svcr)
+                case .at: return decode(unsafe systemOperand.alias.at, AArch64At.self, Value.at)
+                case .db: return decode(unsafe systemOperand.alias.db, AArch64Db.self, Value.dataBarrier)
+                case .dc: return decode(unsafe systemOperand.alias.dc, AArch64Dc.self, Value.dc)
+                case .isb: return decode(unsafe systemOperand.alias.isb, AArch64Isb.self, Value.isb)
+                case .tsb: return decode(unsafe systemOperand.alias.tsb, AArch64Tsb.self, Value.tsb)
+                case .prfm: return decode(unsafe systemOperand.alias.prfm, AArch64Prfm.self, Value.prefetch)
+                case .sveprfm: return decode(unsafe systemOperand.alias.sveprfm, AArch64Sveprfm.self, Value.svePrefetch)
+                case .rprfm: return decode(unsafe systemOperand.alias.rprfm, AArch64Rprfm.self, Value.rangePrefetch)
                 case .pstateimm015:
-                    return decode(systemOperand.alias.pstateimm0_15, AArch64Pstateimm015.self, Value.processorState15)
+                    return decode(unsafe systemOperand.alias.pstateimm0_15, AArch64Pstateimm015.self, Value.processorState15)
                 case .pstateimm01:
-                    return decode(systemOperand.alias.pstateimm0_1, AArch64Pstateimm01.self, Value.processorState1)
-                case .psb: return decode(systemOperand.alias.psb, AArch64Psb.self, Value.psb)
-                case .bti: return decode(systemOperand.alias.bti, AArch64Bti.self, Value.branchTargetIdentification)
+                    return decode(unsafe systemOperand.alias.pstateimm0_1, AArch64Pstateimm01.self, Value.processorState1)
+                case .psb: return decode(unsafe systemOperand.alias.psb, AArch64Psb.self, Value.psb)
+                case .bti: return decode(unsafe systemOperand.alias.bti, AArch64Bti.self, Value.branchTargetIdentification)
                 case .svepredpat:
-                    return decode(systemOperand.alias.svepredpat, AArch64Svepredpat.self, Value.svePredicatePattern)
+                    return decode(unsafe systemOperand.alias.svepredpat, AArch64Svepredpat.self, Value.svePredicatePattern)
                 case .sveveclenspecifier:
-                    return decode(systemOperand.alias.sveveclenspecifier, AArch64Sveveclenspecifier.self, Value.sveVectorLengthSpecifier)
+                    return decode(unsafe systemOperand.alias.sveveclenspecifier, AArch64Sveveclenspecifier.self, Value.sveVectorLengthSpecifier)
 
                 // SYSREG/SYSIMM/SYSALIAS say "a system operand the engine did not
                 // resolve further"; the encoding is in the matching raw_val.
-                case .sysimm: return .raw(systemOperand.imm.raw_val)
-                case .sysalias: return .raw(systemOperand.alias.raw_val)
-                default: return .raw(systemOperand.reg.raw_val)
+                case .sysimm: return .raw(unsafe systemOperand.imm.raw_val)
+                case .sysalias: return .raw(unsafe systemOperand.alias.raw_val)
+                default: return .raw(unsafe systemOperand.reg.raw_val)
                 }
             }
 

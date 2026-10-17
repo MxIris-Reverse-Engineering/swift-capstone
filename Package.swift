@@ -154,9 +154,11 @@ let package = Package(
             cSettings: architectures.map {
                 .define($0.define, .when(traits: [$0.trait]))
             },
+            // Unsafe code is confined to where the module meets capstone's C API, and
+            // marked there; anything unsafe elsewhere is a warning.
             swiftSettings: architectures.map {
                 .define($0.define, .when(traits: [$0.trait]))
-            },
+            } + [.strictMemorySafety()],
         ),
         .plugin(
             name: "CapstoneEnumsGeneratePlugin",
@@ -186,12 +188,9 @@ let package = Package(
         .testTarget(
             name: "CapstoneTests",
             dependencies: ["Capstone"],
-            // Swift 6 mode, as both downstream packages use: Swift 5 mode lets a
-            // non-Sendable type through a Sendable requirement without a word, so
-            // SendableTests could never fail there.
             swiftSettings: architectures.map {
                 .define($0.define, .when(traits: [$0.trait]))
-            } + [.swiftLanguageMode(.v6)],
+            },
         ),
         .testTarget(
             name: "CapstoneEnumsGeneratorTests",
@@ -201,5 +200,8 @@ let package = Package(
             ],
         ),
     ],
-    swiftLanguageModes: [.v5],
+    // Swift 6, as both downstream packages use. The tests depend on it too: Swift 5
+    // mode lets a non-Sendable type through a Sendable requirement without a word,
+    // so SendableTests could never fail there.
+    swiftLanguageModes: [.v6],
 )

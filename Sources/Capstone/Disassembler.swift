@@ -15,7 +15,10 @@ import Ccapstone
 /// copied, and it is not `Sendable`: use it from one task at a time. To decode in
 /// parallel, give each child task its own engine; AArch64 instructions are all four
 /// bytes long, so code can be split at any four-byte boundary.
+@safe
 public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
+    // Safe to use despite the pointers: the handle and the buffer never leave the
+    // engine, and the view that reads the buffer cannot leave the closure it is lent to.
     private let handle: csh
     /// The buffer capstone decodes into, reused for every instruction.
     private let sharedInstruction: UnsafeMutablePointer<cs_insn>
@@ -50,7 +53,7 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
         mnemonics: [Architecture.InstructionIdentifier: String] = [:]
     ) throws {
         var handle: csh = 0
-        let openError = cs_open(cs_arch(Architecture.architecture.rawValue), cs_mode(mode.rawValue), &handle)
+        let openError = unsafe cs_open(cs_arch(Architecture.architecture.rawValue), cs_mode(mode.rawValue), &handle)
         guard openError == CS_ERR_OK else {
             throw CapstoneError(openError)
         }
@@ -66,19 +69,19 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
             )
             // Allocated after the options are set: cs_malloc gives the buffer room
             // for details only when they are on by then.
-            self.sharedInstruction = try Self.allocateInstruction(handle: handle)
+            unsafe self.sharedInstruction = try Self.allocateInstruction(handle: handle)
             self.handle = handle
             self.state = state
         } catch {
-            cs_close(&handle)
+            unsafe cs_close(&handle)
             throw error
         }
     }
 
     deinit {
-        cs_free(sharedInstruction, 1)
+        unsafe cs_free(sharedInstruction, 1)
         var handle = handle
-        cs_close(&handle)
+        unsafe cs_close(&handle)
     }
 
     /// Lends each decoded instruction to `body`, in order.
@@ -110,43 +113,43 @@ public struct Disassembler<Architecture: DisassemblyArchitecture>: ~Copyable {
         // A pass started from inside the closure of another would overwrite the
         // instruction that closure was lent, so it decodes into a buffer of its own.
         let isNested = state.isDecoding
-        let instruction = isNested ? Self.allocateNestedInstruction(handle: handle) : sharedInstruction
+        let instruction = unsafe isNested ? Self.allocateNestedInstruction(handle: handle) : sharedInstruction
         state.isDecoding = true
         defer {
             if isNested {
-                cs_free(instruction, 1)
+                unsafe cs_free(instruction, 1)
             } else {
                 state.isDecoding = false
             }
         }
 
         return try code.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) throws(Failure) -> Int in
-            guard let start = buffer.baseAddress, !buffer.isEmpty else {
+            guard let start = buffer.baseAddress, unsafe !buffer.isEmpty else {
                 return 0
             }
             // The skipdata callback reports offsets into this pass's input; a nested
             // pass has its own and hands the outer one back when it ends.
-            let outerInput = state.input
-            state.input = buffer
-            defer { state.input = outerInput }
-            var position: UnsafePointer<UInt8>? = start.assumingMemoryBound(to: UInt8.self)
+            let outerInput = unsafe state.input
+            unsafe state.input = buffer
+            defer { unsafe state.input = outerInput }
+            var position: UnsafePointer<UInt8>? = unsafe start.assumingMemoryBound(to: UInt8.self)
             var remaining = buffer.count
             var nextAddress = address
             var decodedCount = 0
             while limit.map({ decodedCount < $0 }) ?? true {
-                let entryStart = position
+                let entryStart = unsafe position
                 let remainingBefore = remaining
                 // capstone sets these when an instruction has them and never clears
                 // them, so in a reused buffer they would carry over from an earlier one.
-                instruction.pointee.illegal = false
-                instruction.pointee.is_alias = false
-                instruction.pointee.alias_id = 0
-                guard cs_disasm_iter(handle, &position, &remaining, &nextAddress, instruction) else {
+                unsafe instruction.pointee.illegal = false
+                unsafe instruction.pointee.is_alias = false
+                unsafe instruction.pointee.alias_id = 0
+                guard unsafe cs_disasm_iter(handle, &position, &remaining, &nextAddress, instruction) else {
                     break
                 }
                 decodedCount += 1
-                let entryBytes = UnsafeRawBufferPointer(start: entryStart, count: remainingBefore - remaining)
-                try body(InstructionView(instruction: instruction, handle: handle, entryBytes: entryBytes))
+                let entryBytes = unsafe UnsafeRawBufferPointer(start: entryStart, count: remainingBefore - remaining)
+                try body(unsafe InstructionView(instruction: instruction, handle: handle, entryBytes: entryBytes))
             }
             return buffer.count - remaining
         }
@@ -222,19 +225,19 @@ extension Disassembler {
     }
 
     private static func allocateInstruction(handle: csh) throws -> UnsafeMutablePointer<cs_insn> {
-        guard let instruction = cs_malloc(handle) else {
+        guard let instruction = unsafe cs_malloc(handle) else {
             throw CapstoneError.outOfMemory
         }
-        return instruction
+        return unsafe instruction
     }
 
     /// Out of memory is fatal here as it is for any other allocation in Swift: the
     /// decoding entry points do not throw errors of their own.
     private static func allocateNestedInstruction(handle: csh) -> UnsafeMutablePointer<cs_insn> {
-        guard let instruction = cs_malloc(handle) else {
+        guard let instruction = unsafe cs_malloc(handle) else {
             fatalError("capstone could not allocate an instruction buffer")
         }
-        return instruction
+        return unsafe instruction
     }
 }
 
@@ -266,8 +269,8 @@ extension Disassembler {
         if state.skipsData {
             // capstone keeps the struct's mnemonic pointer, not a copy of the
             // string; the state owns it for the life of the engine.
-            var setup = cs_opt_skipdata(
-                mnemonic: state.skipDataMnemonic.map { UnsafePointer($0) },
+            var setup = unsafe cs_opt_skipdata(
+                mnemonic: state.skipDataMnemonic.map { unsafe UnsafePointer($0) },
                 callback: state.hasSkipDataCallback ? skipDataCallback : nil,
                 user_data: Unmanaged.passUnretained(state).toOpaque()
             )
@@ -281,7 +284,7 @@ extension Disassembler {
         for (identifier, mnemonic) in mnemonics {
             // capstone copies the string into its own list.
             let error = mnemonic.withCString { mnemonicPointer in
-                var customization = cs_opt_mnem(id: identifier.rawValue, mnemonic: mnemonicPointer)
+                var customization = unsafe cs_opt_mnem(id: identifier.rawValue, mnemonic: mnemonicPointer)
                 return withUnsafeMutablePointer(to: &customization) { pointer in
                     cs_option(handle, CS_OPT_MNEMONIC, UInt(bitPattern: pointer))
                 }
@@ -295,17 +298,20 @@ extension Disassembler {
 /// has a `bytesToSkip`. capstone passes the remaining input, not the whole of it,
 /// with an offset of 0; the state knows where the pass's input starts.
 private let skipDataCallback: cs_skipdata_cb_t = { code, _, _, userData in
-    guard let code, let userData else {
+    guard let code = unsafe code, let userData = unsafe userData else {
         return 0
     }
-    let state = Unmanaged<DecodingState>.fromOpaque(userData).takeUnretainedValue()
-    return state.bytesToSkip(at: code)
+    let state = unsafe Unmanaged<DecodingState>.fromOpaque(userData).takeUnretainedValue()
+    return unsafe state.bytesToSkip(at: code)
 }
 
 /// What the borrowing methods of `Disassembler`, and capstone's skipdata callback,
 /// have to change or read. A class because the callback needs an address that
 /// stays put while the engine, a struct, can be moved.
+@safe
 final class DecodingState {
+    // Safe to use despite the pointers: they are the engine's own, valid while it is.
+
     /// Whether a pass over code is in progress.
     var isDecoding = false
 
@@ -325,21 +331,21 @@ final class DecodingState {
 
     init(skipData: SkipData?) {
         skipsData = skipData != nil
-        skipDataMnemonic = skipData?.mnemonic.flatMap { strdup($0) }
+        unsafe skipDataMnemonic = skipData?.mnemonic.flatMap { unsafe strdup($0) }
         skipDataBytesToSkip = skipData?.bytesToSkip
     }
 
     deinit {
-        free(skipDataMnemonic)
+        unsafe free(skipDataMnemonic)
     }
 
     /// Asks the caller's closure how many bytes to skip at `code`, which points into
     /// the pass's input. Negative answers stop decoding, as 0 does.
     func bytesToSkip(at code: UnsafePointer<UInt8>) -> Int {
-        guard let skipDataBytesToSkip, let input, let start = input.baseAddress else {
+        guard let skipDataBytesToSkip, let input = unsafe input, let start = input.baseAddress else {
             return 0
         }
-        let offset = UnsafeRawPointer(code) - start
-        return max(skipDataBytesToSkip(input.bytes, offset), 0)
+        let offset = unsafe UnsafeRawPointer(code) - start
+        return max(skipDataBytesToSkip(unsafe input.bytes, offset), 0)
     }
 }

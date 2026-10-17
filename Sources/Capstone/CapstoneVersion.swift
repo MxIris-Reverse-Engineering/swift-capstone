@@ -14,7 +14,7 @@ public struct CapstoneVersion: Hashable, Comparable, Sendable, CustomStringConve
     public static var current: CapstoneVersion {
         var major: Int32 = 0
         var minor: Int32 = 0
-        cs_version(&major, &minor)
+        unsafe cs_version(&major, &minor)
         return CapstoneVersion(major: Int(major), minor: Int(minor))
     }
 
