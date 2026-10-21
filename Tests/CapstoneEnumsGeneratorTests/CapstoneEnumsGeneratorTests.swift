@@ -21,8 +21,42 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
     )
 }
 
+/// The built `capstone-enums-generator`, which SwiftPM puts next to this test bundle.
+private func generatorExecutable() -> URL {
+    Bundle(for: TestBundleMarker.self).bundleURL
+        .deletingLastPathComponent()
+        .appendingPathComponent("capstone-enums-generator")
+}
+
+private final class TestBundleMarker {}
+
 @Suite struct CapstoneEnumsGeneratorTests {
-    @Test func generatesSwiftEnumFromHeader() async throws {
+    /// The command line is the generator's interface, so it is driven as a process.
+    /// A mistyped option has to stop it before it writes anything: ignored, `--chek`
+    /// regenerated the files that a `--check` was meant to compare.
+    @Test func unknownArgumentStopsBeforeWriting() throws {
+        let fileManager = FileManager.default
+        let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
+        let outputDir = tempDir.appendingPathComponent("output", isDirectory: true)
+        try fileManager.createDirectory(at: includeDir, withIntermediateDirectories: true)
+        try writeMinimalCapstoneHeader(to: includeDir)
+        try "typedef enum arm_test { ARM_TEST_INVALID = 0 } arm_test;"
+            .write(to: includeDir.appendingPathComponent("arm.h"), atomically: true, encoding: .utf8)
+
+        let generator = Process()
+        generator.executableURL = generatorExecutable()
+        generator.arguments = ["--include", includeDir.path, "--output", outputDir.path, "--chek"]
+        generator.standardOutput = FileHandle.nullDevice
+        generator.standardError = FileHandle.nullDevice
+        try generator.run()
+        generator.waitUntilExit()
+
+        #expect(generator.terminationStatus != 0)
+        #expect(!fileManager.fileExists(atPath: outputDir.appendingPathComponent("Architecture+Generated.swift").path))
+    }
+
+    @Test func generatesSwiftEnumFromHeader() throws {
         let fileManager = FileManager.default
         let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
@@ -43,10 +77,10 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         try header.write(to: headerURL, atomically: true, encoding: .utf8)
 
         let generator = CapstoneEnumsGenerator()
-        try await generator.generate(input: includeDir, output: outputDir)
+        try generator.generate(input: includeDir, output: outputDir)
 
         let generated = outputDir.appendingPathComponent("ArmEnums.swift")
-        let contents = try String(contentsOf: generated)
+        let contents = try String(contentsOf: generated, encoding: .utf8)
 
         #expect(contents.contains("public enum ArmTest"))
         #expect(contents.contains("case foo = 1"))
@@ -56,7 +90,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         #expect(contents.contains("public static let fooAlias: ArmTest = .foo"))
     }
 
-    @Test func detectsOptionSetStyleBitmasks() async throws {
+    @Test func detectsOptionSetStyleBitmasks() throws {
         let fileManager = FileManager.default
         let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
@@ -77,17 +111,17 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         try header.write(to: headerURL, atomically: true, encoding: .utf8)
 
         let generator = CapstoneEnumsGenerator()
-        try await generator.generate(input: includeDir, output: outputDir)
+        try generator.generate(input: includeDir, output: outputDir)
 
         let generated = outputDir.appendingPathComponent("ArmEnums.swift")
-        let contents = try String(contentsOf: generated)
+        let contents = try String(contentsOf: generated, encoding: .utf8)
 
         #expect(contents.contains("public struct ArmFlags: OptionSet"))
         #expect(contents.contains("public static let read = ArmFlags(rawValue: 1)"))
         #expect(contents.contains("public static let execute = ArmFlags(rawValue: 4)"))
     }
 
-    @Test func parsesMacroDefinedOptionSets() async throws {
+    @Test func parsesMacroDefinedOptionSets() throws {
         let fileManager = FileManager.default
         let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
@@ -106,9 +140,9 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         try header.write(to: headerURL, atomically: true, encoding: .utf8)
 
         let generator = CapstoneEnumsGenerator()
-        try await generator.generate(input: includeDir, output: outputDir)
+        try generator.generate(input: includeDir, output: outputDir)
 
-        let contents = try String(contentsOf: outputDir.appendingPathComponent("X86Enums.swift"))
+        let contents = try String(contentsOf: outputDir.appendingPathComponent("X86Enums.swift"), encoding: .utf8)
         #expect(contents.contains("public struct X86Eflags: OptionSet"))
         #expect(contents.contains("public static let modifyCf = X86Eflags(rawValue: 2)"))
         #expect(contents.contains("public static let resetOf = X86Eflags(rawValue: 2097152)"))
@@ -122,7 +156,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
     /// Xtensa's `XTENSA_INS_L32I` and `XTENSA_INS__L32I`. Dropping the underscores
     /// gave each pair one Swift name, and the enum stopped compiling as soon as its
     /// trait was enabled.
-    @Test func constantsDifferingOnlyInUnderscoresGetDistinctNames() async throws {
+    @Test func constantsDifferingOnlyInUnderscoresGetDistinctNames() throws {
         let fileManager = FileManager.default
         let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
@@ -142,7 +176,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         """
         try header.write(to: includeDir.appendingPathComponent("arm.h"), atomically: true, encoding: .utf8)
 
-        try await CapstoneEnumsGenerator().generate(input: includeDir, output: outputDir)
+        try CapstoneEnumsGenerator().generate(input: includeDir, output: outputDir)
 
         let contents = try String(contentsOf: outputDir.appendingPathComponent("ArmEnums.swift"), encoding: .utf8)
         #expect(contents.contains("case aliasMr = 1"))
@@ -154,7 +188,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
     /// Models an upstream header rename, as v6 did with arm64.h: the files were
     /// generated, then the header they came from disappeared. Skipping the
     /// architecture leaves those files alone, so `--check` would call them current.
-    @Test func missingHeaderOfDeclaredArchitectureFailsTheCheck() async throws {
+    @Test func missingHeaderOfDeclaredArchitectureFailsTheCheck() throws {
         let fileManager = FileManager.default
         let tempDir = fileManager.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         let includeDir = tempDir.appendingPathComponent("include", isDirectory: true)
@@ -167,11 +201,11 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         try "typedef enum arm_test { ARM_TEST_INVALID = 0 } arm_test;"
             .write(to: headerURL, atomically: true, encoding: .utf8)
         let generator = CapstoneEnumsGenerator()
-        try await generator.generate(input: includeDir, output: outputDir)
+        try generator.generate(input: includeDir, output: outputDir)
         try fileManager.removeItem(at: headerURL)
 
-        let error = try await #require(throws: GenerationError.self) {
-            try await generator.generate(input: includeDir, output: outputDir, checkOnly: true)
+        let error = try #require(throws: GenerationError.self) {
+            try generator.generate(input: includeDir, output: outputDir, checkOnly: true)
         }
         guard case .missingHeader("arm.h") = error else {
             Issue.record("expected missingHeader(\"arm.h\"), got \(error)")

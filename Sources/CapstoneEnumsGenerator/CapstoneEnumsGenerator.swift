@@ -64,7 +64,7 @@ public enum GenerationError: Error, CustomStringConvertible {
     }
 }
 
-public struct CapstoneEnumsGenerator {
+public struct CapstoneEnumsGenerator: Sendable {
     public init() {}
 
     /// Writes the generated sources, or with `checkOnly` compares them against what
@@ -73,7 +73,7 @@ public struct CapstoneEnumsGenerator {
     /// The check exists because a generated file that has drifted from its inputs
     /// looks exactly like a hand-written one — nothing about the file says it is out
     /// of date.
-    public func generate(input inputFileURL: URL, output outputFileURL: URL, checkOnly: Bool = false) async throws {
+    public func generate(input inputFileURL: URL, output outputFileURL: URL, checkOnly: Bool = false) throws {
         var staleFiles = [String]()
 
         func emit(_ contents: String, to url: URL) throws {
@@ -467,7 +467,7 @@ private extension CapstoneEnumsGenerator {
 
     func parseMacroOptionSets(from headerURL: URL, configuration: ArchitectureConfig) throws -> [ParsedEnum] {
         guard !configuration.macroOptionSets.isEmpty else { return [] }
-        let contents = try String(contentsOf: headerURL)
+        let contents = try String(contentsOf: headerURL, encoding: .utf8)
         var parsed = [ParsedEnum]()
 
         for macroConfig in configuration.macroOptionSets {
@@ -520,7 +520,7 @@ private extension CapstoneEnumsGenerator {
 
     func parseMacroEnums(from headerURL: URL, configuration: ArchitectureConfig) throws -> [ParsedEnum] {
         guard !configuration.macroEnums.isEmpty else { return [] }
-        let contents = try String(contentsOf: headerURL)
+        let contents = try String(contentsOf: headerURL, encoding: .utf8)
         var parsed = [ParsedEnum]()
 
         for macroConfig in configuration.macroEnums {
@@ -566,7 +566,7 @@ private extension CapstoneEnumsGenerator {
         return parsed
     }
 
-    func cursorIsInHeader(_ cursor: Cursor, headerURL: URL) -> Bool {
+    func cursorIsInHeader(_ cursor: any Cursor, headerURL: URL) -> Bool {
         let cursorFile = cursor.range.start.file.name
         return URL(fileURLWithPath: cursorFile).lastPathComponent == headerURL.lastPathComponent
     }
@@ -674,7 +674,7 @@ private extension CapstoneEnumsGenerator {
         return makeSwiftIdentifier(prefixWithoutArch, lowercaseFirst: false)
     }
 
-    func swiftRawType(from type: CType) -> String {
+    func swiftRawType(from type: any CType) -> String {
         let size = (try? type.sizeOf()) ?? 4
         let isUnsigned = type.isUnsignedIntegerType
 
@@ -797,9 +797,9 @@ private extension CapstoneEnumsGenerator {
 
         do {
             try process.run()
+            let data = try pipe.fileHandleForReading.remainingData()
             process.waitUntilExit()
             guard process.terminationStatus == 0 else { return nil }
-            let data = pipe.fileHandleForReading.readDataToEndOfFile()
             let path = String(decoding: data, as: UTF8.self).trimmingCharacters(in: .whitespacesAndNewlines)
             return path.isEmpty ? nil : path
         } catch {
@@ -1106,6 +1106,18 @@ private extension CapstoneEnumsGenerator {
 
         lines.append("}")
         return lines.joined(separator: "\n")
+    }
+}
+
+private extension FileHandle {
+    /// Everything left to read. `readToEnd()` reports a failed read as a Swift error;
+    /// `readDataToEndOfFile()` raises an Objective-C exception, which Swift cannot
+    /// catch, and stands in only before macOS 10.15.4, which lacks the other.
+    func remainingData() throws -> Data {
+        if #available(macOS 10.15.4, *) {
+            return try readToEnd() ?? Data()
+        }
+        return readDataToEndOfFile()
     }
 }
 

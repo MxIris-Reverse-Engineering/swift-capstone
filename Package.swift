@@ -195,10 +195,9 @@ let package = Package(
         ),
         .testTarget(
             name: "CapstoneEnumsGeneratorTests",
-            dependencies: ["CapstoneEnumsGenerator"],
-            swiftSettings: [
-                .enableExperimentalFeature("SwiftTesting"),
-            ],
+            // The command-line tests run the built generator, so it has to be built
+            // before they are.
+            dependencies: ["CapstoneEnumsGenerator", "capstone-enums-generator"],
         ),
     ],
     // Swift 6, as both downstream packages use. The tests depend on it too: Swift 5
