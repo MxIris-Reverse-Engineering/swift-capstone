@@ -80,6 +80,18 @@ struct DisassemblerTests {
         #expect(result.consumed == 8)
     }
 
+    #if os(macOS) || os(Linux) || os(Windows)
+    /// A negative limit is a programming error, documented as such, not a request
+    /// to decode nothing.
+    @Test("a negative limit traps")
+    func negativeLimitTraps() async {
+        await #expect(processExitsWith: .failure) {
+            let disassembler = try Disassembler<AArch64>()
+            disassembler.forEachInstruction(in: [0x62, 0x00, 0x04, 0x8B] as [UInt8], address: 0x1000, limit: -1) { _ in }
+        }
+    }
+    #endif
+
     @Test("empty input lends nothing and consumes nothing")
     func emptyInput() throws {
         let disassembler = try Disassembler<AArch64>()

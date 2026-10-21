@@ -31,6 +31,17 @@ struct AArch64Tests {
         #expect(registers == [.x2, .x3, .x4])
     }
 
+    #if os(macOS) || os(Linux) || os(Windows)
+    /// `operand(at:)` requires an index below `operandCount`.
+    @Test("reading past the last operand traps")
+    func operandIndexOutOfRangeTraps() async {
+        await #expect(processExitsWith: .failure) {
+            // add x2, x3, x4 has three operands.
+            _ = try withFirstInstruction([0x62, 0x00, 0x04, 0x8B]) { $0.operand(at: 3) }
+        }
+    }
+    #endif
+
     @Test("a memory operand reports base and displacement")
     func memoryOperand() throws {
         // ldr x0, [x1, #8]
