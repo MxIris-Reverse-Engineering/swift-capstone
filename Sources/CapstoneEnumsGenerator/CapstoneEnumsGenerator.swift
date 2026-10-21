@@ -1095,8 +1095,11 @@ private extension CapstoneEnumsGenerator {
                 switch constant.kind {
                 case .standard:
                     lines.append("    case \(constant.name) = \(constant.rawValue)")
-                case .alias:
-                    lines.append("    public static let \(constant.name) = \(constant.rawValue)")
+                case .alias(let target):
+                    // An enum cannot have two cases with one raw value, so a constant
+                    // repeating another's value becomes a second name for that case.
+                    // Typed as the enum, it compares and switches like the case.
+                    lines.append("    public static let \(constant.name): \(item.swiftName) = .\(target)")
                 }
             }
         }

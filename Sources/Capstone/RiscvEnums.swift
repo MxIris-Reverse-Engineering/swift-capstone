@@ -4863,7 +4863,7 @@ public enum RiscvSysreg: UInt32, Sendable {
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case mcountinhibit = 800
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
-    public static let mucounteren = 800
+    public static let mucounteren: RiscvSysreg = .mcountinhibit
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case mhpmevent3 = 803
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
@@ -5251,7 +5251,7 @@ public enum RiscvSysreg: UInt32, Sendable {
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case dscratch0 = 1970
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
-    public static let dscratch = 1970
+    public static let dscratch: RiscvSysreg = .dscratch0
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case dscratch1 = 1971
     /// generated content <RISCVGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off

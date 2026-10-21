@@ -130,6 +130,19 @@ struct AArch64Tests {
         #expect(try withFirstInstruction([0x04, 0x00, 0x00, 0x14]) { $0.conditionCode } == nil)
     }
 
+    /// aarch64.h names the SVE conditions as aliases of the base ones:
+    /// `AArch64CC_NONE_ACTIVE = AArch64CC_EQ`, `ANY_ACTIVE = NE`, `LAST_ACTIVE = LO`
+    /// and `FIRST_ACTIVE = MI`.
+    @Test("SVE condition names are the conditions aarch64.h equates them with", arguments: [
+        (AArch64CondCode.noneActive, AArch64CondCode.eq),
+        (.anyActive, .ne),
+        (.lastActive, .lo),
+        (.firstActive, .mi),
+    ])
+    func conditionCodeAliases(alias: AArch64CondCode, condition: AArch64CondCode) {
+        #expect(alias == condition)
+    }
+
     @Test("comparisons set the flags and plain arithmetic does not")
     func flagUpdates() throws {
         // cmp x5, #1 is subs xzr, x5, #1

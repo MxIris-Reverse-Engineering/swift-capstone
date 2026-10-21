@@ -1790,7 +1790,7 @@ public enum X86Prefix: UInt32, Sendable {
     /// rep (cs_x86.prefix[0]
     case rep = 243
     /// repe/repz (cs_x86.prefix[0]
-    public static let repe = 243
+    public static let repe: X86Prefix = .rep
 }
 
 /// X86 registers

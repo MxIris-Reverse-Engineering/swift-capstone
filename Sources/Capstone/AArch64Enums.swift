@@ -56,21 +56,21 @@ public enum AArch64CondCode: UInt32, Sendable {
     /// Equal Equal
     case eq = 0
     /// ( Z)
-    public static let noneActive = 0
+    public static let noneActive: AArch64CondCode = .eq
     /// Not equal, or unordered
     case ne = 1
     /// (!Z)
-    public static let anyActive = 1
+    public static let anyActive: AArch64CondCode = .ne
     /// Unsigned higher or same >, ==, or unordered
     case hs = 2
     /// Unsigned lower Less than
     case lo = 3
     /// (!C)
-    public static let lastActive = 3
+    public static let lastActive: AArch64CondCode = .lo
     /// Minus, negative Less than
     case mi = 4
     /// ( N)
-    public static let firstActive = 4
+    public static let firstActive: AArch64CondCode = .mi
     /// Plus, positive or zero >, ==, or unordered
     case pl = 5
     /// Overflow Unordered
@@ -4376,7 +4376,7 @@ public enum AArch64Pstateimm015: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> begin clang-format off
     case pan = 4
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> end
-    public static let ending = 4
+    public static let ending: AArch64Pstateimm015 = .pan
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> begin clang-format off
     case spsel = 5
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_PStateImm0_15> begin clang-format off
@@ -4400,13 +4400,13 @@ public enum AArch64Reg: UInt16, Sendable {
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case fp = 2
     /// alias registers
-    public static let x29 = 2
+    public static let x29: AArch64Reg = .fp
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case fpcr = 3
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case lr = 4
     /// alias registers
-    public static let x30 = 4
+    public static let x30: AArch64Reg = .lr
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case nzcv = 5
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
@@ -4908,11 +4908,11 @@ public enum AArch64Reg: UInt16, Sendable {
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case x16 = 254
     /// alias registers
-    public static let ip0 = 254
+    public static let ip0: AArch64Reg = .x16
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case x17 = 255
     /// alias registers
-    public static let ip1 = 255
+    public static let ip1: AArch64Reg = .x17
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
     case x18 = 256
     /// generated content <AArch64GenCSRegEnum.inc> begin clang-format off
@@ -5855,7 +5855,7 @@ public enum AArch64Svcr: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVCR> begin clang-format off
     case svcrsmza = 3
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVCR> end
-    public static let ending = 3
+    public static let ending: AArch64Svcr = .svcrsmza
 }
 
 public enum AArch64Svepredpat: UInt32, Sendable {
@@ -5880,7 +5880,7 @@ public enum AArch64Svepredpat: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> begin clang-format off
     case vl16 = 9
     /// clang-format on generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> end
-    public static let ending = 9
+    public static let ending: AArch64Svepredpat = .vl16
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> begin clang-format off
     case vl32 = 10
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SVEPREDPAT> begin clang-format off
@@ -6264,7 +6264,7 @@ public enum AArch64Sysreg: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case trcextinselr = 34884
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
-    public static let trcextinselr0 = 34884
+    public static let trcextinselr0: AArch64Sysreg = .trcextinselr
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case trccntvr0 = 34885
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
@@ -6828,7 +6828,7 @@ public enum AArch64Sysreg: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case dbgdtrrxEl0 = 38952
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
-    public static let dbgdtrtxEl0 = 38952
+    public static let dbgdtrtxEl0: AArch64Sysreg = .dbgdtrrxEl0
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case spmcrEl0 = 40160
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
@@ -7810,7 +7810,7 @@ public enum AArch64Sysreg: UInt32, Sendable {
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case ttbr0El2 = 57600
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
-    public static let vsctlrEl2 = 57600
+    public static let vsctlrEl2: AArch64Sysreg = .ttbr0El2
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off
     case ttbr1El2 = 57601
     /// generated content <AArch64GenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_SysReg> begin clang-format off

@@ -6,59 +6,59 @@ public enum SparcAsitagAsi: UInt32, Sendable {
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case n = 4
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let nucleus = 4
+    public static let nucleus: SparcAsitagAsi = .n
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case nL = 12
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let nucleusLittle = 12
+    public static let nucleusLittle: SparcAsitagAsi = .nL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case aiup = 16
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let asIfUserPrimary = 16
+    public static let asIfUserPrimary: SparcAsitagAsi = .aiup
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case aius = 17
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let asIfUserSecondary = 17
+    public static let asIfUserSecondary: SparcAsitagAsi = .aius
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case aiupL = 24
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let asIfUserPrimaryLittle = 24
+    public static let asIfUserPrimaryLittle: SparcAsitagAsi = .aiupL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case aiusL = 25
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let asIfUserSecondaryLittle = 25
+    public static let asIfUserSecondaryLittle: SparcAsitagAsi = .aiusL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case p = 128
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let primary = 128
+    public static let primary: SparcAsitagAsi = .p
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case s = 129
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let secondary = 129
+    public static let secondary: SparcAsitagAsi = .s
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case pnf = 130
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let primaryNofault = 130
+    public static let primaryNofault: SparcAsitagAsi = .pnf
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case snf = 131
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let secondaryNofault = 131
+    public static let secondaryNofault: SparcAsitagAsi = .snf
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case pL = 136
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let primaryLittle = 136
+    public static let primaryLittle: SparcAsitagAsi = .pL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case sL = 137
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let secondaryLittle = 137
+    public static let secondaryLittle: SparcAsitagAsi = .sL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case pnfL = 138
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let primaryNofaultLittle = 138
+    public static let primaryNofaultLittle: SparcAsitagAsi = .pnfL
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
     case snfL = 139
     /// generated content <SparcGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_ASITag> begin clang-format off
-    public static let secondaryNofaultLittle = 139
+    public static let secondaryNofaultLittle: SparcAsitagAsi = .snfL
 }
 
 /// Enums corresponding to Sparc condition codes, both icc's and fcc's.
@@ -72,7 +72,7 @@ public enum SparcCcCpcc: UInt32, Sendable {
     /// Co-processor conditional branches
     case begin = 32
     /// Never
-    public static let n = 32
+    public static let n: SparcCcCpcc = .begin
     case _123 = 33
     case _12 = 34
     case _13 = 35
@@ -95,7 +95,7 @@ public enum SparcCcCpcc: UInt32, Sendable {
 public enum SparcCcFcc: UInt32, Sendable {
     case begin = 16
     /// Never
-    public static let n = 16
+    public static let n: SparcCcFcc = .begin
     /// Not Equal
     case ne = 17
     /// Less or Greater
@@ -2020,7 +2020,7 @@ public enum SparcReg: UInt16, Sendable {
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
     case i6 = 172
     /// extras
-    public static let fp = 172
+    public static let fp: SparcReg = .i6
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
     case i7 = 173
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
@@ -2054,7 +2054,7 @@ public enum SparcReg: UInt16, Sendable {
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
     case o6 = 188
     /// extras
-    public static let sp = 188
+    public static let sp: SparcReg = .o6
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off
     case o7 = 189
     /// generated content <SparcGenCSRegEnum.inc> begin clang-format off

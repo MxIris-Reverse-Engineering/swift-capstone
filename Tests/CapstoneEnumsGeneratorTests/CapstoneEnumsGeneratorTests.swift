@@ -51,7 +51,9 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         #expect(contents.contains("public enum ArmTest"))
         #expect(contents.contains("case foo = 1"))
         #expect(contents.contains("case bar = 3"))
-        #expect(contents.contains("public static let fooAlias = 1"))
+        // ARM_TEST_FOO_ALIAS = ARM_TEST_FOO: an alias is a value of the enum, the
+        // case it names, not a bare integer that compares with nothing.
+        #expect(contents.contains("public static let fooAlias: ArmTest = .foo"))
     }
 
     @Test func detectsOptionSetStyleBitmasks() async throws {
@@ -146,7 +148,7 @@ private func writeMinimalCapstoneHeader(to includeDirectory: URL, declaring arch
         #expect(contents.contains("case aliasMr = 1"))
         #expect(contents.contains("case aliasMr_ = 2"))
         #expect(contents.contains("case _aliasMr = 3"))
-        #expect(contents.contains("public static let aliasMrSame = 2"))
+        #expect(contents.contains("public static let aliasMrSame: ArmIns = .aliasMr_"))
     }
 
     /// Models an upstream header rename, as v6 did with arm64.h: the files were

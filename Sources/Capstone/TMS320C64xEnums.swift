@@ -222,7 +222,7 @@ public enum Tms320c64xReg: UInt16, Sendable {
     case dnum = 4
     case ecr = 5
     /// Alias registers
-    public static let efr = 5
+    public static let efr: Tms320c64xReg = .ecr
     case gfpgfr = 6
     case gplya = 7
     case gplyb = 8
@@ -233,7 +233,7 @@ public enum Tms320c64xReg: UInt16, Sendable {
     case irp = 13
     case isr = 14
     /// Alias registers
-    public static let ifr = 14
+    public static let ifr: Tms320c64xReg = .isr
     case istp = 15
     case itsr = 16
     case nrp = 17

@@ -4502,131 +4502,131 @@ public enum LoongArchReg: UInt16, Sendable {
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r0 = 45
     /// alias registers
-    public static let zero = 45
+    public static let zero: LoongArchReg = .r0
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r1 = 46
     /// alias registers
-    public static let ra = 46
+    public static let ra: LoongArchReg = .r1
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r2 = 47
     /// alias registers
-    public static let tp = 47
+    public static let tp: LoongArchReg = .r2
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r3 = 48
     /// alias registers
-    public static let sp = 48
+    public static let sp: LoongArchReg = .r3
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r4 = 49
     /// alias registers
-    public static let a0 = 49
+    public static let a0: LoongArchReg = .r4
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r5 = 50
     /// alias registers
-    public static let a1 = 50
+    public static let a1: LoongArchReg = .r5
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r6 = 51
     /// alias registers
-    public static let a2 = 51
+    public static let a2: LoongArchReg = .r6
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r7 = 52
     /// alias registers
-    public static let a3 = 52
+    public static let a3: LoongArchReg = .r7
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r8 = 53
     /// alias registers
-    public static let a4 = 53
+    public static let a4: LoongArchReg = .r8
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r9 = 54
     /// alias registers
-    public static let a5 = 54
+    public static let a5: LoongArchReg = .r9
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r10 = 55
     /// alias registers
-    public static let a6 = 55
+    public static let a6: LoongArchReg = .r10
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r11 = 56
     /// alias registers
-    public static let a7 = 56
+    public static let a7: LoongArchReg = .r11
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r12 = 57
     /// alias registers
-    public static let t0 = 57
+    public static let t0: LoongArchReg = .r12
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r13 = 58
     /// alias registers
-    public static let t1 = 58
+    public static let t1: LoongArchReg = .r13
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r14 = 59
     /// alias registers
-    public static let t2 = 59
+    public static let t2: LoongArchReg = .r14
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r15 = 60
     /// alias registers
-    public static let t3 = 60
+    public static let t3: LoongArchReg = .r15
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r16 = 61
     /// alias registers
-    public static let t4 = 61
+    public static let t4: LoongArchReg = .r16
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r17 = 62
     /// alias registers
-    public static let t5 = 62
+    public static let t5: LoongArchReg = .r17
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r18 = 63
     /// alias registers
-    public static let t6 = 63
+    public static let t6: LoongArchReg = .r18
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r19 = 64
     /// alias registers
-    public static let t7 = 64
+    public static let t7: LoongArchReg = .r19
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r20 = 65
     /// alias registers
-    public static let t8 = 65
+    public static let t8: LoongArchReg = .r20
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r21 = 66
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r22 = 67
     /// alias registers
-    public static let fp = 67
+    public static let fp: LoongArchReg = .r22
     /// alias registers
-    public static let s9 = 67
+    public static let s9: LoongArchReg = .r22
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r23 = 68
     /// alias registers
-    public static let s0 = 68
+    public static let s0: LoongArchReg = .r23
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r24 = 69
     /// alias registers
-    public static let s1 = 69
+    public static let s1: LoongArchReg = .r24
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r25 = 70
     /// alias registers
-    public static let s2 = 70
+    public static let s2: LoongArchReg = .r25
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r26 = 71
     /// alias registers
-    public static let s3 = 71
+    public static let s3: LoongArchReg = .r26
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r27 = 72
     /// alias registers
-    public static let s4 = 72
+    public static let s4: LoongArchReg = .r27
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r28 = 73
     /// alias registers
-    public static let s5 = 73
+    public static let s5: LoongArchReg = .r28
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r29 = 74
     /// alias registers
-    public static let s6 = 74
+    public static let s6: LoongArchReg = .r29
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r30 = 75
     /// alias registers
-    public static let s7 = 75
+    public static let s7: LoongArchReg = .r30
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case r31 = 76
     /// alias registers
-    public static let s8 = 76
+    public static let s8: LoongArchReg = .r31
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off
     case scr0 = 77
     /// generated content <LoongArchGenCSRegEnum.inc> begin clang-format off

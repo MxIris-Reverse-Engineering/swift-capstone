@@ -1801,19 +1801,19 @@ public enum ArmMclasssysreg: UInt32, Sendable {
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case apsr = 2048
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
-    public static let apsrNzcvq = 2048
+    public static let apsrNzcvq: ArmMclasssysreg = .apsr
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case iapsr = 2049
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
-    public static let iapsrNzcvq = 2049
+    public static let iapsrNzcvq: ArmMclasssysreg = .iapsr
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case eapsr = 2050
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
-    public static let eapsrNzcvq = 2050
+    public static let eapsrNzcvq: ArmMclasssysreg = .eapsr
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case xpsr = 2051
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
-    public static let xpsrNzcvq = 2051
+    public static let xpsrNzcvq: ArmMclasssysreg = .xpsr
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
     case ipsr = 2053
     /// generated content <ARMGenCSSystemOperandsEnum.inc:GET_ENUM_VALUES_MClassSysReg> begin clang-format off
@@ -1965,17 +1965,17 @@ public enum ArmReg: UInt16, Sendable {
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case lr = 13
     /// alias registers
-    public static let r14 = 13
+    public static let r14: ArmReg = .lr
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case pc = 14
     /// alias registers
-    public static let r15 = 14
+    public static let r15: ArmReg = .pc
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case raAuthCode = 15
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case sp = 16
     /// alias registers
-    public static let r13 = 16
+    public static let r13: ArmReg = .sp
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case spsr = 17
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
@@ -2109,19 +2109,19 @@ public enum ArmReg: UInt16, Sendable {
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case r9 = 82
     /// alias registers
-    public static let sb = 82
+    public static let sb: ArmReg = .r9
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case r10 = 83
     /// alias registers
-    public static let sl = 83
+    public static let sl: ArmReg = .r10
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case r11 = 84
     /// alias registers
-    public static let fp = 84
+    public static let fp: ArmReg = .r11
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case r12 = 85
     /// alias registers
-    public static let ip = 85
+    public static let ip: ArmReg = .r12
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off
     case s0 = 86
     /// generated content <ARMGenCSRegEnum.inc> begin clang-format off

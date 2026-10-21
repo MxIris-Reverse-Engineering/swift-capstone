@@ -5306,7 +5306,7 @@ public enum PpcPred: UInt32, Sendable {
     /// Name | BI | BO
     case gt = 44
     /// SPE scalar compare instructions always set the GT bit.
-    public static let spe = 44
+    public static let spe: PpcPred = .gt
     /// Reserved
     case gtReserved = 45
     /// Likely not taken
@@ -5332,7 +5332,7 @@ public enum PpcPred: UInt32, Sendable {
     /// Not Unordered (after fp comparison)
     case nu = 100
     /// not summary overflow
-    public static let ns = 100
+    public static let ns: PpcPred = .nu
     /// Reserved
     case nuReserved = 101
     /// Likely not taken
@@ -5342,7 +5342,7 @@ public enum PpcPred: UInt32, Sendable {
     /// Unordered (after fp comparison)
     case un = 108
     /// summary overflow
-    public static let so = 108
+    public static let so: PpcPred = .un
     /// Reserved
     case unReserved = 109
     /// Likely not taken

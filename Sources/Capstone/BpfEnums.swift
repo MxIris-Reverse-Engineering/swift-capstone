@@ -76,7 +76,7 @@ public enum BpfIns: UInt32, Sendable {
     /// eBPF only
     case ldw = 45
     /// cBPF only
-    public static let ld = 45
+    public static let ld: BpfIns = .ldw
     case ldh = 46
     case ldb = 47
     /// eBPF only: load 64-bit imm
@@ -84,7 +84,7 @@ public enum BpfIns: UInt32, Sendable {
     /// eBPF only
     case ldxw = 49
     /// cBPF only
-    public static let ldx = 49
+    public static let ldx: BpfIns = .ldxw
     /// eBPF only
     case ldxh = 50
     /// eBPF only
@@ -106,7 +106,7 @@ public enum BpfIns: UInt32, Sendable {
     /// eBPF only
     case stw = 59
     /// cBPF only
-    public static let st = 59
+    public static let st: BpfIns = .stw
     /// eBPF only
     case sth = 60
     /// eBPF only
@@ -116,7 +116,7 @@ public enum BpfIns: UInt32, Sendable {
     /// eBPF only
     case stxw = 63
     /// cBPF only
-    public static let stx = 63
+    public static let stx: BpfIns = .stxw
     /// eBPF only
     case stxh = 64
     /// eBPF only
