@@ -12,14 +12,16 @@
 - No prerequisite install: capstone is a Swift package dependency built from source. Set `USING_LOCAL_DEPENDENCIES=1` to resolve it from a sibling checkout instead of the remote.
 - `swift build` – compile the package.
 - `swift test` – run the suite (swift-testing); use `swift test --filter <name>` to scope failures. Trust the raw exit code, never a formatter's summary.
-- `swift package plugin generate-enums` – regenerates the enums, the architecture table and the operand accessors from the capstone headers; run after upgrading capstone and commit the result.
+- `swift package plugin generate-enums` – regenerates the enums, the architecture table and the operand accessors from the capstone headers; run after upgrading capstone and commit the result. Add `--check` to compare instead of writing. Both the plugin and the generator stop at an unknown argument.
 - `swift run capstone-enums-generator --include <capstone>/include/capstone --output Sources/Capstone --check` – verifies the checked-in generated files still match the headers, writing nothing. Exits non-zero when stale.
 - `swift build --enable-all-traits --build-tests` – every architecture's generated enums must compile, since the documentation plugin builds this way.
 - `swift run cstool -- --help` (from `Examples/cstool`) – sanity-check the example tool.
 
 ## Coding Style & Naming Conventions
 - Swift 6 language mode (tools version 6.2); prefer 4-space indentation and trailing commas for multiline literals.
+- The package must keep building with Xcode 26.6 (Swift 6.3): no syntax or API that needs Swift 6.4. An API that needs a newer OS than the declared platforms goes behind `@available` / `#available` as an extra option, never as the only path.
 - The `Capstone` target checks strict memory safety. Mark unsafe operations with `unsafe` where they meet capstone's C API (the engine, the instruction view, the operand types, the C-array helpers) and keep them out of everything else. Build with the current toolchain clean: Swift 6.3 also flags calls such as `withUnsafeBytes` and `withCString` that 6.4 considers safe, and no marking satisfies both.
+- Every file of the `Capstone` target, generated ones included, imports capstone as `internal import Ccapstone`, so no C type can reach a public signature; the check is per file, so new files follow suit. The target enables `MemberImportVisibility`: a file calling a Foundation member imports Foundation itself.
 - Follow Swift naming: UpperCamelCase types, lowerCamelCase methods/properties, UPPER_CASE for C-style constants bridged into Swift when necessary.
 - SwiftLint is configured (`.swiftlint.yml`); run `swiftlint lint` locally when available. Large tuples, nesting, and line length limits are relaxed; keep identifiers succinct (min length 1).
 - Keep generated enum files under `Sources/Capstone/*Enums.swift` excluded from lint but still readable.

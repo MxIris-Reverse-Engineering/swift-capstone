@@ -1,6 +1,7 @@
 # 解码引擎：实现说明
 
-> 配套提案见[0003 - 用新 Swift 特性重写封装层](../Evolutions/0003-rewrite-with-modern-swift.md)。
+> 配套提案见[0003 - 用新 Swift 特性重写封装层](../Evolutions/0003-rewrite-with-modern-swift.md)，
+> 之后的小幅调整见[0004 - 重写之后的现代化收尾](../Evolutions/0004-modernization-follow-up.md)。
 > 本文记录 `Disassembler` 实际怎么建成、哪些决定在代码里看不出原因、已知的降级。面向维护者；调用方要遵守的
 > 契约写在 DocC 文章 [Streaming and Snapshots](../../Sources/Capstone/Capstone.docc/StreamingAndSnapshots.md) 里。
 
@@ -53,6 +54,12 @@ capstone 的 skipdata 路径不碰详情缓冲，数据条目的缓冲里是什�
 每次尝试解码前先清零，所以是空的；别的模块未必。视图对数据条目一律返回空：`details` 为 `nil`，标志为假，
 `identifier` / `alias` 为 `nil`。判断数据条目只能看 `id == 0`。
 
+### 读写寄存器的临时缓冲放在栈上
+
+`registersAccessed()` 要给 `cs_regs_access` 两块各 64 项的 `uint16_t` 缓冲，只在这一次调用里用。`decode` 给
+每条指令做快照时都会调它，所以缓冲用 `withUnsafeTemporaryAllocation` 放在栈上，不再每次在堆上建两个数组。
+代价是 Swift 6.3 下多两条下一节所说的判定不一致警告。
+
 ### 严格内存安全：`@safe` 的三个类型与 `unsafe` 的边界
 
 `Disassembler`、`InstructionView` 与内部的 `DecodingState` 存着指针，标 `@safe`：句柄与缓冲不出引擎，视图
@@ -60,9 +67,15 @@ capstone 的 skipdata 路径不碰详情缓冲，数据条目的缓冲里是什�
 `Utils.swift` 里读 C 定长数组的两个函数。读**具名** C union 的成员（`slice_offset`、`sysop` 的三个 union）
 算不安全，匿名 union 的成员不算，所以生成的操作数访问器无需标记。
 
+边界的另一半由 import 守住：模块里每个文件，包括生成的操作数访问器，都写 `internal import Ccapstone`，
+公开签名里一出现 C 类型就编译失败。这道检查按文件生效：哪个文件写回普通的 `import`，那个文件里的公开声明
+就又能带上 C 类型，编译器不会提示，所以新文件也要照写。Capstone target 还打开了 `MemberImportVisibility`，
+用到 Foundation 成员（例如 `String.contains`）的文件必须自己 import Foundation，不能靠别的文件间接可见。
+
 Swift 6.3 与 6.4 对「调用带不安全参数闭包的函数」判定不同：6.3 认为 `withUnsafeBytes`、
-`withUnsafeMutablePointer`、`withCString`、`ArraySlice.span` 的调用本身不安全，6.4 认为安全、标了反而报
-「没有不安全操作」。代码以 6.4 零警告为准，6.3 下多 9 条警告，编译与测试都通过。
+`withUnsafeMutablePointer`、`withUnsafeTemporaryAllocation`、`withCString`、`ArraySlice.span` 的调用本身
+不安全，6.4 认为安全、标了反而报「没有不安全操作」。代码以 6.4 零警告为准，6.3 下多 11 条警告，编译与测试
+都通过。最低工具链是 Swift 6.3（要能用 Xcode 26.6 编译），所以只能二选一，不能改用 6.4 才有的写法消掉它们。
 
 ### `[UInt8]` 输入经 `ArraySlice` 取 span
 
@@ -104,6 +117,9 @@ Sources/Capstone/Utils.swift                   # 枚举转换，读 C 定长数�
   `DisassemblerOptionsTests`（各选项与 skipdata）、`AArch64Tests`、`InstructionInformationTests`、
   `SnapshotTests`、`SendableTests`（编译期）、`ArchitectureTests`。嵌套缓冲的用例在去掉保护时确认过会失败；
   非法标记的用例在 capstone 6.0.100 上失败、6.0.101 上通过。
+- 两处文档写明会 trap 的检查（`limit` 为负、`operand(at:)` 越界）由退出测试覆盖：被测代码在子进程里运行，
+  断言它异常退出。退出测试只在 macOS、Linux、Windows 上可用，测试代码用 `#if os(...)` 包住，测试 target
+  为 iOS 等平台编译时跳过。
 - 默认 trait 与 `--traits AARCH64,SH` 两种配置，Swift 6.4 与 6.3 两个编译器；`swift build --enable-all-traits`。
 - 性能：同一组 10 万条指令，流式 0.93 µs/条（直接调 C 0.78 µs），快照 1.55 µs/条、常驻 61 MiB；6.x 是
   1.57 µs/条、301 MiB。方法见提案决策日志。
@@ -118,7 +134,10 @@ Sources/Capstone/Utils.swift                   # 枚举转换，读 C 定长数�
 ## 后续工作
 
 - 适配下一个架构：步骤见[实现说明：代码生成](CodeGeneration.md#适配下一个架构要做什么)。
-- 等最低编译器提到 Swift 6.4，用 `~Sendable` 取代 unavailable 的 `Sendable` 扩展。
+
+原先这里还有一条「最低编译器提到 Swift 6.4 后，用 `~Sendable` 取代 unavailable 的 `Sendable` 扩展」，已撤销：
+对结构体而言两种写法等价，而 `~Sendable` 带不了报错提示语，理由见
+[0004 - 重写之后的现代化收尾](../Evolutions/0004-modernization-follow-up.md)的决策日志。
 
 ## 延伸阅读
 

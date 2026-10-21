@@ -156,16 +156,23 @@ swift package plugin generate-enums
 ```
 
 To verify the checked-in output still matches the headers, without writing
-anything:
+anything, add `--check`:
+
+```sh
+swift package plugin generate-enums --check
+```
+
+It exits non-zero when a generated file is out of date, which is what a CI job
+should run — a stale generated file is indistinguishable from a hand-written one
+by inspection. Running the generator directly does the same without the plugin's
+permission prompt:
 
 ```sh
 swift run capstone-enums-generator \
     --include <path-to>/capstone/include/capstone --output Sources/Capstone --check
 ```
 
-It exits non-zero when a generated file is out of date, which is what a CI job
-should run — a stale generated file is indistinguishable from a hand-written one
-by inspection.
+Both stop at an argument they do not know rather than ignore it.
 
 ## Examples
 

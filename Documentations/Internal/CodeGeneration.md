@@ -1,6 +1,7 @@
 # 代码生成：实现说明
 
-> 配套提案见 [0001 - 适配 capstone v6](../Evolutions/0001-adapt-capstone-v6.md)。
+> 配套提案见 [0001 - 适配 capstone v6](../Evolutions/0001-adapt-capstone-v6.md)；别名常量的类型、参数检查等
+> 后来的修正见[0004 - 重写之后的现代化收尾](../Evolutions/0004-modernization-follow-up.md)。
 > 本文记录生成器实际怎么落地、维护时必须遵守的约定、与提案的差异以及已知降级。面向维护者。
 
 ## 背景与目标
@@ -63,6 +64,16 @@ trait 编译）编不过才暴露。
 `conflictingCaseName`，需要在生成器里显式处理。先出现的常量保持原名，所以没撞名的枚举，包括已适配的 AArch64，
 生成结果不变。
 
+### 别名常量是所属枚举类型的静态常量
+
+Swift 枚举不能有两个原始值相同的 case，所以和前面某个常量同值的 C 常量生成为一个静态常量，指向第一个同值的
+case：`public static let x29: AArch64Reg = .fp`、`public static let noneActive: AArch64CondCode = .eq`。
+它和 case 一样能比较、能用在 `switch` 里。
+
+2026-10 之前这类常量生成的是裸整数（`public static let x29 = 2`），类型是 `Int`，拿去和枚举值比较编译不过，
+`operand.register == .x29` 这种写法根本写不出来。当时 9 个架构共有 87 个这样的常量；生成器测试和
+`AArch64Tests` 里按 aarch64.h 写的 SVE 条件码别名用例守着现在的行为。
+
 ### 生成的类型一律声明 `Sendable`
 
 生成的枚举、`OptionSet` 和 `Architecture` 只装原始值，不引用引擎句柄，所以都显式声明 `Sendable`。
@@ -100,6 +111,18 @@ v6 重排了 `cs_arch`：SystemZ 从 6 挪到 2，Mips、X86、PowerPC、Sparc �
 `include/capstone`。capstone 的位置不固定：设了 `USING_LOCAL_DEPENDENCIES` 时是同级目录，否则是构建目录
 （scratch path）下的 checkout，两者都不在包目录的 `.build/checkouts` 里。
 
+### 命令行与插件不放过不认识的参数
+
+生成器的命令行和插件遇到不认识的参数、或选项缺少取值时都报错退出，不写任何文件。原先两者都静默跳过：把
+`--check` 打成 `--chek`，结果是重新生成、覆盖文件，而不是检查；插件更是根本不认 `--check`，传了也照样重新
+生成。现在插件把 `--check` 转交给生成器；`--target` / `--product` 照样放过：这是 SwiftPM 约定的「限定插件作用
+范围」的参数，宿主（例如 Xcode 的命令对话框）用它传用户选中的目标，而生成器总是处理全部架构，用不上它们。
+
+两者读子进程输出都用 `readToEnd()`：旧的 `readDataToEndOfFile()` 读失败时抛 ObjC 异常，Swift 接不住。这个
+方法要 macOS 10.15.4，而包的最低版本是 10.15：Xcode 26.6 在 Apple 芯片上按 11.0 编译（arm64 的 macOS 从 11
+开始），为 x86_64 编译时就按 10.15，直接调用会编不过。所以用 `#available` 判断，更老的系统才退回旧方法。
+部署目标已经满足时这个判断恒为真，编译器不会提示它多余（Xcode 27 的 SDK 把最低版本抬到 12）。
+
 ## 模块结构
 
 ```
@@ -120,7 +143,9 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 2. 渲染架构表。
 3. 逐个处理 `ArchitectureConfig.all`：头文件存在就解析其中的 C 枚举，以及配置里声明的宏常量组
    （`macroOptionSets`、`macroEnums`），同名去重后渲染成 `*Enums.swift`；头文件缺失时按上一节的规则报错或跳过。
-4. 有 `operandConfiguration` 的架构，解析操作数结构体的成员，做双向检查，再渲染访问器。
+4. 有 `operandConfiguration` 的架构，解析操作数结构体的成员，做双向检查，再渲染访问器。访问器文件和手写
+   文件一样写 `internal import Ccapstone`（理由见[实现说明：解码引擎](Disassembler.md)的严格内存安全一节）；
+   不暴露的操作数类型集合生成为 `static let`，只建一次，`Operand.value` 每次查它都不再现建 `Set`。
 5. 加了 `--check` 时，所有输出都只和磁盘上的文件比对，有差异就报 `staleGeneratedFiles`。
 
 ## 适配下一个架构要做什么
@@ -155,13 +180,17 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 ## 验证
 
 - `Tests/CapstoneEnumsGeneratorTests/CapstoneEnumsGeneratorTests.swift`：枚举解析、按位标志识别成 `OptionSet`、
-  宏常量组、只差下划线的常量得到不同的名字，以及「头文件消失后 `--check` 必须失败」。
+  宏常量组、只差下划线的常量得到不同的名字、别名常量是枚举类型，以及「头文件消失后 `--check` 必须失败」。
+  命令行用例把构建出的 `capstone-enums-generator` 当子进程运行，断言拼错的参数让它非零退出且一个文件都不写；
+  测试 target 因此依赖这个可执行 target。别名与命令行两条用例都在修复前确认过会失败。
 - 全部 trait：`swift build --enable-all-traits --build-tests` 要能编过，即所有架构的生成枚举都合法；2026-10-17
   修好撞名后验证过。DocC 插件就是这样编译的。
 - 双向检查：落地时故意改坏配置，确认两类报错都会触发（人工验证）。
 - `--check`：落地时验证过两个方向，干净的树退出 0，篡改一个生成文件后退出 1（人工验证）；对当前头文件退出 0。
 - 插件：2026-10-17 在 `USING_LOCAL_DEPENDENCIES=1` 下验证，修复前报找不到 capstone.h，修复后成功，重新生成
-  无差异。插件没法从测试 target 里调用，所以没有自动化回归测试。
+  无差异。2026-10-21 验证参数处理：`--chek` 与缺少取值的 `--output` 报错退出；`--check` 对干净的树退出 0，
+  对篡改过的 `Architecture+Generated.swift` 报过时并退出 1，文件保持篡改后的样子，说明确实只做了检查。插件
+  没法从测试 target 里调用，所以没有自动化回归测试。
 - 端到端：`Tests/CapstoneTests/AArch64Tests.swift` 用真实指令编码验证访问器，包括寄存器、立即数、内存
   操作数，以及 `mrs`、`prfm`、`dmb`、`at` 的系统操作数都解码成具名值。
 
@@ -170,7 +199,8 @@ Sources/Capstone/AArch64Operand.swift                        # 手写：AArch64.
 - **原始值类型推不出来时按 4 字节处理。** `swiftRawType(from:)` 在 libclang 给不出类型大小时按 4 字节、
   再按有无符号取 `UInt32` 或 `Int32`，不报错。C 枚举实际更宽时，超出范围的常量会让生成物编译失败；
   实际更窄时不会有任何提示。
-- **只有 AArch64 有操作数配置。** 其他架构的访问器仍是 v5 时代的手写代码，开启它们的 trait 编译不过。
+- **只有 AArch64 有操作数配置。** 其他架构只有生成的枚举，没有操作数访问器；v5 时代的手写封装随 7.0.0 删除，
+  所以打开它们的 trait 能编过，只是没有可用来解码的 Swift 类型。
 - **上游新增的架构只有警告。** `cs_arch` 里有、配置里没有的架构，生成器打印警告后继续，不中止。
 
 ## 后续工作
