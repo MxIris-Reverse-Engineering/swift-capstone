@@ -1,5 +1,5 @@
 #if CAPSTONE_HAS_AARCH64
-import Ccapstone
+internal import Ccapstone
 
 // The type-safe operand accessors live in AArch64+Operands.swift, generated from
 // the operand configuration in CapstoneEnumsGenerator. What is here is what the

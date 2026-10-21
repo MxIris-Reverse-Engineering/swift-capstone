@@ -1,5 +1,5 @@
 import Foundation
-import Ccapstone
+internal import Ccapstone
 
 /// A capstone engine for one architecture, its options fixed when it is created.
 ///

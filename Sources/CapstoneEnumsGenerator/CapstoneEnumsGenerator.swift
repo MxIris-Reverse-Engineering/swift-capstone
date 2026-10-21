@@ -990,7 +990,7 @@ private extension CapstoneEnumsGenerator {
         lines.append("// in CapstoneEnumsGenerator; the C header only carries it in comments.")
         lines.append("")
         lines.append("#if \(architecture.swiftDefine)")
-        lines.append("import Ccapstone")
+        lines.append("internal import Ccapstone")
         lines.append("")
         lines.append("public extension \(configuration.swiftOperandType) {")
 
@@ -1035,10 +1035,12 @@ private extension CapstoneEnumsGenerator {
         for (type, reason) in configuration.unexposedTypes.sorted(by: { $0.key < $1.key }) {
             lines.append("    /// - `\(type)`: \(reason)")
         }
-        lines.append("    internal static var unexposedOperandTypes: Set<\(prefix)Op> {")
+        // Stored rather than computed: `value` consults it, and a computed property
+        // would build the set again on every call.
+        lines.append("    internal static let unexposedOperandTypes: Set<\(prefix)Op> = [")
         let unexposed = configuration.unexposedTypes.keys.sorted().map { ".\($0)" }
-        lines.append("        [\(unexposed.joined(separator: ", "))]")
-        lines.append("    }")
+        lines.append("        \(unexposed.joined(separator: ", ")),")
+        lines.append("    ]")
         lines.append("}")
         lines.append("#endif")
         lines.append("")

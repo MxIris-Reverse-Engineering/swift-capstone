@@ -1,9 +1,9 @@
 #if CAPSTONE_HAS_AARCH64
-import Ccapstone
+internal import Ccapstone
 
 /// AArch64, also known as ARM64: the type parameter of `Disassembler<AArch64>` and
 /// the namespace of everything specific to the architecture.
-public enum AArch64: DisassemblyArchitecture {
+public enum AArch64: DisassemblyArchitecture, Sendable {
     public typealias InstructionIdentifier = AArch64Ins
 
     public static var architecture: Architecture { .aarch64 }

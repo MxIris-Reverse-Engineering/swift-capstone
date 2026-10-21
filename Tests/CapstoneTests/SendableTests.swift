@@ -4,7 +4,8 @@ import Capstone
 /// Checked by the compiler rather than at run time: each `requireSendable` call
 /// stops the test target from building if its type is not `Sendable`. Values that
 /// hold no engine handle can cross concurrency domains; `Disassembler` and
-/// `InstructionView` stay out, since they read the engine's buffer.
+/// `InstructionView` stay out, since they read the engine's buffer, and so does
+/// `SkipData`, whose closure may capture mutable state.
 @Suite("Sendable")
 struct SendableTests {
     private func requireSendable<Value: Sendable>(_: Value.Type) {}
@@ -21,6 +22,7 @@ struct SendableTests {
     #if CAPSTONE_HAS_AARCH64
     @Test("AArch64 values can cross concurrency domains")
     func aarch64ValuesAreSendable() {
+        requireSendable(AArch64.self)
         requireSendable(AArch64Ins.self)
         requireSendable(AArch64Reg.self)
         requireSendable(AArch64Grp.self)

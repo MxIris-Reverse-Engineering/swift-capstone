@@ -1,4 +1,4 @@
-import Ccapstone
+internal import Ccapstone
 
 // Not named CapstoneVersion: the compiler leaves any symbol whose name starts with
 // the module name followed by "Version" out of the symbol graph, so the type would

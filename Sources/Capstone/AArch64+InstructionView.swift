@@ -1,5 +1,6 @@
 #if CAPSTONE_HAS_AARCH64
-import Ccapstone
+import Foundation
+internal import Ccapstone
 
 extension InstructionView where Architecture == AArch64 {
     /// The number of operands; 0 for data entries.
@@ -112,19 +113,26 @@ extension InstructionView where Architecture == AArch64 {
         guard unsafe details != nil else {
             return ([], [])
         }
+        // capstone fills two fixed arrays of 64 registers, which only live for this
+        // call; on the stack they cost no allocation, and `decode` makes this call
+        // for every instruction it copies.
         let capacity = MemoryLayout<cs_regs>.size / MemoryLayout<UInt16>.stride
-        var read = [UInt16](repeating: 0, count: capacity)
-        var written = [UInt16](repeating: 0, count: capacity)
-        var readCount: UInt8 = 0
-        var writtenCount: UInt8 = 0
-        let error = unsafe cs_regs_access(handle, instruction, &read, &readCount, &written, &writtenCount)
-        guard error == CS_ERR_OK else {
-            return ([], [])
+        return withUnsafeTemporaryAllocation(of: UInt16.self, capacity: capacity) { read in
+            withUnsafeTemporaryAllocation(of: UInt16.self, capacity: capacity) { written in
+                var readCount: UInt8 = 0
+                var writtenCount: UInt8 = 0
+                let error = unsafe cs_regs_access(
+                    handle, instruction, read.baseAddress, &readCount, written.baseAddress, &writtenCount
+                )
+                guard error == CS_ERR_OK else {
+                    return ([], [])
+                }
+                return unsafe (
+                    read.prefix(Int(readCount)).compactMap(AArch64Reg.init(rawValue:)),
+                    written.prefix(Int(writtenCount)).compactMap(AArch64Reg.init(rawValue:))
+                )
+            }
         }
-        return (
-            read.prefix(Int(readCount)).compactMap(AArch64Reg.init(rawValue:)),
-            written.prefix(Int(writtenCount)).compactMap(AArch64Reg.init(rawValue:))
-        )
     }
 }
 #endif

@@ -1,4 +1,4 @@
-import Ccapstone
+internal import Ccapstone
 
 /// One decoded instruction as capstone left it in the engine's buffer, lent to the
 /// closure of `Disassembler.forEachInstruction`.
@@ -99,3 +99,6 @@ public struct InstructionView<Architecture: DisassemblyArchitecture>: ~Copyable 
         return unsafe UnsafePointer(details)
     }
 }
+
+@available(*, unavailable, message: "A view reads the engine's buffer and exists only in the closure it is lent to.")
+extension InstructionView: Sendable {}

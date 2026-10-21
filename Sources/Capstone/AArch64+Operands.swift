@@ -5,7 +5,7 @@
 // in CapstoneEnumsGenerator; the C header only carries it in comments.
 
 #if CAPSTONE_HAS_AARCH64
-import Ccapstone
+internal import Ccapstone
 
 public extension AArch64.Operand {
     /// Register value for `reg` operands.
@@ -98,8 +98,8 @@ public extension AArch64.Operand {
     /// - `sveveclenspecifier`: Only ever a sysop sub_type; read via systemOperand.
     /// - `tlbi`: Only ever a sysop sub_type; read via systemOperand.
     /// - `tsb`: Only ever a sysop sub_type; read via systemOperand.
-    internal static var unexposedOperandTypes: Set<AArch64Op> {
-        [.at, .bti, .db, .dbnxs, .dc, .exactfpimm, .ic, .invalid, .isb, .memImm, .memReg, .prfm, .psb, .pstateimm01, .pstateimm015, .regMrs, .regMsr, .rprfm, .svcr, .svepredpat, .sveprfm, .sveveclenspecifier, .tlbi, .tsb]
-    }
+    internal static let unexposedOperandTypes: Set<AArch64Op> = [
+        .at, .bti, .db, .dbnxs, .dc, .exactfpimm, .ic, .invalid, .isb, .memImm, .memReg, .prfm, .psb, .pstateimm01, .pstateimm015, .regMrs, .regMsr, .rprfm, .svcr, .svepredpat, .sveprfm, .sveveclenspecifier, .tlbi, .tsb,
+    ]
 }
 #endif

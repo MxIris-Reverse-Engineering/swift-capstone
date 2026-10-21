@@ -1,4 +1,4 @@
-import Ccapstone
+internal import Ccapstone
 
 // The `Architecture` enum itself is generated into Architecture+Generated.swift from
 // `cs_arch`. Generating it rather than hand-maintaining it is not cosmetic: capstone

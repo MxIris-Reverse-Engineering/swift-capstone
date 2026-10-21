@@ -156,10 +156,15 @@ let package = Package(
                 .define($0.define, .when(traits: [$0.trait]))
             },
             // Unsafe code is confined to where the module meets capstone's C API, and
-            // marked there; anything unsafe elsewhere is a warning.
+            // marked there; anything unsafe elsewhere is a warning. Each file imports
+            // what it uses: Ccapstone `internal`, so no C type can reach a public
+            // signature, and Foundation wherever one of its members is called.
             swiftSettings: architectures.map {
                 .define($0.define, .when(traits: [$0.trait]))
-            } + [.strictMemorySafety()],
+            } + [
+                .strictMemorySafety(),
+                .enableUpcomingFeature("MemberImportVisibility"),
+            ],
         ),
         .plugin(
             name: "CapstoneEnumsGeneratePlugin",

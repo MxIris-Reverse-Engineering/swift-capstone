@@ -14,6 +14,9 @@ public enum DetailForm: Sendable {
 /// bytes become a data entry — `isData` is `true`, the mnemonic is `.byte`
 /// unless `mnemonic` says otherwise, and there are no details — and decoding goes
 /// on after them.
+///
+/// It is not `Sendable`, so that `bytesToSkip` can capture mutable state. To decode
+/// in parallel, create one in each task that creates an engine.
 public struct SkipData {
     /// The mnemonic data entries are printed with; capstone's default is `.byte`.
     public var mnemonic: String?
@@ -31,3 +34,6 @@ public struct SkipData {
         self.bytesToSkip = bytesToSkip
     }
 }
+
+@available(*, unavailable, message: "bytesToSkip may capture mutable state; create a SkipData in each task that creates an engine.")
+extension SkipData: Sendable {}

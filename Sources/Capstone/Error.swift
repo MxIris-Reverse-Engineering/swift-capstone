@@ -1,4 +1,4 @@
-import Ccapstone
+internal import Ccapstone
 
 /// Errors creating a `Disassembler` can throw. Decoding itself never fails.
 public enum CapstoneError: Error, Hashable {
